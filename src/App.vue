@@ -34,9 +34,10 @@ export default {
 </script>
 
 <style lang="scss">
-* {
-  padding: 0;
-  margin: 0;
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 #app, html, body{
   min-height: 550px;
