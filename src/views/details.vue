@@ -21,8 +21,19 @@
             <li v-for="(food, index) in item.foods" :key="index">
               <div class="goodsRow">
                 <img :src="food.icon">
-                <p>{{food.name}}</p>
-                <sx-input-number v-model="chooseCommodity[food.id].num" :max="food.stock" @isMax="isMax" :item="food" @clickAction="clickAction"></sx-input-number>
+                <div class="goodsContent">
+                  <div class="goodsContentTop">
+                    {{food.name}}
+                    <div class="abstract">
+                      <span>规格:105g</span>
+                      <span>库存458袋</span>
+                    </div>
+                  </div>
+                  <div class="goodsContentBottom">
+                   <span><span style="color:#FF344E">￥33</span>/袋子</span>
+                    <sx-input-number v-model="chooseCommodity[food.id].num" :max="food.stock" @isMax="isMax" :item="food" @clickAction="clickAction"></sx-input-number>
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
@@ -348,6 +359,40 @@ export default {
     align-items: center;
     box-sizing: border-box;
     background: white;
+    height: 110px;
+    padding: $small;
+    // padding-bottom: 0;
+    // padding-right: 0;
+    img {
+      // box-sizing: border-box;
+      // padding: $medium;
+      // padding-top: 0;
+      height: 100%;
+    }
+    .goodsContent {      
+      flex: 1;
+      height: 100%;
+      display: flex;
+      padding-left: $small;
+      // border-bottom: $lightgray 1px solid;
+      box-sizing: border-box;
+      justify-content: space-between;
+      // align-content: space-around;
+      flex-direction: column;
+      .goodsContentTop {
+        font-size: $medium;
+        .abstract {
+          color: $gray;
+          font-size: $small;          
+        }
+      }
+      .goodsContentBottom {
+        font-size: $medium;
+        color: $gray;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
   & {
     // content inside
@@ -363,6 +408,7 @@ export default {
       line-height: 20px;
       font-size: 14px;
       background: rgba(240, 239, 239, 0.88);
+      color: $lightblack;
       padding: 10px;
     }
     /deep/ .cube-scroll-nav-panel {
@@ -376,11 +422,13 @@ export default {
     }
     // left
     /deep/ .cube-scroll-nav-bar-item_active {
-      color: $primary;
+      color: black !important;
       border-left: $primary 3px solid;
+      font-weight: bold !important;
     }
     /deep/ .cube-scroll-nav-bar-item {
-      padding: 15px;
+      color: $lightblack;
+      padding: $small;
       box-sizing: border-box;
       // display: flex;
       // align-items: center;
@@ -401,7 +449,7 @@ export default {
     display: flex;
     box-sizing: border-box;
     justify-content: space-between;
-    background: $black;
+    background: $lightblack;
     // background: white;
     .box {
       width: 100%;
@@ -473,7 +521,7 @@ export default {
 }
 .popupLeft {
   font-size: $default;
-  color: $black;
+  color: $lightblack;
   span {
     font-size: $small;
     color: $gray;

@@ -89,7 +89,7 @@ export default {
   i {
     margin-left: 6px;
     color: $primary;
-    font-size: 28px;
+    font-size: 26px;
   }
   .reduce {}
   .increase {}
