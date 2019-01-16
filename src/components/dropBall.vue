@@ -65,12 +65,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/css/variable.scss';
 .ball {
   z-index: 1;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: red;
+  background: $primary;
   position: absolute;
   left: 0;
   top: 0;

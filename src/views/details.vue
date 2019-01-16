@@ -240,7 +240,7 @@ export default {
   },
   computed: {
     destination() {
-      return { top: window.innerHeight - 35, left: 20 }
+      return { top: window.innerHeight - 40, left: 45 }
     }
   },
   created() {
@@ -297,7 +297,10 @@ export default {
       toast.show()
     },
     clickAction(e, item, tf) {
-      if (tf) this.$set(this.cart, item.id, item)
+      if (tf) {
+        this.$set(this.cart, item.id, item)
+        this.$refs.drop.drop(e)
+      }
       if (!this.cart[item.id].num) this.$delete(this.cart, item.id)
       if (!Object.keys(this.cart).length) {
         this.$refs.popup.closePopup()
