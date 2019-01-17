@@ -7,11 +7,11 @@
         :current="current"
         @change="changeHandler"
         @sticky-change="stickyChangeHandler">
-        <ul class="prepend-header" slot="prepend">
-          <li>11</li>
-          <li>22</li>
-          <li>333</li>
-        </ul>
+        <div class="prepend-header" slot="prepend">
+          <cube-input style="margin: 15px;" placeholder="请输入商品名称">
+            <i class="cubeic-search" slot="prepend" style="padding-left: 15px;font-size: 16px;"></i>
+          </cube-input>
+        </div>
         <cube-scroll-nav-panel
           v-for="item in data"
           :key="item.name"
@@ -41,7 +41,7 @@
       </cube-scroll-nav>
       <sx-popup ref="popup">
         <div slot="left" class="popupLeft">
-          已选商品 <span>(共{{Object.keys(this.cart).length}}件商品)</span>
+          已选商品 <span>(共{{Object.keys(cart).length}}件商品)</span>
         </div>
         <div slot="right" class="popupRight" @click="clearCart">
           <i class="box-lajitong"></i>清空
@@ -60,11 +60,11 @@
     </div>
     <div class="bottom">
       <div class="box"  @click="closePopup">
-        <div class="shoppingCart" @click.stop="openTheShoppingCart" :style="{transition: 'all .3s ease', backgroundColor: !Object.keys(this.cart).length ? '#cccccc' : ''}">
+        <div class="shoppingCart" @click.stop="openTheShoppingCart" :style="{transition: 'all .3s ease', backgroundColor: !Object.keys(cart).length ? '#cccccc' : ''}">
           <i class="box-gouwuche"></i>
-          <span v-show="Object.keys(this.cart).length">{{Object.keys(this.cart).length}}</span>
+          <span v-show="Object.keys(cart).length">{{Object.keys(cart).length}}</span>
         </div>
-        <div  class="info" v-if="!Object.keys(this.cart).length"><span>未选购商品</span></div>
+        <div  class="info" v-if="!Object.keys(cart).length"><span>未选购商品</span></div>
         <div class="info" v-else>
           <p>￥33.33 <s>￥55</s></p>
           bbbbbbbbbbbbbbbbbb

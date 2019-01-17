@@ -4,12 +4,27 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
       name: 'details',
       component: () => import('../views/details.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/login.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/register.vue')
+    },
+    {
+      path: '/forget',
+      name: 'forget',
+      component: () => import('../views/forget.vue')
     },
     {
       path: '/test',
