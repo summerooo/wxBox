@@ -9,7 +9,14 @@ export default new Router({
     {
       path: '/',
       name: 'details',
-      component: () => import('../views/details.vue')
+      component: () => import('../views/details.vue'),
+      children: [
+        {
+          path: '/search',
+          name: 'search',
+          component: () => import('../views/search.vue'),
+        }
+      ]
     },
     {
       path: '/login',
@@ -25,6 +32,11 @@ export default new Router({
       path: '/forget',
       name: 'forget',
       component: () => import('../views/forget.vue')
+    },
+    {
+      path: '/info',
+      name: 'info',
+      component: () => import('../views/info.vue')
     },
     {
       path: '/test',

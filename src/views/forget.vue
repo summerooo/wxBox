@@ -1,5 +1,5 @@
 <template>
-  <div class="loginAll">
+  <div class="all">
     <cube-input v-model="registerData.phoneNum"  placeholder="手机号"></cube-input>
     <div class="getCode">
       <cube-input v-model="registerData.code" class="code" placeholder="验证码" type="number"></cube-input>
@@ -61,9 +61,9 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/css/variable.scss';
 
-.loginAll {
+.all {
   padding: 30px;
-  height: 53%;
+  height: 390px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

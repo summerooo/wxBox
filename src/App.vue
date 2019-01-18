@@ -34,6 +34,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 *, *:before, *:after {
     box-sizing: border-box;
     margin: 0;
@@ -44,6 +45,7 @@ export default {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  background: white;
   * {
     // font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
   }

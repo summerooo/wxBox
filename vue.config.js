@@ -36,10 +36,10 @@ module.exports = {
   devServer: {
     port: 8088,
     proxy: {
-      '/app': {
-        target: 'https://api.myjson.com/bins/',
+      '/api': {
+        target: 'http://192.168.0.103:85/userapi/v1/',
         pathRewrite: {
-          '^/app': '/'
+          '^/api': ''
         }
       }
     }

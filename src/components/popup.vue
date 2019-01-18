@@ -140,8 +140,9 @@ export default {
 @import '../assets/css/variable.scss';
 
 .popup {
-  align-self: flex-end;
-  position: fixed;
+  // align-self: flex-end;
+  position: absolute;
+  bottom: 0;
   width: 100%;
   // height: 100%;
   // border: 3px solid lightsalmon;

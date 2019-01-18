@@ -1,5 +1,5 @@
 <template>
-  <div class="loginAll">
+  <div class="all">
     <cube-input class="phoneNum" placeholder="请输入手机号" v-model="phoneNum" type="number"></cube-input>
     <cube-button :primary="true" @click="validatePhone">获取验证码</cube-button>
     <div>
@@ -64,9 +64,9 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/css/variable.scss';
 
-.loginAll {
+.all {
   padding: 30px;
-  height: 33%;
+  height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -76,12 +76,14 @@ export default {
   }
   div {
     text-align: center;
-    font-size: $small;
+    font-size: $medium;
     span {
       color: $primary;
     }
   }
-  
+  /deep/ .cube-input {
+    font-size: $medium;
+  }
   /deep/ .cube-input::after {
     // border: 0px;
     border-left: 0px;

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import './cube-ui'
-import './cube-ui'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -16,7 +15,11 @@ import './assets/css/icon.css'
 Vue.config.productionTip = false
 
 Vue.prototype.$md5 = md5
-
+Vue.directive('focus', {
+  inserted: function (el) {
+    el.focus()
+  }
+})
 new Vue({
   router,
   store,

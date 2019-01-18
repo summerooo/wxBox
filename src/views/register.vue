@@ -1,5 +1,5 @@
 <template>
-  <div class="loginAll">
+  <div class="all">
     <span>手机号: {{registerData.phoneNum}}</span>
     <div class="getCode">
       <cube-input v-model="registerData.code" class="code" placeholder="验证码" type="number"></cube-input>
@@ -59,6 +59,7 @@ export default {
       if (this.registerData['pwd'] !== this.registerData['confirmPwd']) return this.$createToast({ txt: `两次密码不相同`, type: 'txt' }).show()
       if (this.registerData['pwd'].length < 6) return this.$createToast({ txt: `密码至少6位`, type: 'txt' }).show()
       this.$createToast({ txt: 'register sumbit', type: 'txt' }).show()
+      this.$router.push({ name: 'info'})
     }
   }
 }
@@ -66,9 +67,10 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/css/variable.scss';
 
-.loginAll {
+.all {
   padding: 30px;
-  height: 53%;
+  // height: 66%;
+  height: 390px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

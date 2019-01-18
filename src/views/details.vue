@@ -1,43 +1,57 @@
 <template>
-  <div class="allDetails">
-    <div class="content">
+  <div class="all">
+    <div :class="{content: true, isSearch: [2, 3, 4, 5].includes(searching)}">
       <cube-scroll-nav
+        ref="scroll"
         :side="true"
         :data="data"
         :current="current"
         @change="changeHandler"
         @sticky-change="stickyChangeHandler">
         <div class="prepend-header" slot="prepend">
-          <cube-input style="margin: 15px;" placeholder="请输入商品名称">
-            <i class="cubeic-search" slot="prepend" style="padding-left: 15px;font-size: 16px;"></i>
-          </cube-input>
+          <div class="searchNav">
+            <transition name="back">
+              <i class="cubeic-back backIcon" @click="back" v-if="![1].includes(searching)"></i>
+            </transition>
+            <cube-input ref="searchInput" v-model="searchData" @focus="focusSearch" @blur="blurSearch" @keyup.enter.native="searchingSubmit" placeholder="请输入商品名称">
+              <i class="cubeic-search" slot="prepend"></i>
+            </cube-input>
+          </div>
         </div>
-        <cube-scroll-nav-panel
-          v-for="item in data"
-          :key="item.name"
-          :label="item.name"
-          :title="item.name">
-          <ul>
-            <li v-for="(food, index) in item.foods" :key="index">
-              <div class="goodsRow">
-                <img :src="food.icon">
-                <div class="goodsContent">
-                  <div class="goodsContentTop">
-                    {{food.name}}
-                    <div class="abstract">
-                      <span>规格:105g</span>
-                      <span>库存458袋</span>
+        <div v-if="[1, 3].includes(searching)">
+          <cube-scroll-nav-panel
+            v-for="item in data"
+            :key="item.name"
+            :label="item.name"
+            :title="item.name">
+            <ul>
+              <li v-for="(food, index) in item.foods" :key="index">
+                <div class="goodsRow">
+                  <img :src="food.icon">
+                  <div class="goodsContent">
+                    <div class="goodsContentTop">
+                      {{food.name}}
+                      <div class="abstract">
+                        <span>规格:105g</span>
+                        <span>库存458袋</span>
+                      </div>
+                    </div>
+                    <div class="goodsContentBottom">
+                    <font><span>￥33</span>/袋子</font>
+                      <sx-input-number v-model="chooseCommodity[food.id].num" :max="food.stock" @isMax="isMax" :item="food" @clickAction="clickAction"></sx-input-number>
                     </div>
                   </div>
-                  <div class="goodsContentBottom">
-                   <span><span style="color:#FF344E">￥33</span>/袋子</span>
-                    <sx-input-number v-model="chooseCommodity[food.id].num" :max="food.stock" @isMax="isMax" :item="food" @clickAction="clickAction"></sx-input-number>
-                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
-        </cube-scroll-nav-panel>
+              </li>
+            </ul>
+          </cube-scroll-nav-panel>
+        </div>
+        <div v-if="[0].includes(searching)" class="noSearch">
+          没有搜索结果
+          <span>换个关键词试试吧</span>
+        </div>
+        <sx-search-panel @panelIcon="panelIcon" @panelCell="panelCell" v-if="[4].includes(searching)"/>
+        <sx-search-list @listRow="listRow" v-if="[5].includes(searching)"/>
       </cube-scroll-nav>
       <sx-popup ref="popup">
         <div slot="left" class="popupLeft">
@@ -81,11 +95,15 @@
 import sxDropBall from '../components/dropBall'
 import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
+import sxSearchPanel from '../components/searchPanel'
+import sxSearchList from '../components/searchList'
 export default {
   components: {
     sxDropBall,
     sxInputNumber,
-    sxPopup
+    sxPopup,
+    sxSearchPanel,
+    sxSearchList
   },
   data() {
     return {
@@ -235,12 +253,24 @@ export default {
       // 购物车 选择的商品
       cart: {},
       // 商品列表 选择的商品 car chooseCommodity 两份相同数据 做了一层分离而已。
-      chooseCommodity: {}
+      chooseCommodity: {},
+      // 0、暂无数据  1、商品全部展示  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
+      searching: 1,
+      searchData: '',
+      timer: ''
     }
   },
   computed: {
     destination() {
       return { top: window.innerHeight - 40, left: 45 }
+    }
+  },
+  watch: {
+    searchData () {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.searchingSubmit()
+      }, 200)
     }
   },
   created() {
@@ -315,14 +345,35 @@ export default {
         this.$set(this.chooseCommodity[z], 'num', 0)
       }
       this.$refs.popup.closePopup()
-    }
+    },
+    focusSearch () {
+      this.$router.push({name: 'search'})
+      this.searching = 3
+    },
+    blurSearch () {
+      // this.$router.push({name: 'details'})
+      // this.searching = 1
+      // this.$refs.scroll.refresh()
+    },
+    searchingSubmit () {
+      console.log(this.searchData)
+    },
+    back () {
+      this.$router.go(-1)
+      this.$refs.searchInput.$refs.input.blur()
+      this.searching = 1
+      this.$refs.scroll.refresh()
+    },
+    panelIcon () {},
+    panelCell () {},
+    listRow () {}
   },
   mounted() {}
 }
 </script>
 <style scoped lang="scss">
 @import '../assets/css/variable.scss';
-.allDetails {
+.all {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -333,8 +384,8 @@ export default {
   & .content {
     overflow: hidden;
     flex: 1;
-    display: flex;
-    // border: 3px solid green;
+    // display: flex;
+    position: relative;
     box-sizing: border-box;
     & .popupContent {
       display: flex;
@@ -348,98 +399,147 @@ export default {
     & .popupContent:last-child{
       border: none;
     }
-  }
-  .pullup-wrapper {
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.9vw;
-  }
-  .goodsRow {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-sizing: border-box;
-    background: white;
-    height: 110px;
-    padding: $small;
-    // padding-bottom: 0;
-    // padding-right: 0;
-    img {
-      // box-sizing: border-box;
-      // padding: $medium;
-      // padding-top: 0;
-      height: 100%;
-    }
-    .goodsContent {      
-      flex: 1;
-      height: 100%;
+    .pullup-wrapper {
+      height: 20px;
       display: flex;
-      padding-left: $small;
-      // border-bottom: $lightgray 1px solid;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.9vw;
+    }
+    .goodsRow {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
       box-sizing: border-box;
-      justify-content: space-between;
-      // align-content: space-around;
-      flex-direction: column;
-      .goodsContentTop {
-        font-size: $medium;
-        .abstract {
+      background: white;
+      height: 110px;
+      padding: $small;
+      // padding-bottom: 0;
+      // padding-right: 0;
+      img {
+        // box-sizing: border-box;
+        // padding: $medium;
+        // padding-top: 0;
+        height: 100%;
+      }
+      .goodsContent {      
+        flex: 1;
+        height: 100%;
+        display: flex;
+        padding-left: $small;
+        // border-bottom: $lightgray 1px solid;
+        box-sizing: border-box;
+        justify-content: space-between;
+        // align-content: space-around;
+        flex-direction: column;
+        .goodsContentTop {
+          font-size: $medium;
+          .abstract {
+            color: $gray;
+            font-size: $small;          
+          }
+        }
+        .goodsContentBottom {
+          font-size: $medium;
           color: $gray;
-          font-size: $small;          
+          display: flex;
+          justify-content: space-between;
+          font {
+            span {
+              color: $red;
+            }
+          }
         }
       }
-      .goodsContentBottom {
-        font-size: $medium;
+    }
+    & {
+      // content inside
+      /deep/ .cube-scroll-nav,
+      /deep/ .cube-scroll-nav_side {
+        width: 100%;
+      }
+      /deep/ .cube-scroll-nav-main {
+        padding-bottom: 35px;
+      }
+      // right
+      /deep/ .cube-scroll-nav-panel-title {
+        line-height: 20px;
+        font-size: 14px;
+        // background: rgba(240, 239, 239, 0.88);
+        background: white;
+        color: $lightblack;
+        padding: 10px;
+      }
+      /deep/ .cube-scroll-nav-panel {
+        width: 100%;
+      }
+      // left
+      /deep/ .cube-scroll-wrapper {
+        width: 22vw;
+        line-height: 20px;
+        background: $nav;
+      }
+      /deep/ .cube-scroll-nav-bar-item_active {
+        color: black !important;
+        border-left: $primary 3px solid;
+        background: white;
+        font-weight: bold !important;
+      }
+      /deep/ .cube-scroll-nav-bar-item {
+        color: $lightblack;
+        padding: $small;
+        box-sizing: border-box;
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .noSearch {
+      flex: 1;
+      height: 160px;
+      flex-direction: column;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: $medium;
+      color: $lightblack;
+      span {
         color: $gray;
+        font-size: $small
+      }
+    }
+    .searchNav {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      align-items: center;
+      padding: 15px;
+      .cubeic-search {
+        font-size: $medium;
+        padding-left: $medium;
+      }
+      .backIcon {
+        font-size: $large;
+        width: 39px;
+      }
+      .cube-input {
         display: flex;
-        justify-content: space-between;
+        flex: 1;
+        align-items: center;
       }
     }
   }
-  & {
-    // content inside
-    /deep/ .cube-scroll-nav,
-    /deep/ .cube-scroll-nav_side {
-      width: 100%;
-    }
-    /deep/ .cube-scroll-nav-main {
-      padding-bottom: 35px;
-    }
-    // right
-    /deep/ .cube-scroll-nav-panel-title {
-      line-height: 20px;
-      font-size: 14px;
-      background: rgba(240, 239, 239, 0.88);
-      color: $lightblack;
-      padding: 10px;
-    }
-    /deep/ .cube-scroll-nav-panel {
-      width: 100%;
-    }
+  & .isSearch {
     /deep/ .cube-scroll-wrapper {
-      width: 22vw;
-      line-height: 20px;
-      background: $nav;
-      
-    }
-    // left
-    /deep/ .cube-scroll-nav-bar-item_active {
-      color: black !important;
-      border-left: $primary 3px solid;
-      font-weight: bold !important;
-    }
-    /deep/ .cube-scroll-nav-bar-item {
-      color: $lightblack;
-      padding: $small;
-      box-sizing: border-box;
-      // display: flex;
-      // align-items: center;
-      // justify-content: center;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      width: 0px;
+      background: white;
+      .cube-scroll-nav-bar-items {
+        display: none;
+      }
     }
   }
   .bottom {
@@ -551,5 +651,25 @@ export default {
 }
 .list-leave-active {
   height: 10px;
+}
+
+// back transition
+.back-enter-active, .back-leave-active {
+  transition: all .3s ease;
+}
+.back-enter, .back-leave-to{
+  width: 0px !important;
+  opacity: 0;
+}
+
+// search transition
+.search-enter-active, .search-leave-active {
+  transition: all .3s ease;
+}
+.search-enter, .search-leave-to{
+  height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  opacity: 0;
 }
 </style>
