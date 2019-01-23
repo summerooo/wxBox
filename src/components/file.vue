@@ -40,6 +40,10 @@ export default {
           }
         }
       }
+    },
+    getFile () {
+      console.log('get file')
+      this.$refs.inputFile.click()
     }
   }
 }

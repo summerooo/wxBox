@@ -1,60 +1,96 @@
 <template>
   <div class="all">
-    <cube-input v-model="registerData.phoneNum"  placeholder="手机号"></cube-input>
+    <!-- <div class="top">
+      <i class="cubeic-back" @click="back"></i>
+      <span style="text-align:center">注册</span>
+    </div> -->
+    <cube-input class="telephone" placeholder="请输入手机号" v-model="registerData.telephone" type="number"></cube-input>
     <div class="getCode">
       <cube-input v-model="registerData.code" class="code" placeholder="验证码" type="number"></cube-input>
       <cube-button light @click="getCode">{{time ? `${time} s` : '获取验证码'}}</cube-button>
     </div>
-    <cube-input v-model="registerData.pwd" type="password" placeholder="密码"></cube-input>
-    <cube-input v-model="registerData.confirmPwd" type="password" placeholder="确认密码"></cube-input>
+    <cube-input v-model="registerData.password" class="code" type="password" placeholder="密码"></cube-input>
+    <!-- <cube-input v-model="registerData.confirmpassword" class="code" type="password" placeholder="确认密码"></cube-input> -->
     <cube-button style="margin-top: 16px;" primary @click="sumbit">确认</cube-button>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
+import { forgetPasswordCode, sevaPassword } from '../api/forget'
 export default {
   data() {
     return {
       registerData: {
-        phoneNum: '',
+        telephone: '',
         code: '',
-        pwd: '',
-        confirmPwd: ''
+        code_id: '',
+        password: ''
+        // confirmpassword: ''
       },
       contrast: {
-        phoneNum: '手机号',
+        telephone: '手机号',
         code: '验证码',
-        pwd: '密码',
-        confirmPwd: '确认密码'
+        password: '密码'
+        // confirmpassword: '确认密码'
       },
       time: 0
     }
   },
+  computed: {
+    ...mapState([
+      'phone',
+      'APP_ID',
+      'ENCSTR'
+    ])
+  },
   created () {
-    this.registerData.phoneNum = this.phone
+    // if (!this.phone) this.$createToast({ txt: `手机号未获取`, type: 'txt' }).show()
+    // this.registerData.telephone = this.phone
   },
   methods: {
-    getCode () {
+    async getCode () {
       if (this.time) return
-      if (!/(?:^1[3456789]|^9[28])\d{9}$/.test(this.registerData['phoneNum'])) return this.$createToast({ txt: '请输入正确手机号', type: 'txt' }).show()
-      if (!this.registerData['phoneNum']) return this.$createToast({ txt: `手机号未知`, type: 'txt' }).show()
-      this.time = 60
-      let timer = setInterval(() => {
-        this.time--
-        if (!this.time) {
-          clearInterval(timer)
-        }
-      }, 1000)
-      this.$createToast({ txt: 'getting Code', type: 'txt' }).show()
+      if (!this.registerData.telephone) return this.$createToast({ txt: `手机号未知`, type: 'txt' }).show()
+      let grc = await forgetPasswordCode({telephone: this.registerData.telephone})
+      this.$createToast({ txt: grc.data.return_msg, type: 'txt' }).show()
+      if (grc.data.return_code === 200) {
+        this.time = 60
+        let timer = setInterval(() => {
+          this.time--
+          if (!this.time) {
+            clearInterval(timer)
+          }
+        }, 1000)
+        this.registerData.code_id = grc.data.return_data.code_id
+      }
     },
-    sumbit () {
-      for (let i in this.registerData) {
+    async sumbit () {
+      for (let i in this.contrast) {
         if (!this.registerData[i]) return this.$createToast({ txt: `${this.contrast[i]}不能为空`, type: 'txt' }).show()
       }
-      if (!/(?:^1[3456789]|^9[28])\d{9}$/.test(this.registerData['phoneNum'])) return this.$createToast({ txt: '请输入正确手机号', type: 'txt' }).show()
-      if (this.registerData['pwd'] !== this.registerData['confirmPwd']) return this.$createToast({ txt: `两次密码不相同`, type: 'txt' }).show()
-      if (this.registerData['pwd'].length < 6) return this.$createToast({ txt: `密码至少6位`, type: 'txt' }).show()
-      this.$createToast({ txt: 'register sumbit', type: 'txt' }).show()
+      // if (this.registerData['password'] !== this.registerData['confirmpassword']) return this.$createToast({ txt: `两次密码不相同`, type: 'txt' }).show()
+      if (this.registerData['password'].length < 6) return this.$createToast({ txt: `密码至少6位`, type: 'txt' }).show()
+      // this.$md5(this.ENCSTR + this.APP_ID + 'APP_ID' + this.APP_ID + 'telephone' + this.registerData.telephone).toUpperCase()
+      let toast = this.$createToast({
+        txt: '验证中',
+        mask: true,
+        time: 0
+      })
+      toast.show()
+      let sp = await sevaPassword(this.registerData)
+      toast.hide()
+      this.$createToast({
+        txt: sp.data.return_msg,
+        type: 'txt'
+      }).show()
+      if (sp.data.return_code === 200) this.$router.replace({name: 'login'})
+    },
+    back () {
+      this.$router.replace({name: 'login'})
     }
+  },
+  mounted() {
+    document.title = '注册'
   }
 }
 </script>
@@ -63,13 +99,22 @@ export default {
 
 .all {
   padding: 30px;
-  height: 390px;
+  // height: 66%;
+  height: 360px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   & span {
     padding-left: $mini;
     font-size: $medium;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    span {
+      color: $drakblack;
+      font-size: $default;
+    }
   }
   .getCode {
     display: flex;

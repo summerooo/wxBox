@@ -7,18 +7,18 @@
       </cube-input>
     </div>
     <transition-group name="flip-list" tag="ul" v-if="isFocus">
-      <li v-for="item in items" v-bind:key="item">
+      <li v-for="item in listData" v-bind:key="item">
         {{ item }}
       </li>
     </transition-group>
-    <ul v-if="isFocus">
+    <!-- <ul v-if="isFocus">
       <li v-for="(item, index) in listData" :key="index" @click="listItem(item, index)">
         <i class="cubeic-search" slot="prepend"></i> {{item.value}}
       </li>
     </ul>
     <div v-else>
       aaa
-    </div>
+    </div> -->
   </div>
 </template>
 

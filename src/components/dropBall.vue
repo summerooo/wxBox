@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       balls: [],
-      i: 0
+      i: 1000
     }
   },
   methods: {

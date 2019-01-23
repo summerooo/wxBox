@@ -15,11 +15,11 @@ import './assets/css/icon.css'
 Vue.config.productionTip = false
 
 Vue.prototype.$md5 = md5
-Vue.directive('focus', {
-  inserted: function (el) {
-    el.focus()
-  }
-})
+// Vue.directive('focus', {
+//   inserted: function (el) {
+//     el.focus()
+//   }
+// })
 new Vue({
   router,
   store,

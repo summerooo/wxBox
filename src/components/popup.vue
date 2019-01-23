@@ -1,6 +1,6 @@
 <template>
   <div class="popup" ref="popup">
-    <transition name="fade" @after-leave="afterLeave">
+    <transition name="fade-modal" @after-leave="afterLeave">
       <div v-show="isVisible" @click="closePopup" :style="{background: modal ? 'rgba(0, 0, 0, .6)' : 'transparent'}" class="popupModal"></div>
     </transition>
     <div class="container" ref="container">
@@ -208,14 +208,14 @@ export default {
   }
   
   & {
-    .fade-enter-active {
+    .fade-modal-enter-active {
       transition: all .3s ease;
     }
-    .fade-leave-active {
+    .fade-modal-leave-active {
       transition: all .3s ease;
     }
-    .fade-enter,
-    .fade-leave-to {
+    .fade-modal-enter,
+    .fade-modal-leave-to {
       // transform: translateY(23%);
       // transform: translateY(100%);
       opacity: 0;

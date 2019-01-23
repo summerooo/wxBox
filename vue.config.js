@@ -2,6 +2,7 @@
 const CompressionPlugin = require('compression-webpack-plugin')
 // drop console
 const TerserPlugin = require('terser-webpack-plugin')
+const proxy = require('./src/dev').proxy
 module.exports = {
   runtimeCompiler: undefined,
   productionSourceMap: false,
@@ -35,17 +36,10 @@ module.exports = {
 
   devServer: {
     port: 8088,
-    proxy: {
-      '/api': {
-        target: 'http://192.168.0.103:85/userapi/v1/',
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    }
+    proxy: proxy
   },
-
-  baseUrl: './',
+  // history  ->  '/'    hash  ->  './' 
+  baseUrl: '/',
   outputDir: undefined,
   assetsDir: undefined,
   parallel: undefined,

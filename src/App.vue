@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition name="fade">
+      <router-view/>
+    </transition>
   </div>
 </template>
 <script>
@@ -23,12 +25,16 @@ export default {
         break
       }
     }
+    this.$store.commit('getUser')
   },
   data () {
     return {
       device: null,
       kernel: null
     }
+  },
+  mounted() {
+    console.log(this.$md5('123456'))
   }
 }
 </script>
@@ -49,5 +55,16 @@ export default {
   * {
     // font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
   }
+}
+.fade-enter-active, .fade-leave-active {
+  transition: all .3s ease;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+  height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
 }
 </style>

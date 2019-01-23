@@ -26,7 +26,7 @@ axios.interceptors.response.use(
           console.log('200')
           break
         default:
-          res = false
+          res = response
           console.log('201签名错误 202签名不存在 400 接口访问错误')
           break
       }
