@@ -1,5 +1,6 @@
 <template>
   <div class="all">
+    <img src="../assets/images/logo.jpg" alt="">
     <cube-input class="telephone" placeholder="请输入手机号" v-model="telephone" type="number"></cube-input>
     <cube-input class="telephone" v-model="password" type="password" placeholder="请输入密码"></cube-input>
     <div style="text-align:right">
@@ -39,7 +40,12 @@ export default {
       if (this.password.length < 6) return this.$createToast({ txt: `密码至少6位`, type: 'txt' }).show()
       if (!/(?:^1[3456789]|^9[28])\d{9}$/.test(this.telephone)) return this.$createToast({ txt: '请输入正确手机号', type: 'txt' }).show()
       console.log('success' ,this.telephone)
+      const toast = this.$createToast({
+        time: 0
+      })
+      toast.show()
       let ul = await userLogin({telephone: this.telephone, password: this.password})
+      toast.hide()
       if (ul.data.return_code === 200) {
         this.setUser(ul.data.return_data)
         this.$router.replace('info')
@@ -91,10 +97,14 @@ export default {
 
 .all {
   padding: 30px;
-  height: 360px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  img {
+    width: 55%;
+    align-self: center;
+  }
   .telephone {
     background: transparent;
   }

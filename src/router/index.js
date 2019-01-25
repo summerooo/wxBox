@@ -7,12 +7,12 @@ export default new Router({
   mode: 'history',
   // base: __dirname,
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/goodsDetails'
-    // },
     {
       path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '/goodsDetails',
       name: 'goodsDetails',
       component: () => import('../views/goodsDetails'),
       children: [
@@ -40,6 +40,38 @@ export default new Router({
         {
           path: '/goodsDetails5',
           name: 'goodsDetails5'
+        }
+      ]
+    },
+    {
+      path: '/goodsBox',
+      name: 'goodsBox',
+      component: () => import('../views/goodsBox'),
+      children: [
+        // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)  searching
+        // {
+        //   path: '/goodsDetails0',
+        //   name: 'goodsDetails0'
+        // },
+        {
+          path: '/goodsBox1',
+          name: 'goodsBox1'
+        },
+        {
+          path: '/goodsBox2',
+          name: 'goodsBox2'
+        },
+        {
+          path: '/goodsBox3',
+          name: 'goodsBox3'
+        },
+        {
+          path: '/goodsBox4',
+          name: 'goodsBox4'
+        },
+        {
+          path: '/goodsBox5',
+          name: 'goodsBox5'
         }
       ]
     },

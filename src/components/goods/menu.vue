@@ -1,7 +1,7 @@
 <template>
   <div :class="{menuAll: true, horizontal: mode === 'horizontal'}">
     <ul class="content">
-      <li :class="{menuCell: true, 'acitveCotnent': item.value === newDefaultActive}" v-for="(item, index) in menuData" :key="index" @click="select(item, index)">
+      <li :class="{menuCell: true, 'acitveCotnent': item.value === newDefaultActive}" v-for="(item, index) in menusData" :key="index" @click="select(item, index)">
         <i :class="item.icon"></i>
         {{item.label}}
       </li>
@@ -22,10 +22,10 @@ export default {
     defaultActive: {
       type: null,
       default () {
-        return 'ccc'
+        return ''
       }
     },
-    menuData: {
+    menusData: {
       type: Array,
       default () {
         return [

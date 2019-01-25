@@ -162,12 +162,13 @@ export default {
     align-self: flex-end;
     flex: 1;
      & .yellowBar {
-      background: #fefbe4;
+      background: $lightprimary;
       opacity: .9;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 26px;
+      height: 33px;
+      font-size: $small;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
     }

@@ -11,7 +11,9 @@ export default new Vuex.Store({
     user: {},
     upload: '',
     school: '',
-    dormitory: ''
+    dormitory: '',
+    // 选商品前的数据
+    beforeInfo: {}
   },
   mutations: {
     setPhone (state, data) {
@@ -19,10 +21,10 @@ export default new Vuex.Store({
     },
     setUser (state, data) {
       state.user = data
-      sessionStorage.setItem('user', data)
+      sessionStorage.setItem('user', JSON.stringify(data))
     },
     getUser (state) {
-      state.user = sessionStorage.getItem('user')
+      state.user = JSON.parse(sessionStorage.getItem('user'))
     },
     setUpload (state, data) {
       state.upload = data
@@ -32,6 +34,13 @@ export default new Vuex.Store({
     },
     setDormitory (state, data) {
       state.dormitory = data
+    },
+    setBeforeInfo (state, data) {
+      state.beforeInfo = data
+      sessionStorage.setItem('beforeInfo', JSON.stringify(data))
+    },
+    getBeforeInfo (state) {
+      state.beforeInfo = JSON.parse(sessionStorage.getItem('beforeInfo'))
     }
   },
   actions: {

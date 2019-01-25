@@ -95,7 +95,7 @@ export default {
       }).show()
     },
     searchingSubmit () {
-      this.schoolList(this.listModels[2] ? this.listModels[2].area_id : '', this.searchData)
+      this.schoolList('', this.searchData)
     },
     async listClick (row, i) {
       this.acitveIndex = i
@@ -108,7 +108,7 @@ export default {
           this.$set(this.listModels, this.index - 1, row)
           if (this.index === 3) {
             this.position = `${this.listModels[0].area_name} ${this.listModels[1].area_name} ${this.listModels[2].area_name}`
-            this.searchingSubmit()
+            this.schoolList(this.listModels[2] ? this.listModels[2].area_id : '', '')
             this.$router.push({name: `chooseSchool0`})
           }
           else {

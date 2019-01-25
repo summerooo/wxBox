@@ -4,6 +4,7 @@
       <i class="cubeic-back" @click="back"></i>
       <span style="text-align:center">注册</span>
     </div> -->
+    <img src="../assets/images/logo.jpg" alt="">
     <cube-input class="telephone" placeholder="请输入手机号" v-model="registerData.telephone" type="number"></cube-input>
     <div class="getCode">
       <cube-input v-model="registerData.code" class="code" placeholder="验证码" type="number"></cube-input>
@@ -100,10 +101,14 @@ export default {
 .all {
   padding: 30px;
   // height: 66%;
-  height: 360px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  img {
+    width: 55%;
+    align-self: center;
+  }
   & span {
     padding-left: $mini;
     font-size: $medium;

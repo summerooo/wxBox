@@ -3,16 +3,17 @@
     <div class="content" v-if="$route.name === 'info'">
       <label><p>{{modelsContrast['real_name']}}</p><cube-input :disabled="disabled" placeholder="请与身份证姓名一致" v-model="models.real_name"></cube-input></label>
       <label class="sex"><p>{{modelsContrast['sex']}}</p><cube-radio-group v-model="models.sex" :options="sexOptions" :horizontal="true"/></label>
-      <label><p>{{modelsContrast['school_id']}}</p><span @click="choiceSchool" :class="{spanActive: Boolean(models.school_id)}">{{models.school_id ? modelsData['school_id'].school_name : '选择学校 >'}}</span></label>
-      <label><p>{{modelsContrast['hsotel_id']}}</p>
+      <label><p>{{modelsContrast['school_id']}}</p><span @click="choiceSchool" :class="{spanActive: Boolean(models.school_id)}">
+        {{models.school_id ? models.school_name : '选择学校 >'}}</span></label>
+      <label><p>{{modelsContrast['hostel_id']}}</p>
       <span @click="choiceDormitory"
-      :class="{spanActive: Boolean(models.hsotel_id)}">
-      {{models.hsotel_id ? `${modelsData['hsotel_id'][0].floor_name + modelsData['hsotel_id'][1].hostel_name}` : '选择宿舍 >'}}</span></label>
+      :class="{spanActive: Boolean(models.hostel_id)}">
+      {{models.floor_id ? models.floor_name + models.hostel_name : '选择宿舍 >'}}</span></label>
       <label><p>{{modelsContrast['card_type']}}</p><cube-radio-group v-model="models.card_type" :options="cardOptions" :horizontal="true" /></label>
       <p style="width:100%;height: 10px;">
         {{models['real_name'] ? `拍摄上传${models['real_name']}的${models['card_type'] === 1 ? '身份证' : '学生证'}` : ''}}
       </p>
-      <div class="image" :style="{backgroundImage: `url(${models.card_path})`}" @click="getFile">
+      <div class="image" :style="{backgroundImage: `url(${models.view_path})`}" @click="getFile">
         <div :class="{modal: true, changeImage: flag}">
           <i class="cubeic-add icon" v-if="!flag"></i>
           {{flag ? upload ? `${upload}%` : '点击替换' : '点击上传'}}
@@ -24,7 +25,9 @@
         <i class="box-gantanhao_icon"></i>
         信息仅用于身份验证，盒里有保证您的信息安全
       </span>
-      <cube-button :primary="true" @click="submit">确定</cube-button>
+      <cube-button :primary="true" @click="submit" :disabled="disabled">
+        {{models.status ? ( models.status === 0 ? '审核中' : models.status === 1 ? '重新提交' : '审核未通过') : '确认申请'}}
+      </cube-button>
     </div>
     <router-view v-else/>
     <sx-file @onRead="onRead" ref="file"></sx-file>
@@ -34,6 +37,7 @@
 import { mapState, mapMutations } from 'vuex'
 import sxFile from '@/components/file'
 import { saveFile } from '@/api/uploadImage.js'
+import { receiveInfo, isExistOperator, applyEnter } from '@/api/info'
 import card from '@/assets/images/card.png'
 import schoolCard from '@/assets/images/schoolCard.png'
 export default {
@@ -44,32 +48,34 @@ export default {
     return {
       models: {
         real_name: null,
-        sex: '男',
+        sex: null,
         school_id: null,
-        hsotel_id: null,
+        hostel_id: null,
+        floor_id: null,
         card_type: 1,
-        card_path: null
+        card_path: null,
+        view_path: null
       },
       modelsData: {
         school_id: null,
-        hsotel_id: null
+        hostel_id: null
       },
       modelsContrast: {
         real_name: '姓名',
         sex: '性别',
         school_id: '学校',
-        hsotel_id: '宿舍',
+        hostel_id: '宿舍',
         card_type: '证件类型',
         card_path: '图片'
       },
       sexOptions: [
         {
-          value: '男',
+          value: 1,
           label: '男',
           text: '男'
         },
         {
-          value: '女',
+          value: 2,
           label: '女',
           text: '女'
         }
@@ -94,6 +100,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'user',
       'upload',
       'school',
       'dormitory'
@@ -102,24 +109,57 @@ export default {
   watch: {
     school (val) {
       this.models['school_id'] = val.school_id
-      this.modelsData['school_id'] = val
+      this.$set(this.models, 'school_name', val.school_name)
+      // this.modelsData['school_id'] = val
     },
     dormitory (val) {
-      console.log(val)
-      this.$set(this.models,'hsotel_id', val)
-      this.$set(this.modelsData,'hsotel_id', val)
+      this.$set(this.models, 'floor_name', val[0].floor_name)
+      this.$set(this.models, 'floor_id', val[0].floor_id)
+      this.$set(this.models,'hostel_id', val[1].hostel_id)
+      this.$set(this.models,'hostel_name', val[1].hostel_name)
+      // this.$set(this.modelsData,'hostel_id', val)
     },
   },
   created () {
-    console.log(this.school)
-    if (this.disabled) for (let i of this.sexOptions) {
-      i['disabled'] = this.disabled
-    }
+    this.firstShow()
   },
   methods: {
     ...mapMutations([
-      'setUpload'
+      'setUpload',
+      'setBeforeInfo'
     ]),
+    async firstShow () {
+      let pc = await receiveInfo(this.user)
+      console.log(pc)
+      this.models = Object.assign(this.models, pc.data.return_data)
+      if (pc.data.return_data.status === 0) this.disabled = true
+      if (this.disabled) {
+        for (let i of this.sexOptions) {
+          i['disabled'] = this.disabled
+        }
+        for (let i of this.cardOptions) {
+          i['disabled'] = this.disabled
+        }
+      }
+      let alertInfo = ''
+      switch (pc.data.return_data.status) {
+        case 0:
+          alertInfo = '待审核'
+          break
+        case 1:
+          alertInfo = '认领已通过'
+          break
+        case 2:
+          alertInfo = '您认领盒子未通过申请 请重新上传证件 '
+          break
+        default:
+          return
+      }
+      this.$createDialog({
+        type: 'alert',
+        content: alertInfo,
+      }).show()
+    },
     getFile () {
       let that = this
       this.$createDialog({
@@ -185,10 +225,55 @@ export default {
         ]
       }).show()
     },
-    submit () {
-      for (let i in this.models) {
+    async submit () {
+      for (let i in this.modelsContrast) {
+        console.log(i, 'i', this.models[i])
         if (!this.models[i]) return this.$createToast({ txt: `${this.modelsContrast[i]}不能为空`, type: 'txt' }).show()
       }
+      const toast = this.$createToast({
+        time: 0
+      })
+      toast.show()
+      let ieo = await isExistOperator(this.models)
+      toast.hide()
+      // this.$createToast({ txt: ieo.data.return_msg, type: 'txt' }).show()
+      console.log(ieo, 'ieo')
+      if (ieo.data.return_code !== 200) {
+        let that = this
+        this.$createDialog({
+          type: 'confirm',
+          content: '学校尚未开通 是否要加入我们',
+          confirmBtn: {
+            text: '是',
+            active: true,
+            disabled: false,
+            href: 'javascript:;'
+          },
+          cancelBtn: {
+            text: '否',
+            active: false,
+            disabled: false,
+            href: 'javascript:;'
+          },
+          onConfirm: async () => {
+            let ae = await applyEnter(Object.assign({}, this.user, this.models, {order_origin: 4}))
+            console.log(ae)
+            if (ae.data.return_code === 200) {
+              // that.$router.push('goodsBox')
+              // that.setBeforeInfo(that.models)
+              that.$createDialog({ type: 'alert', content: '稍后会有客服与您联系' }).show()
+            }
+            else return that.$createToast({ txt: ae.data.return_msg, type: 'txt' }).show()
+          },
+          onCancel: () => {
+            return
+          }
+        }).show()
+      } else {
+        this.setBeforeInfo(this.models)
+        this.$router.push('goodsBox')
+      }
+      console.log(this.models, 'submitData')
     },
     choiceSchool () {
       if (this.disabled) return
@@ -208,11 +293,13 @@ export default {
       models.append('save_path', data.file)
       models.append('user_id', '16813')
       models.append('login_token', 'e909d77a7d2d9fec5b0b5bfdccb495d5')
-      // console.log(data)
       let sf = await saveFile(models)
       console.log(sf)
       this.setUpload(0)
-      if (sf) this.models.card_path = sf.data.return_data.view_path
+      if (sf) {
+        this.models.card_path = sf.data.return_data.upload_path
+        this.models.view_path = sf.data.return_data.view_path
+      }
     }
   },
   mounted() {
