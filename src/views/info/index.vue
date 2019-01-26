@@ -2,7 +2,12 @@
   <div class="all">
     <div class="content" v-if="$route.name === 'info'">
       <label><p>{{modelsContrast['real_name']}}</p><cube-input :disabled="disabled" placeholder="请与身份证姓名一致" v-model="models.real_name"></cube-input></label>
-      <label class="sex"><p>{{modelsContrast['sex']}}</p><cube-radio-group v-model="models.sex" :options="sexOptions" :horizontal="true"/></label>
+      <label class="sex"><p>{{modelsContrast['sex']}}</p>
+        <div class="sexContent" @click="openSexChoose">
+          {{models.sex === 2 ? '女' : '男' }}
+        </div>
+        <!-- <cube-radio-group v-model="models.sex" :options="sexOptions" :horizontal="true"/> -->
+      </label>
       <label><p>{{modelsContrast['school_id']}}</p><span @click="choiceSchool" :class="{spanActive: Boolean(models.school_id)}">
         {{models.school_id ? models.school_name : '选择学校 >'}}</span></label>
       <label><p>{{modelsContrast['hostel_id']}}</p>
@@ -13,7 +18,7 @@
       <p style="width:100%;height: 10px;">
         {{models['real_name'] ? `拍摄上传${models['real_name']}的${models['card_type'] === 1 ? '身份证' : '学生证'}` : ''}}
       </p>
-      <div class="image" :style="{backgroundImage: `url(${models.view_path})`}" @click="getFile">
+      <div class="image" :style="{backgroundImage: `url(${models.card_view})`}" @click="getFile">
         <div :class="{modal: true, changeImage: flag}">
           <i class="cubeic-add icon" v-if="!flag"></i>
           {{flag ? upload ? `${upload}%` : '点击替换' : '点击上传'}}
@@ -26,7 +31,7 @@
         信息仅用于身份验证，盒里有保证您的信息安全
       </span>
       <cube-button :primary="true" @click="submit" :disabled="disabled">
-        {{models.status ? ( models.status === 0 ? '审核中' : models.status === 1 ? '重新提交' : '审核未通过') : '确认申请'}}
+        {{models.status == 0 ? '审核中' : (models.status === 1 ? '成功认领' : '重新申请')}}
       </cube-button>
     </div>
     <router-view v-else/>
@@ -54,7 +59,7 @@ export default {
         floor_id: null,
         card_type: 1,
         card_path: null,
-        view_path: null
+        card_view: null
       },
       modelsData: {
         school_id: null,
@@ -131,7 +136,33 @@ export default {
     async firstShow () {
       let pc = await receiveInfo(this.user)
       console.log(pc)
-      this.models = Object.assign(this.models, pc.data.return_data)
+      if (pc.data.return_code === 400) this.$createDialog({
+        type: 'alert',
+        content: pc.data.return_msg,
+        onConfirm () {
+          // eslint-disable-next-line
+          if(typeof(WeixinJSBridge) != 'undefined'){
+          // eslint-disable-next-line
+            WeixinJSBridge.call('closeWindow')
+          } else {
+            if (navigator.userAgent.indexOf('MSIE') > 0) {
+              if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
+                window.opener = null; window.close()
+              } else {
+                window.open('', '_top'); window.top.close()
+              }  
+            } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
+              window.location.href = 'about:blank '
+            } else {  
+              window.opener = null
+              window.open('', '_self', '')
+              window.close()
+            }
+          }
+        }
+      }).show()
+      this.models = await Object.assign(this.models, pc.data.return_data)
+      if (this.models.card_path) this.flag = true
       if (pc.data.return_data.status === 0) this.disabled = true
       if (this.disabled) {
         for (let i of this.sexOptions) {
@@ -143,22 +174,23 @@ export default {
       }
       let alertInfo = ''
       switch (pc.data.return_data.status) {
-        case 0:
-          alertInfo = '待审核'
-          break
-        case 1:
-          alertInfo = '认领已通过'
-          break
+        // case 0:
+        //   alertInfo = '待审核'
+        //   break
+        // case 1:
+        //   alertInfo = '认领已通过'
+        //   break
         case 2:
-          alertInfo = '您认领盒子未通过申请 请重新上传证件 '
+          alertInfo = pc.data.return_data.refuse_reason
+          this.$createDialog({
+            type: 'alert',
+            title: '您认领盒子未通过申请',
+            content: alertInfo,
+          }).show()
           break
         default:
           return
       }
-      this.$createDialog({
-        type: 'alert',
-        content: alertInfo,
-      }).show()
     },
     getFile () {
       let that = this
@@ -298,8 +330,21 @@ export default {
       this.setUpload(0)
       if (sf) {
         this.models.card_path = sf.data.return_data.upload_path
-        this.models.view_path = sf.data.return_data.view_path
+        this.models.card_view = sf.data.return_data.view_path
       }
+    },
+    openSexChoose () {
+      let that = this
+      this.$createPicker({
+        data: [[
+          {value: 1, text: '男'},
+          {value: 2, text: '女'}
+        ]],
+        onSelect (val) {
+          console.log(val)
+          that.models.sex = val[0]
+        }
+      }).show()
     }
   },
   mounted() {
@@ -351,20 +396,24 @@ export default {
     }
     & {
       .sex {
-        /deep/ .cube-radio-group {
-          .cube-radio {
-            flex: 0.2;
-            .cube-radio-wrap {
-              justify-content: flex-start;
-            }
-          }
-          .cube-radio-ui {
-            display: none;
-          }
-          .cube-radio_selected {
-            color: $primary
-          }
+        .sexContent {
+          flex: 1;
+          color: $primary;
         }
+        // /deep/ .cube-radio-group {
+        //   .cube-radio {
+        //     flex: 0.2;
+        //     .cube-radio-wrap {
+        //       justify-content: flex-start;
+        //     }
+        //   }
+        //   .cube-radio-ui {
+        //     display: none;
+        //   }
+        //   .cube-radio_selected {
+        //     color: $primary
+        //   }
+        // }
       }
       .span-active {
         color: $primary;

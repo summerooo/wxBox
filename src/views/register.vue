@@ -78,9 +78,9 @@ export default {
         time: 0
       })
       toast.show()
-      let ur = await userRegister(this.registerData)
+      let ur = await userRegister(Object.assign({}, this.registerData, {password: this.$md5(this.registerData.password)}))
       if (ur.data.return_code === 200) {
-        this.$router.push({ name: 'info'})
+        this.$router.push({ name: 'login'})
       }
       toast.hide()
       this.$createToast({

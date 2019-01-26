@@ -50,8 +50,8 @@
           没有搜索结果
           <span>换个关键词试试吧</span>
         </div>
-        <sx-search-panel @panelIcon="panelIcon" @panelCell="panelCell" v-if="[4].includes(searching)"/>
-        <sx-search-list @listRow="listRow" v-if="[5].includes(searching)"/>
+        <sx-search-panel @panelIcon="panelIcon" @getPanelCell="getPanelCell" v-if="[4].includes(searching)"/>
+        <sx-search-list @getListRow="getListRow" v-if="[5].includes(searching)"/>
       </cube-scroll-nav>
       <sx-popup ref="popup">
         <div slot="left" class="popupLeft">
@@ -365,8 +365,8 @@ export default {
       this.$refs.scroll.refresh()
     },
     panelIcon () {},
-    panelCell () {},
-    listRow () {}
+    getPanelCell () {},
+    getListRow () {}
   },
   mounted() {}
 }

@@ -81,7 +81,7 @@ export default {
   }
   .acitveCotnent {
     color: $drakblack !important;
-    border-left: $primary 3px solid;
+    border-left: $primary 6px solid;
     background: white;
     font-weight: bold !important;
   }

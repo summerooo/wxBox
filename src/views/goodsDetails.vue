@@ -97,8 +97,8 @@ import sxDropBall from '../components/dropBall'
 import sxMenu from '../components/goods/menu'
 import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
-import sxSearchPanel from '../components/searchPanel'
-import sxSearchList from '../components/searchList'
+import sxSearchPanel from '../components/goods/searchPanel'
+import sxSearchList from '../components/goods/searchList'
 export default {
   components: {
     sxDropBall,

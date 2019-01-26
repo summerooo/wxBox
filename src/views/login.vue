@@ -44,7 +44,7 @@ export default {
         time: 0
       })
       toast.show()
-      let ul = await userLogin({telephone: this.telephone, password: this.password})
+      let ul = await userLogin({telephone: this.telephone, password: this.$md5(this.password)})
       toast.hide()
       if (ul.data.return_code === 200) {
         this.setUser(ul.data.return_data)

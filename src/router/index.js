@@ -101,24 +101,24 @@ export default new Router({
       component: () => import('../views/info'),
       children: [
         {
-          path: '/info/chooseSchool0/:id',
+          path: '/chooseSchool0/:id?',
           props: true,
           name: 'chooseSchool0',
           component: () => import('../views/info/chooseSchool'),
           children: [
-            { path: '/info/chooseSchool1', name: 'chooseSchool1' },
-            { path: '/info/chooseSchool2', name: 'chooseSchool2' },
-            { path: '/info/chooseSchool3', name: 'chooseSchool3' }
+            { path: '/chooseSchool1', name: 'chooseSchool1' },
+            { path: '/chooseSchool2', name: 'chooseSchool2' },
+            { path: '/chooseSchool3', name: 'chooseSchool3' }
           ]
         },
         {
-          path: '/info/chooseDormitory',
+          path: '/chooseDormitory',
           name: 'chooseDormitory',
-          redirect: '/info/chooseDormitory0',
+          redirect: '/chooseDormitory0',
           component: () => import('../views/info/chooseDormitory'),
           children: [
-            { path: '/info/chooseDormitory0', name: 'chooseDormitory0' },
-            { path: '/info/chooseDormitory1', name: 'chooseDormitory1' }
+            { path: '/chooseDormitory0', name: 'chooseDormitory0' },
+            { path: '/chooseDormitory1', name: 'chooseDormitory1' }
           ]
         }
       ]

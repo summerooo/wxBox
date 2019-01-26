@@ -78,7 +78,7 @@ export default {
         time: 0
       })
       toast.show()
-      let sp = await sevaPassword(this.registerData)
+      let sp = await sevaPassword(Object.assign({}, this.registerData, {password: this.$md5(this.registerData.password)}))
       toast.hide()
       this.$createToast({
         txt: sp.data.return_msg,

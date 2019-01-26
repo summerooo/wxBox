@@ -6,7 +6,7 @@
         <i :class="row.icon" @click="panelIcon(row, index)"></i>
       </div>
       <ul class="rowChildren">
-        <li v-for="(cell, i) in row.children" :key="i" @click="panelCell(row, index, cell, i)">
+        <li v-for="(cell, i) in row.children" :key="i" @click="getPanelCell(row, index, cell, i)">
           {{cell.label}}
         </li>
       </ul>
@@ -103,9 +103,8 @@ export default {
     return {}
   },
   methods: {
-    panelCell (row, rowIndex, cell, cellIndex) {
-      console.log(row, rowIndex, cell, cellIndex)
-      this.$emit('panelCell', { row: row, rowIndex: rowIndex, cell: cell, cellIndex: cellIndex })
+    getPanelCell (row, rowIndex, cell, cellIndex) {
+      this.$emit('getPanelCell', { row: row, rowIndex: rowIndex, cell: cell, cellIndex: cellIndex })
     },
     panelIcon (row, index) {
       console.log(row, index)
@@ -116,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variable.scss';
+@import '../../assets/css/variable.scss';
 
 .all {
   width: 100%;
@@ -145,7 +144,7 @@ export default {
       margin: 0;
       padding: 0;
       li {
-        font-size: $mini;
+        font-size: $small;
         background: $nav;
         padding: $mini;
         margin-right: $small;

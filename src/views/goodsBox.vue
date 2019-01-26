@@ -11,7 +11,7 @@
           <transition name="back">
             <i class="cubeic-back backIcon" @click="back" v-if="![0].includes(searching)"></i>
           </transition>
-          <cube-input type.native="search" ref="searchInput" v-model="searchData" @focus="focusSearch" @blur="blurSearch" @keyup.enter.native="searchingSubmit" placeholder="请输入商品名称">
+          <cube-input type="search" ref="searchInput" v-model="searchData" @focus="focusSearch" @blur="blurSearch" @keyup.enter.native="searchingSubmit" placeholder="请输入商品名称">
             <i class="cubeic-search" slot="prepend"></i>
           </cube-input>
         </div>
@@ -48,18 +48,21 @@
                 </div>
               </li>
             </ul>
-            <div v-else style="font-size: 12px;margin: 50px 0;text-align: center;">
-              {{defaultActiveItem.label}} 已售空
+            <div v-else class="noGoodsData">
+              <img src="../assets/images/zwsj.png" alt="">
+              暂无商品
+              <!-- {{defaultActiveItem.label}} 已售空 -->
             </div>
           </cube-scroll>
           <div >
           </div>
           <div v-if="[1].includes(searching)" class="noSearch">
+            <img src="../assets/images/kongbaiye.png" alt="">
             没有搜索结果
-            <span>换个关键词试试吧</span>
+            <!-- <span>换个关键词试试吧</span> -->
           </div>
-          <sx-search-panel @panelIcon="panelIcon" @panelCell="panelCell" v-if="[4].includes(searching)"/>
-          <sx-search-list @listRow="listRow" v-if="[5].includes(searching)"/>
+          <sx-search-panel :panelData="panelData" @panelIcon="panelIcon" @getPanelCell="getPanelCell" v-if="[4].includes(searching)"/>
+          <sx-search-list :listData="listData" @getListRow="getListRow" v-if="[5].includes(searching)"/>
         </div>
       </div>
       <sx-popup ref="popup" :bar="Boolean(boxFee.max_fee)">
@@ -100,7 +103,7 @@
         </div>
       </div>
       <div class="rightBtn">
-        <cube-button :primary="true" :disabled="cartMoney <= boxFee.min_fee" @click="submit">申请补货</cube-button>
+        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee : true" @click="submit">申请补货</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -112,9 +115,9 @@ import sxDropBall from '../components/dropBall'
 import sxMenu from '../components/goods/menu'
 import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
-import sxSearchPanel from '../components/searchPanel'
-import sxSearchList from '../components/searchList'
-import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive } from '../api/goodsBox'
+import sxSearchPanel from '../components/goods/searchPanel'
+import sxSearchList from '../components/goods/searchList'
+import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -164,7 +167,10 @@ export default {
         min_fee: '',
         // 盒子最大补货金额
         max_fee: ''
-      }
+      },
+      panelData: null,
+      listData: null,
+      searchFalse: false
     }
   },
   computed: {
@@ -190,7 +196,7 @@ export default {
     searchData () {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.searchingSubmit()
+        this.changeSearch()
       }, 200)
     },
     '$route' () {
@@ -198,9 +204,12 @@ export default {
     }
   },
   created() {
+    // http://localhost:8088/goodsBox?box_no=FF541857
+    console.log(this.$route.query)
+    this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.getBeforeInfo()
     this.routerInit()
-    // this.init()
+    // this.goodsShow()
     this.firstShow()
   },
   methods: {
@@ -212,36 +221,54 @@ export default {
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
-      this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     },
-    init () {
+    async goodsShow () {
+      // 基于左侧商品 right
+      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: this.defaultActive, page: this.page, order_origin: 4}))
+      this.goodsData = orhg.data.return_data
       for (let i of this.goodsData) {
         this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
       }
-      console.log('3', this.chooseCommodity, this.goodsData)
+      return orhg.data.return_data
+    },
+    async searchShow (val) {
+      // 基于左侧商品 right
+      console.log(val, 'valvalvalvalvalvalval')
+      let goods = await this.searchingSubmit(false, val)
+      this.goodsData = goods
+      for (let i of this.goodsData) {
+        this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
+      }
+      if (goods.length) this.$router.push({name: 'goodsBox3'})
+      else this.$router.push({name: 'goodsBox1'})
     },
     async firstShow () {
-      let orl = await orderReplenishment(Object.assign({}, this.user, this.beforeInfo))
+      // left
+      let orl = await orderReplenishment(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4}))
       // this.menusData = orl.data.returun_data
       if (!orl) return
       let list = orl.data.return_data
-      console.log(orl.data)
       for (let i in list) {
         this.$set(this.menusData, i, Object.assign({}, list[i], {label: list[i].cate_name, value: list[i].cate_id}))
       }
+      this.menusData.unshift({label: '全' + '\xa0\xa0\xa0\xa0' +'部', value: 0, cate_id: 0, cate_name: '全' + '\xa0\xa0\xa0\xa0' +'部'})
       if (!this.menusData.length) return
       this.defaultActive = this.menusData[0].value
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: this.defaultActive, page: this.page}))
-      this.goodsData = orhg.data.return_data
-      this.init()
-      let gbf = await getBoxHandlingFee(this.user)
+      this.goodsShow()
+      // top 栏
+      let gbf = {gbf: await getBoxHandlingFee(this.user)}.gbf
       console.log(gbf, 'ccccc')
       this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
     },
     async showGoods () {
+      // let goods = await this.goodsShow()
       let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, cate_id: this.defaultActive, page: this.page}))
-      if (!orhg.data.return_data.length) return this.$createToast({txt: '没了'})
+      // console.log(!orhg.data.return_data.length)
+      if (!orhg.data.return_data.length) return this.$createToast({txt: '该分类无更多商品', type: 'txt'}).show()
       this.goodsData = await this.goodsData.concat(orhg.data.return_data)
+      for (let i of this.goodsData) {
+        this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
+      }
     },
     scrollHandler({ y }) {
       this.scrollY = -y
@@ -253,12 +280,14 @@ export default {
       toast.show()
       this.page = 1
       this.defaultActive = item.value
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: item.value}, {order_origin: 4, page: 2}))
-      this.goodsData = orhg.data.return_data
-      this.init()
+      // let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: item.value}, {order_origin: 4, page: this.page}))
+      // this.goodsData = orhg.data.return_data
+      await this.goodsShow()
       console.log(item, index)
       toast.hide()
       this.defaultActiveItem = item
+      this.$refs.scroll.scrollTo(0, 0)
+      this.$refs.scroll.refresh()
     },
     changeHandler(label) {
       console.log('changed to:', label)
@@ -329,24 +358,73 @@ export default {
       }
       this.$refs.popup.closePopup()
     },
-    focusSearch () {
-      this.$router.push({name: 'goodsBox1'})
-      // this.$router.push({name: 'search'})
+    async focusSearch () {
+      if (this.searchData) return
+      if (this.panelData) return this.$router.push({name: 'goodsBox4'})
+      this.panelData = []
+      this.$router.push({name: 'goodsBox4'})
+      let osgl = await orderSearchGoodsLog(this.user)
+      let osglData = osgl.data.return_data
+      console.log(osglData, 'asdas')
+      if (osglData.length) {
+        this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
+        this.$set(this.panelData[0], 'children', [])
+        for (let i of osglData) {
+          this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
+        }
+      }
+      let osgh = await orderSearchGoodsHot(this.user)
+      let osghData = osgh.data.return_data
+      if (osghData.length) {
+        this.$set(this.panelData, 1, {label: '热门搜索'})
+        this.$set(this.panelData[1], 'children', [])
+        for (let z of osgl.data.return_data) {
+          this.panelData[1].children.push({label: z.goods_name, value: z.goods_name})
+        }
+      }
+    },
+    async changeSearch () {
+      if (this.searchFalse) return
+      console.log(222222)
+      if (!this.searchData.length) return this.$router.replace({name: 'goodsBox4'})
+      console.log(this.searchData)
+      let list = await this.searchingSubmit(false)
+      if (!list.length) return this.$router.replace({name: 'goodsBox1'})
+      this.listData = []
+      for (let i in list) {
+        this.$set(this.listData, i, {label: list[i].goods_name})
+      }
+      this.$router.replace({name: 'goodsBox5'})
     },
     blurSearch () {
-      // this.searching = 1
-      // this.$router.push({name: 'details'})
-      // this.searching = 1
-      // this.$refs.scroll.refresh()
+      // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
+      switch (this.searching) {
+        case 1:
+        case 2:
+        case 4:
+        case 5:
+          if (this.searchFalse) return
+          this.$refs.searchInput.$refs.input.focus()
+          break
+      }
     },
-    searchingSubmit () {
+    async searchingSubmit (tf = true, goodsName) {
+      if (tf) return this.searchShow(this.searchData)
+      let osg = await orderSearchGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, goods_name: goodsName ? goodsName : this.searchData}))
       console.log(this.searchData)
+      console.log(osg)
+      console.log(tf)
+      return osg.data.return_data
     },
-    back () {
-      this.$router.push({name: 'goodsBox'})
+    async back () {
+      this.searchFalse = true
+      this.searchData = ''
+      await this.$refs.searchInput.$refs.input.blur()
+      await this.goodsShow()
+      await this.$router.replace({name: 'goodsBox'})
+      this.searchFalse = false
+      this.$refs.scroll.refresh()
       // this.$router.go(-1)
-      // this.$refs.searchInput.$refs.input.blur()
-      // this.$refs.scroll.refresh()
     },
     async submit () {
       let goods_info = []
@@ -358,10 +436,22 @@ export default {
       console.log(a)
     },
     panelIcon () {},
-    panelCell () {},
-    listRow () {}
+    async getPanelCell (cellData) {
+      this.searchFalse = true
+      this.searchData = cellData.cell.label
+      await this.searchShow(cellData.cell.data)
+      this.searchFalse = false
+    },
+    async getListRow (rowData) {
+      this.searchFalse = true
+      this.searchData = rowData.row.label
+      await this.searchShow(rowData.row.label)
+      this.searchFalse = false
+      // this.goodsShow()
+    }
   },
   mounted() {
+    document.title = '认领补货'
     // this.$refs.searchContentLeft.style.height = `${this.$refs.searchContent.offsetHeight + this.$refs.searchNav.offsetHeight}px`
   }
 }
@@ -430,14 +520,18 @@ export default {
     }
     .noSearch {
       flex: 1;
-      height: 160px;
+      height: 260px;
       flex-direction: column;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: $medium;
       color: $lightblack;
-      line-height: $large;
+      // line-height: $large;
+      img {
+        width: 30%;
+        margin-bottom: $default;
+      }
       span {
         color: $gray;
         font-size: $small
@@ -468,7 +562,7 @@ export default {
       display: flex;
       .left {
         height: 100%;
-        width: 22vw;
+        width: 24vw;
         background: $nav;
       }
       .right {
@@ -512,6 +606,18 @@ export default {
                 }
               }
             }
+          }
+        }
+        .noGoodsData {
+          font-size: $medium;
+          color: $lightblack;
+          margin: 76px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          img {
+            width: 30%;
+            margin-bottom: $large;
           }
         }
       }
