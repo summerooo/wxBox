@@ -432,8 +432,9 @@ export default {
         goods_info.push(this.cart[i])
       }
       console.log(goods_info)
-      let a = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
-      console.log(a)
+      let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
+      console.log(br)
+      this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
     panelIcon () {},
     async getPanelCell (cellData) {

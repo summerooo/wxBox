@@ -47,7 +47,8 @@ export default {
       let ul = await userLogin({telephone: this.telephone, password: this.$md5(this.password)})
       toast.hide()
       if (ul.data.return_code === 200) {
-        this.setUser(ul.data.return_data)
+        let o = ul.data.return_data
+        this.setUser({box_id: o.box_id, user_id: o.user_id, login_token: o.login_token, user_name: o.user_name})
         this.$router.replace('info')
       } else return this.$createToast({ txt: ul.data.return_msg, type: 'txt' }).show()
       // let that = this
