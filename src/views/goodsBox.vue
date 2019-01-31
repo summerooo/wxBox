@@ -256,7 +256,7 @@ export default {
       this.defaultActive = this.menusData[0].value
       this.goodsShow()
       // top 栏
-      let gbf = {gbf: await getBoxHandlingFee(this.user)}.gbf
+      let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user, this.beforeInfo))}.gbf
       console.log(gbf, 'ccccc')
       this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
     },

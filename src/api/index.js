@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '../router/index'
-
+import Message from '../components/message'
 // import Qs from 'qs'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.timeout = 100000
@@ -17,7 +17,6 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
-    console.log(this)
     // 返回码200请求成功 201签名错误 202签名不存在 400 接口访问错误
     let res = null
     if (response.data) {
@@ -31,10 +30,16 @@ axios.interceptors.response.use(
         case 203:
           res = response
           router.replace({name: 'login'})
+          Message({
+            message: response.data.return_msg
+          })
           // console.log('200')
           break
         default:
           res = response
+          // Message({
+          //   message: response.data.return_msg
+          // })
           console.log('201签名错误 202签名不存在 400 接口访问错误')
           break
       }

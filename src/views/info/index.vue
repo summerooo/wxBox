@@ -133,6 +133,27 @@ export default {
       'setUpload',
       'setBeforeInfo'
     ]),
+    closeWindow () {
+      // eslint-disable-next-line
+      if(typeof(WeixinJSBridge) != 'undefined'){
+      // eslint-disable-next-line
+        WeixinJSBridge.call('closeWindow')
+      } else {
+        if (navigator.userAgent.indexOf('MSIE') > 0) {
+          if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
+            window.opener = null; window.close()
+          } else {
+            window.open('', '_top'); window.top.close()
+          }  
+        } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
+          window.location.href = 'about:blank '
+        } else {  
+          window.opener = null
+          window.open('', '_self', '')
+          window.close()
+        }
+      }
+    },
     async firstShow () {
       let pc = await receiveInfo(this.user)
       console.log(pc)
@@ -140,25 +161,7 @@ export default {
         type: 'alert',
         content: pc.data.return_msg,
         onConfirm () {
-          // eslint-disable-next-line
-          if(typeof(WeixinJSBridge) != 'undefined'){
-          // eslint-disable-next-line
-            WeixinJSBridge.call('closeWindow')
-          } else {
-            if (navigator.userAgent.indexOf('MSIE') > 0) {
-              if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
-                window.opener = null; window.close()
-              } else {
-                window.open('', '_top'); window.top.close()
-              }  
-            } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
-              window.location.href = 'about:blank '
-            } else {  
-              window.opener = null
-              window.open('', '_self', '')
-              window.close()
-            }
-          }
+          this.closeWindow()
         }
       }).show()
       this.models = await Object.assign(this.models, pc.data.return_data)

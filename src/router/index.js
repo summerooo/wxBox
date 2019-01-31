@@ -152,6 +152,7 @@ export default new Router({
       path: '/scrollTest',
       name: 'scrollTest',
       component: () => import('../components/scrollTest')
-    }
+    },
+    { path:'*', redirect: '/' }
   ]
 })
