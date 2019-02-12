@@ -86,7 +86,7 @@
         </transition-group>
       </sx-popup>
     </div>
-    <div class="bottom">
+    <div class="bottom" ref="bottom">
       <!-- <div class="box"  @click="closePopup">
         <div class="shoppingBox" @click.stop="openTheshoppingBox">
           <img :src="shoppingBoxImage" alt="">
@@ -103,7 +103,7 @@
         </div>
       </div> -->
       <div class="box"  @click="closePopup">
-        <div class="shoppingCart" @click.stop="openTheShoppingCart" :style="{transition: 'all .3s ease', backgroundColor: !cartLength ? '#cccccc' : ''}">
+        <div class="shoppingCart" @click.stop="openTheshoppingBox" :style="{transition: 'all .3s ease', backgroundColor: !cartLength ? '#cccccc' : ''}">
           <i class="box-gouwuche"></i>
           <span v-show="cartLength">{{cartLength}}</span>
         </div>
@@ -130,7 +130,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/buyGoods'
+import { WeixinOrderScan, WeixinOrderScanList, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/buyGoods'
 import { mapState } from 'vuex'
 
 export default {
@@ -183,7 +183,8 @@ export default {
       },
       panelData: null,
       listData: null,
-      searchFalse: false
+      searchFalse: false,
+      box_no: 'C007FE9B'
     }
   },
   computed: {
@@ -218,6 +219,7 @@ export default {
   created() {
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
+    if ('box_no' in this.$route.query) this.box_no = this.$route.query['box_no']
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit()
     // this.goodsShow()
@@ -232,7 +234,7 @@ export default {
     },
     async goodsShow () {
       // 基于左侧商品 right
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {cate_id: this.defaultActive, page: this.page, order_origin: 4}))
+      let orhg = await WeixinOrderScanList({cate_id: this.defaultActive, page: this.page, order_origin: 4, box_no: this.box_no})
       this.goodsData = orhg.data.return_data
       for (let i of this.goodsData) {
         this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
@@ -252,7 +254,7 @@ export default {
     },
     async firstShow () {
       // left
-      let orl = await orderReplenishment(Object.assign({}, this.user, {order_origin: 4}))
+      let orl = await WeixinOrderScan({box_no: this.box_no})
       // this.menusData = orl.data.returun_data
       if (!orl) return
       let list = orl.data.return_data
@@ -270,7 +272,7 @@ export default {
     },
     async showGoods () {
       // let goods = await this.goodsShow()
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {order_origin: 4, cate_id: this.defaultActive, page: this.page}))
+      let orhg = await WeixinOrderScanList({cate_id: this.defaultActive, page: this.page, order_origin: 4, box_no: this.box_no})
       // console.log(!orhg.data.return_data.length)
       if (!orhg.data.return_data.length) return this.$createToast({txt: '该分类无更多商品', type: 'txt'}).show()
       this.goodsData = await this.goodsData.concat(orhg.data.return_data)
@@ -288,7 +290,7 @@ export default {
       toast.show()
       this.page = 1
       this.defaultActive = item.value
-      // let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {cate_id: item.value}, {order_origin: 4, page: this.page}))
+      // let orhg = await WeixinOrderScanList(Object.assign({}, this.user, {cate_id: item.value}, {order_origin: 4, page: this.page}))
       // this.goodsData = orhg.data.return_data
       await this.goodsShow()
       console.log(item, index)
@@ -364,6 +366,7 @@ export default {
       for (let z in this.chooseCommodity) {
         this.$set(this.chooseCommodity[z], 'goods_number', 0)
       }
+      this.shoppingBoxImage = this.shoppingBoxImageStatus.none
       this.$refs.popup.closePopup()
     },
     async focusSearch () {
@@ -463,7 +466,7 @@ export default {
   },
   mounted() {
     document.title = '认领补货'
-    // this.$refs.searchContentLeft.style.height = `${this.$refs.searchContent.offsetHeight + this.$refs.searchNav.offsetHeight}px`
+    // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.bottom.offsetHeight}px)`
   }
 }
 </script>
@@ -479,7 +482,7 @@ export default {
   & .content {
     overflow: hidden;
     flex: 1;
-    overflow: auto;
+    // overflow: auto;
     // display: flex;
     position: relative;
     box-sizing: border-box;
@@ -569,16 +572,21 @@ export default {
       }
     }
     .searchContent {
+      // height: calc(100% - 103.1px);
       height: 100%;
       display: flex;
       .left {
         height: 100%;
         width: 24vw;
         background: $nav;
+        padding-bottom: 100px;
       }
       .right {
         flex: 1;
         height: 100%;
+        /deep/ .cube-scroll-content {
+          padding-bottom: 100px;
+        }
         .goodsRow {
           display: flex;
           justify-content: space-around;

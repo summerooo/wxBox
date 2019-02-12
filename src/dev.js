@@ -1,4 +1,5 @@
-let host = 'http://api.heliyou.com/userapi/v1/'
+// let host = 'http://api.heliyou.com/userapi/v1/'
+let host = 'http://192.168.0.103:85/userapi/v1/'
 
 let nginx = false
 nginx = true

@@ -2,13 +2,13 @@ import axios from '../index'
 const { api } = require('../../dev')
 
 // 分类列表
-export const orderReplenishment = data => {
-  return axios.post(`${api}/orderReplenishment`, data)
+export const WeixinOrderScan = data => {
+  return axios.post(`${api}/WeixinOrderScan`, data)
 }
 
 // 分类商品
-export const orderReplenishmentGoods = data => {
-  return axios.post(`${api}/orderReplenishmentGoods`, data)
+export const WeixinOrderScanList = data => {
+  return axios.post(`${api}/WeixinOrderScanList`, data)
 }
 
 // getBoxHandlingFee  盒子补货页tips金额

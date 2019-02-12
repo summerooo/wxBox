@@ -4,9 +4,9 @@
       <div v-show="isVisible" @click="closePopup" :style="{background: modal ? 'rgba(0, 0, 0, .6)' : 'transparent'}" class="popupModal"></div>
     </transition>
     <div class="container" ref="container">
-      <div class="yellowBar" ref="yellowBar" v-show="bar">
+      <div class="yellowBar" ref="yellowBar" v-show="barbar">
         <slot name="bar">
-          yellow bar
+          <!-- yellow bar -->
         </slot>
       </div>
       <!-- <transition name="slide-fade"  v-show="popupTf"> -->
@@ -59,7 +59,15 @@ export default {
       touchstartData: {},
       touchmoveData: {},
       touchendData: {},
-      thatOffsetTop: null
+      thatOffsetTop: null,
+      barbar: false
+    }
+  },
+  watch: {
+    bar (val) {
+      this.barbar = val
+      this.openPopup()
+      this.closePopup()
     }
   },
   mounted () {
@@ -73,7 +81,7 @@ export default {
       this.$refs.container.style.transition = `none`
     },
     openPopup () {
-      this.popupTf = true
+      // this.popupTf = true
       this.isVisible = true
       console.log('111')
       this.$nextTick(() => {
@@ -85,15 +93,17 @@ export default {
       })
     },
     closePopup () {
-      this.$nextTick(() => {
-        this.$refs.container.style.transition = `all .3s ease`
-        this.$refs.container.style.height = this.$refs.container.offsetHeight + 'px'
-        this.$refs.container.style.transform = `translateY(${this.$refs.inside.offsetHeight}px)`
-        this.timer = setTimeout(() => {
-          this.$refs.popup.style.height = `${this.$refs.yellowBar.offsetHeight}px`
-        }, 300)
-        this.isVisible = false
-      })
+      if (this.isVisible) {
+        this.$nextTick(() => {
+          this.$refs.container.style.transition = `all .3s ease`
+          this.$refs.container.style.height = this.$refs.container.offsetHeight + 'px'
+          this.$refs.container.style.transform = `translateY(${this.$refs.inside.offsetHeight}px)`
+          this.timer = setTimeout(() => {
+            this.$refs.popup.style.height = `${this.$refs.yellowBar.offsetHeight}px`
+          }, 300)
+          this.isVisible = false
+        })
+      }
     },
     afterLeave() {
       this.popupTf = false

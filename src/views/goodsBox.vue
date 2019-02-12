@@ -1,11 +1,11 @@
 <template>
   <div class="all">
     <div class="content">
-      <div class="container">
+      <div class="container" >
         <!-- v-if="!boxFee.max_fee" -->
-        <div class="notice" v-if="boxFee.max_fee">
+        <div class="notice" ref="notice" v-if="boxFee.max_fee">
           <i class="box-laba"></i>
-          您的盒子目前有{{boxFee.box_fee}}元商品，还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}商品
+          您的盒子目前有{{cartMoney}}元商品，还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}元商品
         </div>
         <div class="searchNav" ref="searchNav">
           <transition name="back">
@@ -65,7 +65,8 @@
           <sx-search-list :listData="listData" @getListRow="getListRow" v-if="[5].includes(searching)"/>
         </div>
       </div>
-      <sx-popup ref="popup" :bar="Boolean(boxFee.max_fee)">
+      <!-- :bar="Boolean(Number(boxFee.max_fee))" -->
+      <sx-popup ref="popup" :bar="Boolean(Number(boxFee.max_fee))">
         <div slot="bar">
           还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}元，盒子就满了
         </div>
@@ -86,7 +87,7 @@
         </transition-group>
       </sx-popup>
     </div>
-    <div class="bottom">
+    <div class="bottom" ref="bottom">
       <div class="box"  @click="closePopup">
         <div class="shoppingBox" @click.stop="openTheshoppingBox">
           <img :src="shoppingBoxImage" alt="">
@@ -103,7 +104,7 @@
         </div>
       </div>
       <div class="rightBtn">
-        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee : true" @click="submit">申请补货</cube-button>
+        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true" @click="submit">申请补货</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -170,7 +171,8 @@ export default {
       },
       panelData: null,
       listData: null,
-      searchFalse: false
+      searchFalse: false,
+      barbar: false
     }
   },
   computed: {
@@ -259,6 +261,7 @@ export default {
       let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user, this.beforeInfo))}.gbf
       console.log(gbf, 'ccccc')
       if (gbf) this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
+      this.barbar = true
     },
     async showGoods () {
       // let goods = await this.goodsShow()
@@ -326,20 +329,14 @@ export default {
     },
     isMax() {
       const toast = this.$createToast({
-        txt: '没了没了',
+        txt: '库存不足',
         type: 'txt'
       })
       toast.show()
     },
     clickAction(e, item) {
       // if (tf) {
-      console.log(item, 'item')
-      if (this.boxFee.max_fee) {
-        if ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney) <= 0) {
-          this.shoppingBoxImage = this.shoppingBoxImageStatus.full
-          return this.$createToast({txt: '盒子满了'})
-        }
-      }
+      console.log(Number(item.goods_price), (this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney), 'item')
       this.$set(this.cart, item.goods_id, this.chooseCommodity[item.goods_id])
         // this.$refs.drop.drop(e)
       // }
@@ -348,6 +345,15 @@ export default {
         this.shoppingBoxImage = this.shoppingBoxImageStatus.none
         this.$refs.popup.closePopup()
       } else this.shoppingBoxImage = this.shoppingBoxImageStatus.open
+      if (this.boxFee.max_fee) {
+        // if (Number(item.goods_price) > (this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney)) {
+        //   this.$createToast({txt: '剩余金额不足', type: 'txt'}).show()
+        // }
+        if ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney) <= 0) {
+          this.shoppingBoxImage = this.shoppingBoxImageStatus.full
+          this.$createToast({txt: '盒子满了', type: 'txt'}).show()
+        }
+      }
     },
     clearCart () {
       for (let i in this.cart) {
@@ -356,6 +362,7 @@ export default {
       for (let z in this.chooseCommodity) {
         this.$set(this.chooseCommodity[z], 'goods_number', 0)
       }
+      this.shoppingBoxImage = this.shoppingBoxImageStatus.none
       this.$refs.popup.closePopup()
     },
     async focusSearch () {
@@ -363,9 +370,9 @@ export default {
       if (this.panelData) return this.$router.push({name: 'goodsBox4'})
       this.panelData = []
       this.$router.push({name: 'goodsBox4'})
+      console.log(111)
       let osgl = await orderSearchGoodsLog(this.user)
       let osglData = osgl.data.return_data
-      console.log(osglData, 'asdas')
       if (osglData.length) {
         this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
         this.$set(this.panelData[0], 'children', [])
@@ -385,7 +392,6 @@ export default {
     },
     async changeSearch () {
       if (this.searchFalse) return
-      console.log(222222)
       if (!this.searchData.length) return this.$router.replace({name: 'goodsBox4'})
       console.log(this.searchData)
       let list = await this.searchingSubmit(false)
@@ -455,7 +461,7 @@ export default {
   },
   mounted() {
     document.title = '认领补货'
-    // this.$refs.searchContentLeft.style.height = `${this.$refs.searchContent.offsetHeight + this.$refs.searchNav.offsetHeight}px`
+    // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.searchNav.offsetHeight + this.$refs.bottom.offsetHeight - 12}px)`
   }
 }
 </script>
@@ -471,7 +477,7 @@ export default {
   & .content {
     overflow: hidden;
     flex: 1;
-    overflow: auto;
+    // overflow: auto;
     // display: flex;
     position: relative;
     box-sizing: border-box;
@@ -561,16 +567,21 @@ export default {
       }
     }
     .searchContent {
+      // height: calc(100% - 103.1px);
       height: 100%;
       display: flex;
       .left {
         height: 100%;
         width: 24vw;
         background: $nav;
+        padding-bottom: 100px;
       }
       .right {
         flex: 1;
         height: 100%;
+        /deep/ .cube-scroll-content {
+          padding-bottom: 100px;
+        }
         .goodsRow {
           display: flex;
           justify-content: space-around;
