@@ -87,7 +87,7 @@
       </sx-popup>
     </div>
     <div class="bottom">
-      <div class="box"  @click="closePopup">
+      <!-- <div class="box"  @click="closePopup">
         <div class="shoppingBox" @click.stop="openTheshoppingBox">
           <img :src="shoppingBoxImage" alt="">
           <transition name="fade">
@@ -101,9 +101,22 @@
             满 {{boxFee.min_fee}} 元起配送
           </div>
         </div>
+      </div> -->
+      <div class="box"  @click="closePopup">
+        <div class="shoppingCart" @click.stop="openTheShoppingCart" :style="{transition: 'all .3s ease', backgroundColor: !cartLength ? '#cccccc' : ''}">
+          <i class="box-gouwuche"></i>
+          <span v-show="cartLength">{{cartLength}}</span>
+        </div>
+        <div  class="info" v-if="!cartLength"><span>未选购商品</span></div>
+        <div class="info" v-else>
+          <p>￥{{cartMoney}}</p>
+          <div v-if="boxFee.min_fee">
+            满 {{boxFee.min_fee}} 元起配送
+          </div>
+        </div>
       </div>
       <div class="rightBtn">
-        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee : true" @click="submit">申请补货</cube-button>
+        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee : true" @click="submit">结算</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -117,8 +130,8 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
-import { mapState, mapMutations } from 'vuex'
+import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/buyGoods'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -175,8 +188,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'user',
-      'beforeInfo'
+      'user'
     ]),
     destination() {
       return { top: window.innerHeight - 40, left: 45 }
@@ -207,15 +219,11 @@ export default {
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
-    this.getBeforeInfo()
     this.routerInit()
     // this.goodsShow()
     this.firstShow()
   },
   methods: {
-    ...mapMutations([
-      'getBeforeInfo'
-    ]),
     routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
@@ -224,7 +232,7 @@ export default {
     },
     async goodsShow () {
       // 基于左侧商品 right
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: this.defaultActive, page: this.page, order_origin: 4}))
+      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {cate_id: this.defaultActive, page: this.page, order_origin: 4}))
       this.goodsData = orhg.data.return_data
       for (let i of this.goodsData) {
         this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
@@ -239,12 +247,12 @@ export default {
       for (let i of this.goodsData) {
         this.$set(this.chooseCommodity, i.goods_id, Object.assign({}, i, { goods_number: 0 }, this.chooseCommodity[i.goods_id]))
       }
-      if (goods.length) this.$router.push({name: 'goodsBox3'})
-      else this.$router.push({name: 'goodsBox1'})
+      if (goods.length) this.$router.push({name: 'buyGoods3'})
+      else this.$router.push({name: 'buyGoods1'})
     },
     async firstShow () {
       // left
-      let orl = await orderReplenishment(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4}))
+      let orl = await orderReplenishment(Object.assign({}, this.user, {order_origin: 4}))
       // this.menusData = orl.data.returun_data
       if (!orl) return
       let list = orl.data.return_data
@@ -256,13 +264,13 @@ export default {
       this.defaultActive = this.menusData[0].value
       this.goodsShow()
       // top 栏
-      let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user, this.beforeInfo))}.gbf
+      let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user))}.gbf
       console.log(gbf, 'ccccc')
       if (gbf) this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
     },
     async showGoods () {
       // let goods = await this.goodsShow()
-      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, cate_id: this.defaultActive, page: this.page}))
+      let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {order_origin: 4, cate_id: this.defaultActive, page: this.page}))
       // console.log(!orhg.data.return_data.length)
       if (!orhg.data.return_data.length) return this.$createToast({txt: '该分类无更多商品', type: 'txt'}).show()
       this.goodsData = await this.goodsData.concat(orhg.data.return_data)
@@ -280,7 +288,7 @@ export default {
       toast.show()
       this.page = 1
       this.defaultActive = item.value
-      // let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: item.value}, {order_origin: 4, page: this.page}))
+      // let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, {cate_id: item.value}, {order_origin: 4, page: this.page}))
       // this.goodsData = orhg.data.return_data
       await this.goodsShow()
       console.log(item, index)
@@ -360,9 +368,9 @@ export default {
     },
     async focusSearch () {
       if (this.searchData) return
-      if (this.panelData) return this.$router.push({name: 'goodsBox4'})
+      if (this.panelData) return this.$router.push({name: 'buyGoods4'})
       this.panelData = []
-      this.$router.push({name: 'goodsBox4'})
+      this.$router.push({name: 'buyGoods4'})
       let osgl = await orderSearchGoodsLog(this.user)
       let osglData = osgl.data.return_data
       console.log(osglData, 'asdas')
@@ -386,15 +394,15 @@ export default {
     async changeSearch () {
       if (this.searchFalse) return
       console.log(222222)
-      if (!this.searchData.length) return this.$router.replace({name: 'goodsBox4'})
+      if (!this.searchData.length) return this.$router.replace({name: 'buyGoods4'})
       console.log(this.searchData)
       let list = await this.searchingSubmit(false)
-      if (!list.length) return this.$router.replace({name: 'goodsBox1'})
+      if (!list.length) return this.$router.replace({name: 'buyGoods1'})
       this.listData = []
       for (let i in list) {
         this.$set(this.listData, i, {label: list[i].goods_name})
       }
-      this.$router.replace({name: 'goodsBox5'})
+      this.$router.replace({name: 'buyGoods5'})
     },
     blurSearch () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
@@ -410,7 +418,7 @@ export default {
     },
     async searchingSubmit (tf = true, goodsName) {
       if (tf) return this.searchShow(this.searchData)
-      let osg = await orderSearchGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, goods_name: goodsName ? goodsName : this.searchData}))
+      let osg = await orderSearchGoods(Object.assign({}, this.user, {order_origin: 4, goods_name: goodsName ? goodsName : this.searchData}))
       console.log(this.searchData)
       console.log(osg)
       console.log(tf)
@@ -421,7 +429,7 @@ export default {
       this.searchData = ''
       await this.$refs.searchInput.$refs.input.blur()
       await this.goodsShow()
-      await this.$router.replace({name: 'goodsBox'})
+      await this.$router.replace({name: 'buyGoods'})
       setTimeout(() => {
         this.searchFalse = false
       }, 300)
@@ -434,7 +442,7 @@ export default {
         goods_info.push(this.cart[i])
       }
       console.log(goods_info)
-      let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
+      let br = await boxReceive(Object.assign({}, this.user, { goods_info: goods_info, order_origin: 4 }))
       console.log(br)
       this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
@@ -637,23 +645,81 @@ export default {
     justify-content: space-between;
     background: $lightblack;
     .box {
+      // width: 100%;
+      // display: flex;
+      // align-items: center;
+      // .shoppingBox {
+      //   position: relative;
+      //   z-index: 111;
+      //   transition: all .3 ease;
+      //   margin-left: 13px;
+      //   margin-bottom: 24px;
+      //   width: 68px;
+      //   display: flex;
+      //   justify-content: center;
+      //   align-items: center;
+      //   font-size: 20px;
+      //   color: white;
+      //   img {
+      //     width: 100%;
+      //   }
+      //   span {
+      //     background: red;
+      //     padding: 1.2px;
+      //     padding-left: 6px;
+      //     padding-right: 6px;
+      //     font-size: 10px;
+      //     border-radius: 43%;
+      //     position: absolute;
+      //     top: -1px;
+      //     right: -5px;
+      //   }
+      // }
+      // .info {
+      //   flex: 1;
+      //   padding-left: 6px;
+      //   line-height: $default;
+      //   display: flex;
+      //   flex-direction: column;
+      //   justify-content: center;
+      //   box-sizing: border-box;
+      //   height: 60%;
+      //   color: $gray;
+      //   font-size: $small;
+      //   s {
+      //     font-size: $small;
+      //   }
+      //   p {
+      //     font-weight: bold;
+      //     font-size: $default;
+      //     color: white;
+      //   }
+      //   span {
+      //     color: $lightgray;
+      //   }
+      // }
+    }
+    .box {
       width: 100%;
       display: flex;
       align-items: center;
-      .shoppingBox {
+      .shoppingCart {
         position: relative;
         z-index: 111;
         transition: all .3 ease;
-        margin-left: 13px;
+        margin-left: 23px;
         margin-bottom: 24px;
-        width: 68px;
+        width: 55px;
+        height: 55px;
+        background-color: $primary;
+        border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
         font-size: 20px;
         color: white;
-        img {
-          width: 100%;
+        i {
+          font-size: 30px;
         }
         span {
           background: red;
@@ -663,8 +729,8 @@ export default {
           font-size: 10px;
           border-radius: 43%;
           position: absolute;
-          top: -1px;
-          right: -5px;
+          top: 5px;
+          right: -3px;
         }
       }
       .info {

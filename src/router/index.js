@@ -12,38 +12,6 @@ export default new Router({
       redirect: '/login'
     },
     {
-      path: '/goodsDetails',
-      name: 'goodsDetails',
-      component: () => import('../views/goodsDetails'),
-      children: [
-        // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)  searching
-        // {
-        //   path: '/goodsDetails0',
-        //   name: 'goodsDetails0'
-        // },
-        {
-          path: '/goodsDetails1',
-          name: 'goodsDetails1'
-        },
-        {
-          path: '/goodsDetails2',
-          name: 'goodsDetails2'
-        },
-        {
-          path: '/goodsDetails3',
-          name: 'goodsDetails3'
-        },
-        {
-          path: '/goodsDetails4',
-          name: 'goodsDetails4'
-        },
-        {
-          path: '/goodsDetails5',
-          name: 'goodsDetails5'
-        }
-      ]
-    },
-    {
       path: '/goodsBox',
       name: 'goodsBox',
       component: () => import('../views/goodsBox'),
@@ -75,6 +43,70 @@ export default new Router({
         }
       ]
     },
+    {
+      path: '/wxinbox/product_list.html',
+      name: 'buyGoods',
+      component: () => import('../views/buyGoods'),
+      children: [
+        // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)  searching
+        // {
+        //   path: '/goodsDetails0',
+        //   name: 'goodsDetails0'
+        // },
+        {
+          path: '/wxinbox/product_list.html1',
+          name: 'buyGoods1'
+        },
+        {
+          path: '/wxinbox/product_list.html2',
+          name: 'buyGoods2'
+        },
+        {
+          path: '/wxinbox/product_list.html3',
+          name: 'buyGoods3'
+        },
+        {
+          path: '/wxinbox/product_list.html4',
+          name: 'buyGoods4'
+        },
+        {
+          path: '/wxinbox/product_list.html5',
+          name: 'buyGoods5'
+        }
+      ]
+    },
+    // {
+    //   path: '/goodsDetails',
+    //   name: 'goodsDetails',
+    //   component: () => import('../views/goodsDetails'),
+    //   children: [
+    //     // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)  searching
+    //     // {
+    //     //   path: '/goodsDetails0',
+    //     //   name: 'goodsDetails0'
+    //     // },
+    //     {
+    //       path: '/goodsDetails1',
+    //       name: 'goodsDetails1'
+    //     },
+    //     {
+    //       path: '/goodsDetails2',
+    //       name: 'goodsDetails2'
+    //     },
+    //     {
+    //       path: '/goodsDetails3',
+    //       name: 'goodsDetails3'
+    //     },
+    //     {
+    //       path: '/goodsDetails4',
+    //       name: 'goodsDetails4'
+    //     },
+    //     {
+    //       path: '/goodsDetails5',
+    //       name: 'goodsDetails5'
+    //     }
+    //   ]
+    // },
     // {
     //   path: '/',
     //   name: 'details',
@@ -123,16 +155,16 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/test')
-    },
-    {
-      path: '/cc',
-      name: 'customGoods',
-      component: () => import('../views/customGoods')
-    },
+    // {
+    //   path: '/test',
+    //   name: 'test',
+    //   component: () => import('../views/test')
+    // },
+    // {
+    //   path: '/cc',
+    //   name: 'customGoods',
+    //   component: () => import('../views/customGoods')
+    // },
     {
       path: '/goods',
       name: 'goods',
@@ -149,10 +181,15 @@ export default new Router({
       component: () => import('../components/cloud')
     },
     {
-      path: '/scrollTest',
-      name: 'scrollTest',
-      component: () => import('../components/scrollTest')
+      path: '/sss',
+      name: 'sss',
+      component: () => import('../components/scroll.vue')
     },
+    // {
+    //   path: '/scrollTest',
+    //   name: 'scrollTest',
+    //   component: () => import('../components/scrollTest')
+    // },
     { path:'*', redirect: '/' }
   ]
 })
