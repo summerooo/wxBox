@@ -17,23 +17,27 @@ export default {
       startData: {},
       moveData: {},
       endData: {},
-      thatOffsetTop: null
+      thatOffsetTop: null,
+      isEnd: true,
+      topDistance: 33,
+      bottomDistance: 33
     }
   },
   methods: {
     init () {
-      this._click(this.$refs.content)
-      if (!sessionStorage.getItem('device')) {
-        for (let d of ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']) {
-          if (navigator.userAgent.includes(d)) {
-            sessionStorage.setItem('device', d)
-            break
-          }
-        }
-      }
-      let device = sessionStorage.getItem('device')
-      console.log(device)
-      if (device) return this._touch(this.$refs.content)
+      // this._click(this.$refs.content)
+      // if (!sessionStorage.getItem('device')) {
+      //   for (let d of ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']) {
+      //     if (navigator.userAgent.includes(d)) {
+      //       sessionStorage.setItem('device', d)
+      //       break
+      //     }
+      //   }
+      // }
+      // let device = sessionStorage.getItem('device')
+      // console.log(device)
+      // if (device) return this._touch(this.$refs.content)
+      this._touch(this.$refs.content)
       this._mouse(this.$refs.content)
     },
     _scroll(e) {
@@ -81,25 +85,45 @@ export default {
       this.addEvent(el, 'click', this._scroll)
     },
     _start (e) {
-      this.$set(this.startData, 'y', e.changedTouches[0].clientY - this.thatOffsetTop)
-      this.$set(this.startData, 'yy', e.changedTouches[0].clientY)
-      this.$set(this.startData, 't', e.timeStamp)
-      console.log(e.changedTouches[0].clientY, this.startData.y)
+      console.log(e)
+      if (e.type === 'mousedown') {
+        this.$set(this.startData, 'y', e.clientY - this.thatOffsetTop)
+        this.$set(this.startData, 't', e.timeStamp)
+      } else {
+        this.$set(this.startData, 'y', e.changedTouches[0].clientY - this.thatOffsetTop)
+        this.$set(this.startData, 'yy', e.changedTouches[0].clientY)
+        this.$set(this.startData, 't', e.timeStamp)
+      }
+      this.isEnd = false
     },
     _move (e) {
-       this.$set(this.moveData, 'y', e.changedTouches[0].clientY)
+      if (this.topDistance < this.moveData.y - this.startData.y) return
+      if (e.type === 'mousemove') {
+        this.$set(this.moveData, 'y', e.clientY)
+      } else {
+        this.$set(this.moveData, 'y', e.changedTouches[0].clientY)
+      }
       // this.$set(this.moveData, 't', e.timeStamp)
-      this.setPos(this.moveData.y - this.startData.y)
+      console.log(this.moveData.y - this.startData.y)
+      let distance = this.moveData.y - this.startData.y
+      // if (this.topDistance > distance) return
+      if (!this.isEnd) this.setPos(distance)
       return
     },
     _end (e) {
-      console.log(e.changedTouches[0].clientY, 'e.changedTouches[0].clientY')
-      this.$set(this.endData, 'y', e.changedTouches[0].clientY)
-      this.$set(this.endData, 't', e.timeStamp)
+      if (e.type === 'mouseup') {
+        this.$set(this.endData, 'y', e.clientY)
+        this.$set(this.endData, 't', e.timeStamp)
+      } else {
+        this.$set(this.endData, 'y', e.changedTouches[0].clientY)
+        this.$set(this.endData, 't', e.timeStamp)
+      }
+      this.isEnd = true
       this.thatOffsetTop = this.endData.y - this.startData.y
       let time = this.endData.t - this.startData.t
       if (time > 300) return
       let speed = (this.endData.y - this.startData.yy) / time * 15
+      console.log(speed)
       // let f = 0
       // console.log(this.startData.y, this.endData.y)
       // let inertia = () => {
