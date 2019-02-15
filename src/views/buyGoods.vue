@@ -196,10 +196,10 @@ export default {
     this.firstShow()
     let wxData = sessionStorage.getItem('wxData')
     if (!wxData) {
-      var host = location.hostname
-      var prot = location.protocol
-      var redirectUrl = encodeURIComponent(`${prot}//${host}/buyGoods?box_no=${this.box_no}`)
-      location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+      // var host = location.hostname
+      // var prot = location.protocol
+      // var redirectUrl = encodeURIComponent(`${prot}//${host}/buyGoods?box_no=${this.box_no}`)
+      // location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     } else {
       console.log(JSON.parse(wxData))
     }
@@ -408,7 +408,7 @@ export default {
     async submit () {
       let goods_info = []
       for (let i in this.cart) {
-        goods_info.push(this.cart[i])
+        goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number})
       }
       console.log(goods_info)
       let br = await prepayWeixinOrder({ goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })

@@ -128,6 +128,11 @@ export default new Router({
       component: () => import('../views/forget')
     },
     {
+      path: '/agreement',
+      name: 'agreement',
+      component: () => import('../views/agreement.vue')
+    },
+    {
       path: '/info',
       name: 'info',
       component: () => import('../views/info'),

@@ -13,6 +13,7 @@
     <cube-input v-model="registerData.password" class="code" type="password" placeholder="密码"></cube-input>
     <!-- <cube-input v-model="registerData.confirmpassword" class="code" type="password" placeholder="确认密码"></cube-input> -->
     <cube-button style="margin-top: 16px;" primary @click="sumbit">确认</cube-button>
+    <p class="agreement">获取验证码，表示已同意<span @click="viewAgreement">《注册协议》</span></p>
   </div>
 </template>
 <script>
@@ -91,6 +92,9 @@ export default {
     },
     back () {
       this.$router.replace({name: 'login'})
+    },
+    viewAgreement () {
+      this.$router.push({name: 'agreement'})
     }
   },
   mounted() {
@@ -147,6 +151,15 @@ export default {
       border-left:1px solid $lightgray;
       box-shadow: none;
       border-radius: 0;
+    }
+  }
+  .agreement {
+    font-size: $small;
+    color: $lightblack;
+    align-self: center;
+    padding-top: $mini;
+    span {
+      color: $primary;
     }
   }
   .cube-input {

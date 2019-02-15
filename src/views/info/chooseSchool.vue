@@ -19,8 +19,11 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { area, schoolList } from '@/api/info'
+import { authority } from '../../api/wx'
+import wx from 'weixin-js-sdk'
+
 export default {
   props: {
     value: {
@@ -39,7 +42,8 @@ export default {
       listModels: [],
       index: 0,
       acitveIndex: 0,
-      searchData: ''
+      searchData: '',
+      wxData: null
     }
   },
   watch: {
@@ -47,13 +51,43 @@ export default {
       this.routerInit()
     }
   },
+  computed: {
+    ...mapState([
+      'user'
+    ])
+  },
   created() {
     console.log(this.id)
+    console.log(wx)
+    // http://localhost:8088/buyGoods?box_no=FF541857
+    console.log(this.$route.query)
+    this.wxData = sessionStorage.getItem('wxData')
+    if (!this.wxData) {
+      var host = location.hostname
+      var prot = location.protocol
+      var redirectUrl = encodeURIComponent(`${prot}//${host}/chooseSchool`)
+      location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+    } else {
+      console.log(JSON.parse(this.wxData))
+      this.getLocation()
+    }
   },
   methods: {
     ...mapMutations([
       'setSchool'
     ]),
+    async getLocation () {
+      let a = await authority(Object.assign({}, { user_id: this.user.user_id }, this.wxData))
+      console.log(a)
+      // wx.config({
+      //   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      //   appId: res.data.config.appId, // 必填，公众号的唯一标识
+      //   timestamp:res.data.config.timestamp , // 必填，生成签名的时间戳
+      //   nonceStr: res.data.config.nonceStr, // 必填，生成签名的随机串
+      //   signature:res.data.config.signature ,// 必填，签名
+      //   jsApiList: res.data.config.jsApiList // 必填，需要使用的JS接口列表
+      // })
+    },
     routerInit () {
       // 默认 0， 省 1， 市 2， 区 3
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
