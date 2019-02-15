@@ -13,7 +13,7 @@ export default new Vuex.Store({
     school: '',
     dormitory: '',
     // 选商品前的数据
-    beforeInfo: {},
+    beforeInfo: null,
     box_no: ''
   },
   mutations: {

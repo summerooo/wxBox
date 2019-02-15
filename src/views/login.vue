@@ -23,6 +23,9 @@ export default {
       password: ''
     }
   },
+  created() {
+    sessionStorage.clear()
+  },
   computed: {
     ...mapState([
       'phone',

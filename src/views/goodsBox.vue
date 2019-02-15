@@ -438,7 +438,7 @@ export default {
     async submit () {
       let goods_info = []
       for (let i in this.cart) {
-        goods_info.push(this.cart[i])
+        goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number})
       }
       let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
       this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()

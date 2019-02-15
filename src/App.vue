@@ -7,7 +7,7 @@
 </template>
 <script>
 import { mapMutations } from 'vuex'
-import wx from 'weixin-js-sdk'
+// import wx from 'weixin-js-sdk'
 
 export default {
   created() {
@@ -30,7 +30,7 @@ export default {
       }
     }
     this.$store.commit('getUser')
-    console.log(wx)
+    // console.log(wx)
     // var host = location.hostname;
     // var prot = location.protocol;
     // var redirect_uri1 =encodeURIComponent(prot+"//"+host+"/wxinbox/product_list.html");

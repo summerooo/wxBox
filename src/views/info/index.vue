@@ -108,7 +108,8 @@ export default {
       'user',
       'upload',
       'school',
-      'dormitory'
+      'dormitory',
+      'beforeInfo'
     ])
   },
   watch: {
@@ -126,12 +127,15 @@ export default {
     },
   },
   created () {
+    // state.beforeInfo
+    this.getBeforeInfo()
     this.firstShow()
   },
   methods: {
     ...mapMutations([
       'setUpload',
-      'setBeforeInfo'
+      'setBeforeInfo',
+      'getBeforeInfo'
     ]),
     closeWindow () {
       // eslint-disable-next-line
@@ -155,25 +159,32 @@ export default {
       }
     },
     async firstShow () {
+      if (this.beforeInfo) {
+        return this.models = this.beforeInfo
+      }
       let pc = await receiveInfo(this.user)
       console.log(pc)
+      let that = this
       if (pc.data.return_code === 400) this.$createDialog({
         type: 'alert',
         content: pc.data.return_msg,
         onConfirm () {
-          this.closeWindow()
+          that.closeWindow()
         }
       }).show()
       this.models = await Object.assign(this.models, pc.data.return_data)
+      if (!this.models.card_type) this.models.card_type = 1
       if (!this.models.sex) this.models.sex = 1
       if (this.models.card_path) this.flag = true
       if (pc.data.return_data.status === 0) this.disabled = true
       if (this.disabled) {
-        for (let i of this.sexOptions) {
-          i['disabled'] = this.disabled
+        for (let i in this.sexOptions) {
+          this.$set(this.sexOptions[i], 'disabled', this.disabled)
+          // i['disabled'] = this.disabled
         }
-        for (let i of this.cardOptions) {
-          i['disabled'] = this.disabled
+        for (let i in this.cardOptions) {
+          this.$set(this.cardOptions[i], 'disabled', this.disabled)
+          // i['disabled'] = this.disabled
         }
       }
       let alertInfo = ''
@@ -197,6 +208,7 @@ export default {
       }
     },
     getFile () {
+      if (this.disabled) return
       let that = this
       this.$createDialog({
         type: 'alert',
@@ -338,6 +350,7 @@ export default {
       }
     },
     openSexChoose () {
+      if (this.disabled) return
       let that = this
       this.$createPicker({
         data: [[

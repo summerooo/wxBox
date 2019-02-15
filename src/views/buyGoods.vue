@@ -132,6 +132,7 @@ import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, getBoxHandlingFee, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState } from 'vuex'
+import wx from 'weixin-js-sdk'
 
 export default {
   components: {
@@ -207,6 +208,7 @@ export default {
   },
   watch: {
     searchData () {
+      if (this.searchFalse) return
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.changeSearch()
@@ -217,6 +219,7 @@ export default {
     }
   },
   created() {
+    console.log(wx)
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
     if ('box_no' in this.$route.query) this.box_no = this.$route.query['box_no']
@@ -224,6 +227,10 @@ export default {
     this.routerInit()
     // this.goodsShow()
     this.firstShow()
+    var host = location.hostname;
+    var prot = location.protocol;
+    var redirect_uri1 =encodeURIComponent(prot+"//"+host+"/wxinbox/product_list.html");
+    location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri="+redirect_uri1+"&response_type=code&scope=snsapi_userinfo#wechat_redirect";
   },
   methods: {
     async routerInit () {
@@ -395,8 +402,8 @@ export default {
       }
     },
     async changeSearch () {
-      if (this.searchFalse) return
-      console.log(222222)
+      // if (this.searchFalse) return
+      // console.log(222222)
       if (!this.searchData.length) return this.$router.replace({name: 'buyGoods4'})
       console.log(this.searchData)
       let list = await this.searchingSubmit(false)
@@ -462,19 +469,14 @@ export default {
       this.searchFalse = true
       this.searchData = cellData.cell.label
       await this.searchShow(cellData.cell.data)
-      setTimeout(() => {
-        this.searchFalse = false
-      }, 300)
+      this.searchFalse = false
       // this.searchFalse = false
     },
     async getListRow (rowData) {
       this.searchFalse = true
       this.searchData = rowData.row.label
       await this.searchShow(rowData.row.label)
-      // this.searchFalse = false
-      setTimeout(() => {
-        this.searchFalse = false
-      }, 300)
+      this.searchFalse = false
       // this.goodsShow()
     }
   },
