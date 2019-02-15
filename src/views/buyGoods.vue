@@ -2,11 +2,6 @@
   <div class="all">
     <div class="content">
       <div class="container">
-        <!-- v-if="!boxFee.max_fee" -->
-        <div class="notice" v-if="boxFee.max_fee">
-          <i class="box-laba"></i>
-          您的盒子目前有{{boxFee.box_fee}}元商品，还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}商品
-        </div>
         <div class="searchNav" ref="searchNav">
           <transition name="back">
             <i class="cubeic-back backIcon" @click="back" v-if="![0].includes(searching)"></i>
@@ -65,10 +60,7 @@
           <sx-search-list :listData="listData" @getListRow="getListRow" v-if="[5].includes(searching)"/>
         </div>
       </div>
-      <sx-popup ref="popup" :bar="Boolean(boxFee.max_fee)">
-        <div slot="bar">
-          还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}元，盒子就满了
-        </div>
+      <sx-popup ref="popup">
         <div slot="left" class="popupLeft">
           已选商品 <span>(共{{cartLength}}件商品)</span>
         </div>
@@ -87,21 +79,6 @@
       </sx-popup>
     </div>
     <div class="bottom" ref="bottom">
-      <!-- <div class="box"  @click="closePopup">
-        <div class="shoppingBox" @click.stop="openTheshoppingBox">
-          <img :src="shoppingBoxImage" alt="">
-          <transition name="fade">
-            <span v-show="cartLength">{{cartLength}}</span>
-          </transition>
-        </div>
-        <div  class="info" v-if="!cartLength"><span>未选购商品</span></div>
-        <div class="info" v-else>
-          <p>￥{{cartMoney}}</p>
-          <div v-if="boxFee.min_fee">
-            满 {{boxFee.min_fee}} 元起配送
-          </div>
-        </div>
-      </div> -->
       <div class="box"  @click="closePopup">
         <div class="shoppingCart" @click.stop="openTheshoppingBox" :style="{transition: 'all .3s ease', backgroundColor: !cartLength ? '#cccccc' : ''}">
           <i class="box-gouwuche"></i>
@@ -109,10 +86,7 @@
         </div>
         <div  class="info" v-if="!cartLength"><span>未选购商品</span></div>
         <div class="info" v-else>
-          <p>￥{{cartMoney}}</p>
-          <div v-if="boxFee.min_fee">
-            满 {{boxFee.min_fee}} 元起配送
-          </div>
+          <p>合计 ￥{{cartMoney}}</p>
         </div>
       </div>
       <div class="rightBtn">
@@ -130,7 +104,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, getBoxHandlingFee, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
+import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState } from 'vuex'
 import wx from 'weixin-js-sdk'
 
@@ -172,16 +146,6 @@ export default {
         full: 'https://alipic.lanhuapp.com/ps106a53bfaa2ac380-6244-4eac-9069-1d49d36b310f'
       },
       page: 1,
-      boxFee: {
-        // 盒子当前商品价值
-        box_fee: '',
-        // 正在补货的订单价值
-        handling_fee: '',
-        // 最小补货金额
-        min_fee: '',
-        // 盒子最大补货金额
-        max_fee: ''
-      },
       panelData: null,
       listData: null,
       searchFalse: false,
@@ -220,7 +184,7 @@ export default {
   },
   created() {
     console.log(wx)
-    // http://localhost:8088/goodsBox?box_no=FF541857
+    // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
     if ('box_no' in this.$route.query) {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
@@ -234,7 +198,7 @@ export default {
     if (!wxData) {
       var host = location.hostname
       var prot = location.protocol
-      var redirectUrl = encodeURIComponent(`${prot}//${host}/wxinbox/product_list.html?box_no=${this.box_no}`)
+      var redirectUrl = encodeURIComponent(`${prot}//${host}/buyGoods?box_no=${this.box_no}`)
       location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     } else {
       console.log(JSON.parse(wxData))
@@ -281,10 +245,6 @@ export default {
       if (!this.menusData.length) return
       this.defaultActive = this.menusData[0].value
       this.goodsShow()
-      // top 栏
-      let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user))}.gbf
-      console.log(gbf, 'ccccc')
-      if (gbf) this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
     },
     async showGoods () {
       // let goods = await this.goodsShow()
@@ -358,17 +318,8 @@ export default {
       toast.show()
     },
     clickAction(e, item) {
-      // if (tf) {
-      console.log(item, 'item')
-      if (this.boxFee.max_fee) {
-        if ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney) <= 0) {
-          this.shoppingBoxImage = this.shoppingBoxImageStatus.full
-          return this.$createToast({txt: '盒子满了'})
-        }
-      }
       this.$set(this.cart, item.goods_id, this.chooseCommodity[item.goods_id])
-        // this.$refs.drop.drop(e)
-      // }
+      // this.$refs.drop.drop(e)
       if (!this.cart[item.goods_id].goods_number) this.$delete(this.cart, item.goods_id)
       if (!Object.keys(this.cart).length) {
         this.shoppingBoxImage = this.shoppingBoxImageStatus.none
@@ -387,8 +338,8 @@ export default {
     },
     async focusSearch () {
       if (this.searchData) return
-      if (this.panelData) return this.$router.push({name: 'goodsBox4'})
-      this.$router.push({name: 'goodsBox4'})
+      if (this.panelData) return this.$router.push({name: 'buyGoods4'})
+      this.$router.push({name: 'buyGoods4'})
     },
     async showSearchData () {
       this.panelData = []
@@ -489,7 +440,7 @@ export default {
     }
   },
   mounted() {
-    document.title = '认领补货'
+    document.title = '商品列表'
     // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.bottom.offsetHeight}px)`
   }
 }

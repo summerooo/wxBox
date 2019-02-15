@@ -44,7 +44,7 @@ export default new Router({
       ]
     },
     {
-      path: '/wxinbox/product_list.html',
+      path: '/buyGoods',
       name: 'buyGoods',
       component: () => import('../views/buyGoods'),
       children: [
@@ -54,23 +54,23 @@ export default new Router({
         //   name: 'goodsDetails0'
         // },
         {
-          path: '/wxinbox/product_list.html1',
+          path: '/buyGoods1',
           name: 'buyGoods1'
         },
         {
-          path: '/wxinbox/product_list.html2',
+          path: '/buyGoods2',
           name: 'buyGoods2'
         },
         {
-          path: '/wxinbox/product_list.html3',
+          path: '/buyGoods3',
           name: 'buyGoods3'
         },
         {
-          path: '/wxinbox/product_list.html4',
+          path: '/buyGoods4',
           name: 'buyGoods4'
         },
         {
-          path: '/wxinbox/product_list.html5',
+          path: '/buyGoods5',
           name: 'buyGoods5'
         }
       ]
