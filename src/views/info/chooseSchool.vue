@@ -61,7 +61,7 @@ export default {
     console.log(wx)
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
-    if ('response_type' in this.$route.query) {
+    if ('code' in this.$route.query) {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
