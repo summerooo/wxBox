@@ -127,6 +127,10 @@ export default {
     },
   },
   created () {
+    this.wxAuthority('info')
+    if ('code' in this.$route.query) {
+      sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
+    }
     // state.beforeInfo
     this.getBeforeInfo()
     this.firstShow()
@@ -135,7 +139,8 @@ export default {
     ...mapMutations([
       'setUpload',
       'setBeforeInfo',
-      'getBeforeInfo'
+      'getBeforeInfo',
+      'wxAuthority'
     ]),
     closeWindow () {
       // eslint-disable-next-line
