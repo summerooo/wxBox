@@ -222,15 +222,23 @@ export default {
     console.log(wx)
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
-    if ('box_no' in this.$route.query) this.box_no = this.$route.query['box_no']
+    if ('box_no' in this.$route.query) {
+      sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
+      this.box_no = this.$route.query['box_no']
+    }
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit()
     // this.goodsShow()
     this.firstShow()
-    var host = location.hostname;
-    var prot = location.protocol;
-    var redirect_uri1 =encodeURIComponent(prot+"//"+host+"/wxinbox/product_list.html");
-    location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri="+redirect_uri1+"&response_type=code&scope=snsapi_userinfo#wechat_redirect";
+    let wxData = sessionStorage.getItem('wxData')
+    if (!wxData) {
+      var host = location.hostname
+      var prot = location.protocol
+      var redirectUrl = encodeURIComponent(`${prot}//${host}/wxinbox/product_list.html?box_no=${this.box_no}`)
+      location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+    } else {
+      console.log(JSON.parse(wxData))
+    }
   },
   methods: {
     async routerInit () {
