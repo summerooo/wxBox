@@ -13,7 +13,8 @@ export default new Vuex.Store({
     school: '',
     dormitory: '',
     // 选商品前的数据
-    beforeInfo: {}
+    beforeInfo: {},
+    box_no: ''
   },
   mutations: {
     setPhone (state, data) {
@@ -22,6 +23,10 @@ export default new Vuex.Store({
     setUser (state, data) {
       state.user = data
       sessionStorage.setItem('user', JSON.stringify(data))
+    },
+    setBoxNo (state, data) {
+      console.log('!!!!!!!!', 'data', data)
+      state.box_no = data
     },
     getUser (state) {
       state.user = JSON.parse(sessionStorage.getItem('user'))

@@ -104,7 +104,10 @@
         </div>
       </div>
       <div class="rightBtn">
-        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true" @click="submit">申请补货</cube-button>
+        <!-- boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true -->
+        <cube-button :primary="true"
+          :disabled="!Boolean(Number(cartMoney))"
+          @click="submit">申请补货</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -118,7 +121,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
+import { orderSearchLogDelete, orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -196,6 +199,7 @@ export default {
   },
   watch: {
     searchData () {
+      if (this.searchFalse) return
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.changeSearch()
@@ -218,11 +222,12 @@ export default {
     ...mapMutations([
       'getBeforeInfo'
     ]),
-    routerInit () {
+    async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
+      if (this.searching === 4) this.showSearchData()
     },
     async goodsShow () {
       // 基于左侧商品 right
@@ -235,7 +240,6 @@ export default {
     },
     async searchShow (val) {
       // 基于左侧商品 right
-      console.log(val, 'valvalvalvalvalvalval')
       let goods = await this.searchingSubmit(false, val)
       this.goodsData = goods
       for (let i of this.goodsData) {
@@ -259,14 +263,12 @@ export default {
       this.goodsShow()
       // top 栏
       let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user, this.beforeInfo))}.gbf
-      console.log(gbf, 'ccccc')
       if (gbf) this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
       this.barbar = true
     },
     async showGoods () {
       // let goods = await this.goodsShow()
       let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, cate_id: this.defaultActive, page: this.page}))
-      // console.log(!orhg.data.return_data.length)
       if (!orhg.data.return_data.length) return this.$createToast({txt: '该分类无更多商品', type: 'txt'}).show()
       this.goodsData = await this.goodsData.concat(orhg.data.return_data)
       for (let i of this.goodsData) {
@@ -277,6 +279,7 @@ export default {
       this.scrollY = -y
     },
     async handleSelect (item, index) {
+      console.log(item, index)
       const toast = this.$createToast({
         time: 0
       })
@@ -286,7 +289,6 @@ export default {
       // let orhg = await orderReplenishmentGoods(Object.assign({}, this.user, this.beforeInfo, {cate_id: item.value}, {order_origin: 4, page: this.page}))
       // this.goodsData = orhg.data.return_data
       await this.goodsShow()
-      console.log(item, index)
       toast.hide()
       this.defaultActiveItem = item
       this.$refs.scroll.scrollTo(0, 0)
@@ -304,9 +306,12 @@ export default {
       }, 1000)
     },
     async onPullingUp() {
-      this.page++
-      await this.showGoods()
+      if (this.searching !== 3) {
+        this.page++
+        await this.showGoods()
+      }
       this.$refs.scroll.forceUpdate()
+      // this.$refs.scroll.scrollTo(0, 0)
       this.$refs.scroll.refresh()
     },
     parabola(e) {
@@ -336,7 +341,6 @@ export default {
     },
     clickAction(e, item) {
       // if (tf) {
-      console.log(Number(item.goods_price), (this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee - this.cartMoney), 'item')
       this.$set(this.cart, item.goods_id, this.chooseCommodity[item.goods_id])
         // this.$refs.drop.drop(e)
       // }
@@ -366,34 +370,34 @@ export default {
       this.$refs.popup.closePopup()
     },
     async focusSearch () {
+      if (this.searching === 4) return
       if (this.searchData) return
       if (this.panelData) return this.$router.push({name: 'goodsBox4'})
-      this.panelData = []
       this.$router.push({name: 'goodsBox4'})
-      console.log(111)
-      let osgl = await orderSearchGoodsLog(this.user)
+      // this.showSearchData()
+    },
+    async showSearchData () {
+      this.panelData = []
+      let osgl = {osgl: await orderSearchGoodsLog(this.user)}.osgl
       let osglData = osgl.data.return_data
-      if (osglData.length) {
-        this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
-        this.$set(this.panelData[0], 'children', [])
-        for (let i of osglData) {
-          this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
-        }
+      this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
+      this.$set(this.panelData[0], 'children', [])
+      for (let i of osglData) {
+        this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
       }
-      let osgh = await orderSearchGoodsHot(this.user)
+      let osgh = {osgh: await orderSearchGoodsHot(this.user)}.osgh
       let osghData = osgh.data.return_data
       if (osghData.length) {
         this.$set(this.panelData, 1, {label: '热门搜索'})
         this.$set(this.panelData[1], 'children', [])
-        for (let z of osgl.data.return_data) {
+        for (let z of osghData) {
           this.panelData[1].children.push({label: z.goods_name, value: z.goods_name})
         }
       }
     },
     async changeSearch () {
-      if (this.searchFalse) return
+      // if (this.searchFalse) return
       if (!this.searchData.length) return this.$router.replace({name: 'goodsBox4'})
-      console.log(this.searchData)
       let list = await this.searchingSubmit(false)
       if (!list.length) return this.$router.replace({name: 'goodsBox1'})
       this.listData = []
@@ -417,9 +421,6 @@ export default {
     async searchingSubmit (tf = true, goodsName) {
       if (tf) return this.searchShow(this.searchData)
       let osg = await orderSearchGoods(Object.assign({}, this.user, this.beforeInfo, {order_origin: 4, goods_name: goodsName ? goodsName : this.searchData}))
-      console.log(this.searchData)
-      console.log(osg)
-      console.log(tf)
       return osg.data.return_data
     },
     async back () {
@@ -439,12 +440,16 @@ export default {
       for (let i in this.cart) {
         goods_info.push(this.cart[i])
       }
-      console.log(goods_info)
       let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
-      console.log(br)
       this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
-    panelIcon () {},
+    async panelIcon (data) {
+      if (data.row.label === '历史搜索') {
+        let osld = await orderSearchLogDelete(this.user)
+        this.$createToast({ txt: osld.data.return_msg, type: 'txt' }).show()
+        this.showSearchData()
+      }
+    },
     async getPanelCell (cellData) {
       this.searchFalse = true
       this.searchData = cellData.cell.label

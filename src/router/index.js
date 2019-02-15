@@ -190,6 +190,11 @@ export default new Router({
     //   name: 'scrollTest',
     //   component: () => import('../components/scrollTest')
     // },
+    {
+      path: '/goWx',
+      name: 'goWx',
+      component: () => import('../views/goWx.vue')
+    },
     { path:'*', redirect: '/' }
   ]
 })

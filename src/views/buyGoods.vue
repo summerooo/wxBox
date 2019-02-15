@@ -116,7 +116,7 @@
         </div>
       </div>
       <div class="rightBtn">
-        <cube-button :primary="true" :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee : true" @click="submit">结算</cube-button>
+        <cube-button :primary="true" :disabled="!Boolean(Number(cartMoney))" @click="submit">结算</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -130,7 +130,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { WeixinOrderScan, WeixinOrderScanList, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/buyGoods'
+import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, getBoxHandlingFee, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState } from 'vuex'
 
 export default {
@@ -184,7 +184,7 @@ export default {
       panelData: null,
       listData: null,
       searchFalse: false,
-      box_no: 'C007FE9B'
+      box_no: 'CEF33961'
     }
   },
   computed: {
@@ -226,11 +226,12 @@ export default {
     this.firstShow()
   },
   methods: {
-    routerInit () {
+    async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
+      if (this.searching === 4) this.showSearchData()
     },
     async goodsShow () {
       // 基于左侧商品 right
@@ -371,25 +372,24 @@ export default {
     },
     async focusSearch () {
       if (this.searchData) return
-      if (this.panelData) return this.$router.push({name: 'buyGoods4'})
+      if (this.panelData) return this.$router.push({name: 'goodsBox4'})
+      this.$router.push({name: 'goodsBox4'})
+    },
+    async showSearchData () {
       this.panelData = []
-      this.$router.push({name: 'buyGoods4'})
-      let osgl = await orderSearchGoodsLog(this.user)
+      let osgl = {osgl: await orderSearchGoodsLog(this.user)}.osgl
       let osglData = osgl.data.return_data
-      console.log(osglData, 'asdas')
-      if (osglData.length) {
-        this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
-        this.$set(this.panelData[0], 'children', [])
-        for (let i of osglData) {
-          this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
-        }
+      this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
+      this.$set(this.panelData[0], 'children', [])
+      for (let i of osglData) {
+        this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
       }
-      let osgh = await orderSearchGoodsHot(this.user)
+      let osgh = {osgh: await orderSearchGoodsHot(this.user)}.osgh
       let osghData = osgh.data.return_data
       if (osghData.length) {
         this.$set(this.panelData, 1, {label: '热门搜索'})
         this.$set(this.panelData[1], 'children', [])
-        for (let z of osgl.data.return_data) {
+        for (let z of osghData) {
           this.panelData[1].children.push({label: z.goods_name, value: z.goods_name})
         }
       }
@@ -421,7 +421,7 @@ export default {
     },
     async searchingSubmit (tf = true, goodsName) {
       if (tf) return this.searchShow(this.searchData)
-      let osg = await orderSearchGoods(Object.assign({}, this.user, {order_origin: 4, goods_name: goodsName ? goodsName : this.searchData}))
+      let osg = await weixinOrderSerach({box_no: this.box_no, order_origin: 4, goods_name: goodsName ? goodsName : this.searchData})
       console.log(this.searchData)
       console.log(osg)
       console.log(tf)
@@ -445,22 +445,36 @@ export default {
         goods_info.push(this.cart[i])
       }
       console.log(goods_info)
-      let br = await boxReceive(Object.assign({}, this.user, { goods_info: goods_info, order_origin: 4 }))
+      let br = await prepayWeixinOrder({ goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br)
       this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
-    panelIcon () {},
+    async panelIcon (data) {
+      console.log(this.user, '!!!!!')
+      if (data.row.label === '历史搜索') {
+        let osld = await orderSearchLogDelete(this.user)
+        console.log(osld)
+        this.$createToast({ txt: osld.data.return_msg, type: 'txt' }).show()
+        this.showSearchData()
+      }
+    },
     async getPanelCell (cellData) {
       this.searchFalse = true
       this.searchData = cellData.cell.label
       await this.searchShow(cellData.cell.data)
-      this.searchFalse = false
+      setTimeout(() => {
+        this.searchFalse = false
+      }, 300)
+      // this.searchFalse = false
     },
     async getListRow (rowData) {
       this.searchFalse = true
       this.searchData = rowData.row.label
       await this.searchShow(rowData.row.label)
-      this.searchFalse = false
+      // this.searchFalse = false
+      setTimeout(() => {
+        this.searchFalse = false
+      }, 300)
       // this.goodsShow()
     }
   },

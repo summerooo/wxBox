@@ -6,12 +6,16 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
+import wx from 'weixin-js-sdk'
+
 export default {
   created() {
+    let nu = navigator.userAgent
     // 设备
     if (!sessionStorage.getItem('device')) {
       for (let d of ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']) {
-        if (navigator.userAgent.includes(d)) {
+        if (nu.includes(d)) {
           sessionStorage.setItem('device', d)
           this.device = d
           break
@@ -20,12 +24,17 @@ export default {
     }
     // 内核
     for (let i of ['chrome', 'firefox', 'webkit']) {
-      if (navigator.userAgent.toLowerCase().includes(i)) {
+      if (nu.toLowerCase().includes(i)) {
         this.kernel = i
         break
       }
     }
     this.$store.commit('getUser')
+    console.log(wx)
+    // var host = location.hostname;
+    // var prot = location.protocol;
+    // var redirect_uri1 =encodeURIComponent(prot+"//"+host+"/wxinbox/product_list.html");
+    // location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri="+redirect_uri1+"&response_type=code&scope=snsapi_userinfo#wechat_redirect";
   },
   data () {
     return {
@@ -33,7 +42,28 @@ export default {
       kernel: null
     }
   },
-  mounted() {
+  // watch: {
+  //   '$route' () {
+  //     this.isWx()
+  //   }
+  // },
+  methods: {
+    ...mapMutations([
+      'setBoxNo'
+    ]),
+    isWx () {
+      let nu = navigator.userAgent
+      if (nu.toLowerCase().match(/MicroMessenger/i)) {
+        alert('在微信')
+      } else {
+        if ('box_no' in this.$route.query) {
+          this.setBoxNo(this.$route.query['box_no'])
+        }
+        this.$router.replace({name: 'goWx'})
+      }
+    }
+  },
+  mounted () {
     console.log(this.$md5('123456'))
   }
 }

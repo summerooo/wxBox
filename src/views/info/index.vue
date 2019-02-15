@@ -165,6 +165,7 @@ export default {
         }
       }).show()
       this.models = await Object.assign(this.models, pc.data.return_data)
+      if (!this.models.sex) this.models.sex = 1
       if (this.models.card_path) this.flag = true
       if (pc.data.return_data.status === 0) this.disabled = true
       if (this.disabled) {

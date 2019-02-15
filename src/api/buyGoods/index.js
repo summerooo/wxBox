@@ -16,9 +16,9 @@ export const getBoxHandlingFee = data => {
   return axios.post(`${api}/getBoxHandlingFee`, data)
 }
 
-// 盒子认领
-export const boxReceive = data => {
-  return axios.post(`${api}/boxReceive`, data)
+// 结算
+export const prepayWeixinOrder = data => {
+  return axios.post(`${api}/prepayWeixinOrder`, data)
 }
 
 // orderSearchGoodsLog 搜索页历史记录
@@ -31,7 +31,12 @@ export const orderSearchGoodsHot = data => {
   return axios.post(`${api}/orderSearchGoodsHot`, data)
 }
 
+// 删除搜索历史记录
+export const orderSearchLogDelete = data => {
+  return axios.post(`${api}/orderSearchLogDelete`, data)
+}
+
 // 搜索
-export const orderSearchGoods = data => {
-  return axios.post(`${api}/orderSearchGoods`, data)
+export const weixinOrderSerach = data => {
+  return axios.post(`${api}/weixinOrderSerach`, data)
 }

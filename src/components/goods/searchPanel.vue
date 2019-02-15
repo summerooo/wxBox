@@ -1,6 +1,6 @@
 <template>
   <div class="all">
-    <div class="content" v-for="(row, index) in panelData" :key="index">
+    <div class="content" v-for="(row, index) in panelData" :key="index" v-show="row.children.length">
       <div class="rowLabel">
         {{row.label}}
         <i :class="row.icon" @click="panelIcon(row, index)"></i>
@@ -20,95 +20,23 @@ export default {
     panelData: {
       type: Array,
       default () {
-        return [{
-            label: '历史搜索',
-            icon: 'box-lajitong',
-            children: [{
-              label: '二级 1-1',
-              children: [{
-                label: '三级 1-1-1'
-              }]
-            }]
-          }, {
-            label: '热门搜索',
-            children: [{
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-1-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }, {
-              label: '二级 2-2',
-              children: [{
-                label: '三级 2-2-1'
-              }]
-            }]
-          }, {
-            label: '一级 3',
-            children: [{
-              label: '二级 3-1',
-              children: [{
-                label: '三级 3-1-1'
-              }]
-            }, {
-              label: '二级 3-2',
-              children: [{
-                label: '三级 3-2-1'
-              }]
-            }]
-        }]
+        return []
       }
     }
   },
   data () {
     return {}
   },
+  created() {
+    console.log(this.panelData)
+  },
   methods: {
     getPanelCell (row, rowIndex, cell, cellIndex) {
       this.$emit('getPanelCell', { row: row, rowIndex: rowIndex, cell: cell, cellIndex: cellIndex })
     },
     panelIcon (row, index) {
-      console.log(row, index)
-      this.$emit('panelIcon', { row: index })
+      console.log(row, index, 'cccc')
+      this.$emit('panelIcon', { row: row, index: index })
     }
   }
 }

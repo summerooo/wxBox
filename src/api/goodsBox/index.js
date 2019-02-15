@@ -31,6 +31,11 @@ export const orderSearchGoodsHot = data => {
   return axios.post(`${api}/orderSearchGoodsHot`, data)
 }
 
+// 删除搜索历史记录
+export const orderSearchLogDelete = data => {
+  return axios.post(`${api}/orderSearchLogDelete`, data)
+}
+
 // 搜索
 export const orderSearchGoods = data => {
   return axios.post(`${api}/orderSearchGoods`, data)
