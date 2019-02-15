@@ -65,7 +65,7 @@ export default {
     if (!this.wxData) {
       var host = location.hostname
       var prot = location.protocol
-      var redirectUrl = encodeURIComponent(`${prot}//${host}/chooseSchool`)
+      var redirectUrl = encodeURIComponent(`${prot}//${host}/chooseSchool0`)
       location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     } else {
       console.log(JSON.parse(this.wxData))
