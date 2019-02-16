@@ -106,6 +106,7 @@ import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
+import { authority, options } from '../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -194,7 +195,7 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
-    // if (!this.wxData) this.wxAuthority()
+    if (!this.wxData) this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit()
     this.firstShow()
@@ -223,6 +224,30 @@ export default {
           window.close()
         }
       }
+    },
+    async getLocation () {
+      let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+      console.log(a)
+      let redirectUrl = location.href
+      let that = this
+      let o = await options({token: a.data.return_data.token, url: redirectUrl})
+      wx.config(Object.assign({}, o.data.return_data.config, { debug: true }))
+      wx.ready(function () {
+        wx.getLocation({
+          type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+          success (res) {
+            console.log(res, 'location')
+            // const { latitude, longitude, speed, accuracy } = res
+            // console.log()
+          },
+          fail () {
+            that.$createToast({
+              txt: '获取地址失败，请手动选择',
+              type: 'txt'
+            }).show()
+          }
+        })
+      })
     },
     async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)

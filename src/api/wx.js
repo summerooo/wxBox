@@ -10,3 +10,8 @@ export const authority = data => {
 export const options = data => {
   return axios.post(`${api}/options`, data)
 }
+
+// getLocation
+export const getLocation = data => {
+  return axios.post(`${api}/getLocation`, data)
+}

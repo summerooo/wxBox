@@ -21,7 +21,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { area, schoolList } from '@/api/info'
-import { authority, options } from '../../api/wx'
+import { authority, options, getLocation } from '../../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -62,29 +62,33 @@ export default {
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
     this.wxData = sessionStorage.getItem('wxData')
-    if (this.wxData) this.getLocation()
+    if (this.wxData) this.firstShow()
   },
   methods: {
     ...mapMutations([
       'setSchool'
     ]),
-    async getLocation () {
+    // async firstShow() {
+    //   this.schoolList(this.listModels[2] ? this.listModels[2].area_id : '', '')
+    // },
+    async firstShow () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
       console.log(a)
-      // let host = location.hostname
-      // let prot = location.protocol
-      // let redirectUrl = encodeURIComponent(`${prot}//${host}`)
       let redirectUrl = location.href
       let that = this
       let o = await options({token: a.data.return_data.token, url: redirectUrl})
-      wx.config(Object.assign({}, o.data.return_data.config, { debug: true }))
+      wx.config(Object.assign({}, o.data.return_data.config))
       wx.ready(function () {
         wx.getLocation({
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-          success (res) {
+          async success (res) {
             console.log(res, 'location')
             // const { latitude, longitude, speed, accuracy } = res
             // console.log()
+            let gl = await getLocation(res)
+            const { province, city, district, adcode } = gl.return_data
+            that.position = `${province}${city}${district}`
+            that.schoolList(adcode, '')
           },
 					fail () {
             that.$createToast({
@@ -94,6 +98,10 @@ export default {
           }
         })
       })
+      // wx.error(function (res) {
+      //   sessionStorage.removeItem('wxData')
+      //   this.getLocation()
+      // })
       // wx.config({
       //   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
       //   appId: res.data.config.appId, // 必填，公众号的唯一标识
