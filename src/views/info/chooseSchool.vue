@@ -69,12 +69,15 @@ export default {
       'setSchool'
     ]),
     async firstShow () {
-      let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
-      console.log(a)
-      let redirectUrl = location.href
-      let that = this
-      let o = await options({token: a.data.return_data.token, url: redirectUrl})
-      wx.config(Object.assign({}, o.data.return_data.config))
+      if (!sessionStorage.getItem('getLocation')) {
+        let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+        console.log(a)
+        let redirectUrl = location.href
+        let that = this
+        let o = await options({token: a.data.return_data.token, url: redirectUrl})
+        sessionStorage.setItem('getLocation',  JSON.stringify(o.data.return_data.config))
+      }
+      wx.config(JSON.parse(sessionStorage.getItem('getLocation')))
       wx.ready(function () {
         wx.getLocation({
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
