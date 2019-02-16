@@ -71,6 +71,12 @@ export default {
     async getLocation () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
       console.log(a)
+      wx.getLocation({
+        type: 'wgs84',
+        success: function (res) {
+          console.log(res)
+        }
+      })
       // wx.config({
       //   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
       //   appId: res.data.config.appId, // 必填，公众号的唯一标识
