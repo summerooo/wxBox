@@ -130,7 +130,7 @@ export default {
     if ('code' in this.$route.query) {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
-    if (!sessionStorage.getItem('wxData')) this.wxAuthority()
+    if (!sessionStorage.getItem('wxData')) this.wxAuthority('info')
     // state.beforeInfo
     this.getBeforeInfo()
     this.firstShow()
