@@ -330,7 +330,8 @@ export default {
     },
     choiceSchool () {
       if (this.disabled) return
-      this.$router.push({name: 'chooseSchool0', params: {id: '111112323'}})
+      this.$router.push({name: 'chooseSchool0'})
+      // this.$router.push({name: 'chooseSchool0', params: {id: '111112323'}})
       // this.$createToast({ txt: `选择学校`, type: 'txt' }).show()
     },
     choiceDormitory () {

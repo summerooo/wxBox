@@ -86,7 +86,7 @@ export default {
             // const { latitude, longitude, speed, accuracy } = res
             // console.log()
             let gl = await getLocation(res)
-            const { province, city, district, adcode } = gl.return_data
+            const { province, city, district, adcode } = gl.data.return_data
             that.position = `${province}${city}${district}`
             that.schoolList(adcode, '')
           },
