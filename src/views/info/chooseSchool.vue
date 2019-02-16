@@ -82,7 +82,7 @@ export default {
         wx.getLocation({
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
           success (res) {
-            console.log(re, 'location')
+            console.log(res, 'location')
             var latitude = res.latitude
             var longitude = res.longitude
             var speed = res.speed
