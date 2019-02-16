@@ -104,9 +104,10 @@
         </div>
       </div>
       <div class="rightBtn">
+        <!-- !Boolean(Number(cartMoney)) -->
         <!-- boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true -->
         <cube-button :primary="true"
-          :disabled="!Boolean(Number(cartMoney))"
+          :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true"
           @click="submit">申请补货</cube-button>
       </div>
     </div>
@@ -220,7 +221,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'getBeforeInfo'
+      'getBeforeInfo',
+      'closeWindow'
     ]),
     async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
@@ -441,7 +443,15 @@ export default {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number})
       }
       let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
-      this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
+      let that = this
+      if (br.data.return_code === 200) this.$createDialog({
+        type: 'alert',
+        content: br.data.return_msg,
+        onConfirm () {
+          that.closeWindow()
+        }
+      }).show()
+      else this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
     async panelIcon (data) {
       if (data.row.label === '历史搜索') {

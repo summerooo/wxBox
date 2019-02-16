@@ -54,6 +54,27 @@ export default new Vuex.Store({
       // let redirectUrl = `${prot}//${host}/${data}`
       let redirectUrl = location.href
       location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+    },
+    closeWindow () {
+      // eslint-disable-next-line
+      if(typeof(WeixinJSBridge) != 'undefined'){
+      // eslint-disable-next-line
+        WeixinJSBridge.call('closeWindow')
+      } else {
+        if (navigator.userAgent.indexOf('MSIE') > 0) {
+          if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
+            window.opener = null; window.close()
+          } else {
+            window.open('', '_top'); window.top.close()
+          }  
+        } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
+          window.location.href = 'about:blank '
+        } else {  
+          window.opener = null
+          window.open('', '_self', '')
+          window.close()
+        }
+      }
     }
   },
   actions: {

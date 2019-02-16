@@ -31,7 +31,7 @@
         信息仅用于身份验证，盒里有保证您的信息安全
       </span>
       <cube-button :primary="true" @click="submit" :disabled="disabled">
-        {{models.status == 0 ? '审核中' : (models.status === 1 ? '成功认领' : '重新申请')}}
+        {{models.status == 0 ? '审核中' : (models.status === 1 ? '成功认领' : models.status === 2 ? '重新申请' : '申请')}}
       </cube-button>
     </div>
     <router-view v-else/>
@@ -131,7 +131,6 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     if (!sessionStorage.getItem('wxData')) this.wxAuthority('info')
-    // state.beforeInfo
     this.getBeforeInfo()
     this.firstShow()
   },
@@ -140,29 +139,9 @@ export default {
       'setUpload',
       'setBeforeInfo',
       'getBeforeInfo',
-      'wxAuthority'
+      'wxAuthority',
+      'closeWindow'
     ]),
-    closeWindow () {
-      // eslint-disable-next-line
-      if(typeof(WeixinJSBridge) != 'undefined'){
-      // eslint-disable-next-line
-        WeixinJSBridge.call('closeWindow')
-      } else {
-        if (navigator.userAgent.indexOf('MSIE') > 0) {
-          if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
-            window.opener = null; window.close()
-          } else {
-            window.open('', '_top'); window.top.close()
-          }  
-        } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
-          window.location.href = 'about:blank '
-        } else {  
-          window.opener = null
-          window.open('', '_self', '')
-          window.close()
-        }
-      }
-    },
     async firstShow () {
       if (this.beforeInfo) {
         return this.models = this.beforeInfo
@@ -345,8 +324,8 @@ export default {
       // this.models.card_path = data.result
       let models = new FormData()
       models.append('save_path', data.file)
-      models.append('user_id', '16813')
-      models.append('login_token', 'e909d77a7d2d9fec5b0b5bfdccb495d5')
+      models.append('user_id', this.user.user_id)
+      models.append('login_token', this.user.login_token)
       let sf = await saveFile(models)
       console.log(sf)
       this.setUpload(0)

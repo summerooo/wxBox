@@ -14,7 +14,14 @@ export default {
     let nu = navigator.userAgent
     // 设备
     if (!sessionStorage.getItem('device')) {
-      for (let d of ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']) {
+      for (let d of [
+        'Android',
+        'iPhone',
+        'SymbianOS',
+        'Windows Phone',
+        'iPad',
+        'iPod'
+      ]) {
         if (nu.includes(d)) {
           sessionStorage.setItem('device', d)
           this.device = d
@@ -30,13 +37,14 @@ export default {
       }
     }
     this.$store.commit('getUser')
+    this.stopDrop()
     // console.log(wx)
     // var host = location.hostname;
     // var prot = location.protocol;
     // var redirect_uri1 =encodeURIComponent(prot+"//"+host+"/wxinbox/product_list.html");
     // location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri="+redirect_uri1+"&response_type=code&scope=snsapi_userinfo#wechat_redirect";
   },
-  data () {
+  data() {
     return {
       device: null,
       kernel: null
@@ -48,10 +56,33 @@ export default {
   //   }
   // },
   methods: {
-    ...mapMutations([
-      'setBoxNo'
-    ]),
-    isWx () {
+    ...mapMutations(['setBoxNo']),
+    stopDrop() {
+      var overscroll = el => {
+        el.addEventListener('touchstart', () => {
+          var top = el.scrollTop
+          var totalScroll = el.scrollHeight
+          var currentScroll = top + el.offsetHeight
+          if (top === 0) {
+            el.scrollTop = 1
+          } else if (currentScroll === totalScroll) {
+            el.scrollTop = top - 1
+          }
+        })
+        el.addEventListener('touchmove', evt => {
+          if (el.offsetHeight < el.scrollHeight) {
+            evt._isScroller = true
+          }
+        })
+      }
+      overscroll(document.body)
+      document.body.addEventListener('touchmove', evt => {
+        if (!evt._isScroller) {
+          evt.preventDefault()
+        }
+      })
+    },
+    isWx() {
       let nu = navigator.userAgent
       if (nu.toLowerCase().match(/MicroMessenger/i)) {
         alert('在微信')
@@ -59,24 +90,27 @@ export default {
         if ('box_no' in this.$route.query) {
           this.setBoxNo(this.$route.query['box_no'])
         }
-        this.$router.replace({name: 'goWx'})
+        this.$router.replace({ name: 'goWx' })
       }
     }
   },
-  mounted () {
+  mounted() {
     console.log(this.$md5('123456'))
   }
 }
 </script>
 
 <style lang="scss">
-
-*, *:before, *:after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-#app, html, body{
+#app,
+html,
+body {
   min-height: 550px;
   height: 100%;
   width: 100%;
@@ -86,10 +120,12 @@ export default {
     // font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
   }
 }
-.fade-enter-active, .fade-leave-active {
-  transition: all .3s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
 }
-.fade-enter, .fade-leave-to{
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
   height: 0px !important;
   padding-top: 0px !important;

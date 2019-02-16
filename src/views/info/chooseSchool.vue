@@ -68,9 +68,6 @@ export default {
     ...mapMutations([
       'setSchool'
     ]),
-    // async firstShow() {
-    //   this.schoolList(this.listModels[2] ? this.listModels[2].area_id : '', '')
-    // },
     async firstShow () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
       console.log(a)

@@ -202,29 +202,9 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'wxAuthority'
+      'wxAuthority',
+      'closeWindow'
     ]),
-    closeWindow () {
-      // eslint-disable-next-line
-      if(typeof(WeixinJSBridge) != 'undefined'){
-      // eslint-disable-next-line
-        WeixinJSBridge.call('closeWindow')
-      } else {
-        if (navigator.userAgent.indexOf('MSIE') > 0) {
-          if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
-            window.opener = null; window.close()
-          } else {
-            window.open('', '_top'); window.top.close()
-          }  
-        } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
-          window.location.href = 'about:blank '
-        } else {  
-          window.opener = null
-          window.open('', '_self', '')
-          window.close()
-        }
-      }
-    },
     async getLocation () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
       console.log(a)
