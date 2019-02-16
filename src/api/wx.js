@@ -5,3 +5,8 @@ const { api } = require('@/dev')
 export const authority = data => {
   return axios.post(`${api}/authority`, data)
 }
+
+// options
+export const options = data => {
+  return axios.post(`${api}/options`, data)
+}

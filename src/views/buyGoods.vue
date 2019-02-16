@@ -312,7 +312,7 @@ export default {
     },
     isMax() {
       const toast = this.$createToast({
-        txt: '没了没了',
+        txt: '库存不足',
         type: 'txt'
       })
       toast.show()

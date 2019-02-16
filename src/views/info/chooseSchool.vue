@@ -21,7 +21,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { area, schoolList } from '@/api/info'
-import { authority } from '../../api/wx'
+import { authority, options } from '../../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -71,11 +71,28 @@ export default {
     async getLocation () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
       console.log(a)
-      wx.getLocation({
-        type: 'wgs84',
-        success: function (res) {
-          console.log(res)
-        }
+      let host = location.hostname
+      let prot = location.protocol
+      let redirectUrl = encodeURIComponent(`${prot}//${host}`)
+      let that = this
+      let o = await options({token: a.data.return_data.token, url: redirectUrl})
+      wx.config(Object.assign({}, o.data.return_data.config, { debug: true }))
+      wx.ready(() => {
+        wx.getLocation({
+          type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+          success (res) {
+            var latitude = res.latitude
+            var longitude = res.longitude
+            var speed = res.speed
+            var accuracy = res.accuracy
+          },
+					fail () {
+            that.$createToast({
+              txt: '获取地址失败，请手动选择',
+              type: 'txt'
+            }).show()
+          }
+        })
       })
       // wx.config({
       //   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
