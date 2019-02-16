@@ -87,10 +87,16 @@ export default {
             // console.log()
             let gl = await getLocation(res)
             const { province, city, district, adcode } = gl.data.return_data
-            that.position = `${province}${city}${district}`
+            that.position = `${province} ${city} ${district}`
             that.schoolList(adcode, '')
           },
 					fail () {
+            that.$createToast({
+              txt: '获取地址失败，请手动选择',
+              type: 'txt'
+            }).show()
+          },
+          cancel () {
             that.$createToast({
               txt: '获取地址失败，请手动选择',
               type: 'txt'
