@@ -69,11 +69,11 @@ export default {
       'setSchool'
     ]),
     async firstShow () {
+      let that = this
       if (!sessionStorage.getItem('getLocation')) {
         let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
         console.log(a)
         let redirectUrl = location.href
-        let that = this
         let o = await options({token: a.data.return_data.token, url: redirectUrl})
         sessionStorage.setItem('getLocation',  JSON.stringify(o.data.return_data.config))
       }
