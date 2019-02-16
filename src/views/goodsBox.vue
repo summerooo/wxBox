@@ -672,12 +672,14 @@ export default {
           width: 100%;
         }
         span {
-          background: red;
-          padding: 1.2px;
-          padding-left: 6px;
-          padding-right: 6px;
-          font-size: 10px;
-          border-radius: 43%;
+          background: $red;
+          width: $default;
+          height: $default;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: $mini;
+          border-radius: 50%;
           position: absolute;
           top: -1px;
           right: -5px;
