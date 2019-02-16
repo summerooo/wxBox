@@ -77,10 +77,11 @@ export default {
       let that = this
       let o = await options({token: a.data.return_data.token, url: redirectUrl})
       wx.config(Object.assign({}, o.data.return_data.config, { debug: true }))
-      wx.ready(() => {
+      wx.ready(function () {
         wx.getLocation({
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
           success (res) {
+            console.log(res, 'location')
             var latitude = res.latitude
             var longitude = res.longitude
             var speed = res.speed
