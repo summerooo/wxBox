@@ -105,7 +105,7 @@ import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -149,7 +149,8 @@ export default {
       panelData: null,
       listData: null,
       searchFalse: false,
-      box_no: 'CEF33961'
+      box_no: 'CEF33961',
+      wxData: null
     }
   },
   computed: {
@@ -187,24 +188,42 @@ export default {
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
     if ('box_no' in this.$route.query) {
-      sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
       this.box_no = this.$route.query['box_no']
     }
+    if ('code' in this.$route.query) {
+      sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
+    }
+    this.wxData = sessionStorage.getItem('wxData')
+    // if (!this.wxData) this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit()
-    // this.goodsShow()
     this.firstShow()
-    let wxData = sessionStorage.getItem('wxData')
-    if (!wxData) {
-      // var host = location.hostname
-      // var prot = location.protocol
-      // var redirectUrl = encodeURIComponent(`${prot}//${host}/buyGoods?box_no=${this.box_no}`)
-      // location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
-    } else {
-      console.log(JSON.parse(wxData))
-    }
   },
   methods: {
+    ...mapMutations([
+      'wxAuthority'
+    ]),
+    closeWindow () {
+      // eslint-disable-next-line
+      if(typeof(WeixinJSBridge) != 'undefined'){
+      // eslint-disable-next-line
+        WeixinJSBridge.call('closeWindow')
+      } else {
+        if (navigator.userAgent.indexOf('MSIE') > 0) {
+          if (navigator.userAgent.indexOf('MSIE 6.0') > 0) {
+            window.opener = null; window.close()
+          } else {
+            window.open('', '_top'); window.top.close()
+          }  
+        } else if (navigator.userAgent.indexOf('Firefox') > 0) {  
+          window.location.href = 'about:blank '
+        } else {  
+          window.opener = null
+          window.open('', '_self', '')
+          window.close()
+        }
+      }
+    },
     async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
@@ -705,12 +724,12 @@ export default {
           font-size: 30px;
         }
         span {
-          background: red;
-          padding: 1.2px;
+          background: $red;
+          padding: 2px;
           padding-left: 6px;
           padding-right: 6px;
           font-size: 10px;
-          border-radius: 43%;
+          border-radius: 6px;
           position: absolute;
           top: 5px;
           right: -3px;

@@ -83,10 +83,8 @@ export default {
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
           success (res) {
             console.log(res, 'location')
-            var latitude = res.latitude
-            var longitude = res.longitude
-            var speed = res.speed
-            var accuracy = res.accuracy
+            // const { latitude, longitude, speed, accuracy } = res
+            // console.log()
           },
 					fail () {
             that.$createToast({
