@@ -94,17 +94,17 @@ body {
     // font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
   }
 }
-// .fade-enter-active,
-// .fade-leave-active {
-//   transition: all 0.3s ease;
-// }
-// .fade-enter,
-// .fade-leave-to {
-//   opacity: 0;
-//   height: 0px !important;
-//   padding-top: 0px !important;
-//   padding-bottom: 0px !important;
-//   margin-top: 0px !important;
-//   margin-bottom: 0px !important;
-// }
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+  height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
 </style>
