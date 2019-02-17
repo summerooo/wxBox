@@ -75,6 +75,31 @@ export default new Vuex.Store({
           window.close()
         }
       }
+    },
+    stopDrop() {
+      var overscroll = el => {
+        el.addEventListener('touchstart', () => {
+          var top = el.scrollTop
+          var totalScroll = el.scrollHeight
+          var currentScroll = top + el.offsetHeight
+          if (top === 0) {
+            el.scrollTop = 1
+          } else if (currentScroll === totalScroll) {
+            el.scrollTop = top - 1
+          }
+        })
+        el.addEventListener('touchmove', evt => {
+          if (el.offsetHeight < el.scrollHeight) {
+            evt._isScroller = true
+          }
+        })
+      }
+      overscroll(document.querySelector('.isNotScroll'))
+      document.body.addEventListener('touchmove', evt => {
+        if (!evt._isScroller) {
+          evt.preventDefault()
+        }
+      })
     }
   },
   actions: {

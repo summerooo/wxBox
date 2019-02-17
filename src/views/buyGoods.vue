@@ -203,7 +203,8 @@ export default {
   methods: {
     ...mapMutations([
       'wxAuthority',
-      'closeWindow'
+      'closeWindow',
+      'stopDrop'
     ]),
     async getLocation () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
@@ -465,6 +466,7 @@ export default {
   },
   mounted() {
     document.title = '商品列表'
+    this.stopDrop()
     // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.bottom.offsetHeight}px)`
   }
 }

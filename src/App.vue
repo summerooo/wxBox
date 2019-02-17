@@ -37,7 +37,6 @@ export default {
       }
     }
     this.$store.commit('getUser')
-    this.stopDrop()
     // console.log(wx)
     // var host = location.hostname;
     // var prot = location.protocol;
@@ -57,31 +56,6 @@ export default {
   // },
   methods: {
     ...mapMutations(['setBoxNo']),
-    stopDrop() {
-      var overscroll = el => {
-        el.addEventListener('touchstart', () => {
-          var top = el.scrollTop
-          var totalScroll = el.scrollHeight
-          var currentScroll = top + el.offsetHeight
-          if (top === 0) {
-            el.scrollTop = 1
-          } else if (currentScroll === totalScroll) {
-            el.scrollTop = top - 1
-          }
-        })
-        el.addEventListener('touchmove', evt => {
-          if (el.offsetHeight < el.scrollHeight) {
-            evt._isScroller = true
-          }
-        })
-      }
-      overscroll(document.querySelector('.isNotScroll'))
-      document.body.addEventListener('touchmove', evt => {
-        if (!evt._isScroller) {
-          evt.preventDefault()
-        }
-      })
-    },
     isWx() {
       let nu = navigator.userAgent
       if (nu.toLowerCase().match(/MicroMessenger/i)) {
