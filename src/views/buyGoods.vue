@@ -446,7 +446,26 @@ export default {
       console.log(goods_info)
       let br = await prepayWeixinOrder({ token: a.data.return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
-      this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
+      WeixinJSBridge.invoke(
+        'getBrandWCPayRequest', Object.assign({
+          appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
+          timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
+          nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
+          package: 'prepay_id=u802345jgfjsdfgsdg888',
+          signType: 'MD5',         //微信签名方式
+          paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
+        }, br.data.return_data),
+        res => {
+          if(res.err_msg == 'get_brand_wcpay_request:ok' ){
+            this.$createToast({ txt: '支付成功', type: 'txt' }).show()
+            setTimeout(() => {
+              this.$router.push({name: 'paySuccess'})
+            }, 300)
+          } else {
+            this.$createToast({ txt: '支付失败', type: 'txt' }).show()
+          }
+        }
+      )
     },
     async panelIcon (data) {
       console.log(this.user, '!!!!!')
