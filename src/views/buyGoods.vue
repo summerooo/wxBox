@@ -436,16 +436,16 @@ export default {
     },
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
-      this.getLocation()
+      // this.getLocation()
       let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
-      console.log(a)
+      console.log(a, 'tokentokentoken')
       let goods_info = []
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})
       }
       console.log(goods_info)
       let br = await prepayWeixinOrder({ token: a.data.return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
-      console.log(br)
+      console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
       this.$createToast({ txt: br.data.return_msg, type: 'txt' }).show()
     },
     async panelIcon (data) {
