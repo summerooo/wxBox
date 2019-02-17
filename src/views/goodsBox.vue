@@ -1,5 +1,5 @@
 <template>
-  <div class="all isNotScroll">
+  <div class="all" id="isNotScroll">
     <div class="content">
       <div class="container" >
         <!-- v-if="!boxFee.max_fee" -->
@@ -211,7 +211,6 @@ export default {
     }
   },
   created() {
-    this.stopDrop()
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
@@ -478,6 +477,7 @@ export default {
   },
   mounted() {
     document.title = '认领补货'
+    this.stopDrop()
     // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.searchNav.offsetHeight + this.$refs.bottom.offsetHeight - 12}px)`
   }
 }

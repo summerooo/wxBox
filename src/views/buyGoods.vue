@@ -1,5 +1,5 @@
 <template>
-  <div class="all isNotScroll">
+  <div class="all" id="isNotScroll">
     <div class="content">
       <div class="container">
         <div class="searchNav" ref="searchNav">
