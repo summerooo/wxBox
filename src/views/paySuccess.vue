@@ -16,7 +16,6 @@ export default {
   },
   methods: {
     downloadApp () {
-      var u = navigator.userAgent
       let device = sessionStorage.getItem('device')
       if (device != 'Android') window.open('https://itunes.apple.com/cn/app/%E7%9B%92%E9%87%8C%E6%9C%89/id1273970293?mt=8')
       else window.open('http://a.app.qq.com/o/simple.jsp?pkgname=com.zk.intelligentlock')
