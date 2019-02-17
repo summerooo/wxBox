@@ -198,7 +198,7 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
-    if (!this.wxData) return this.wxAuthority()
+    if (!this.wxData) this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit(false)
     this.firstShow()
