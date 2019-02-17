@@ -261,7 +261,7 @@ export default {
       for (let i in list) {
         this.$set(this.menusData, i, Object.assign({}, list[i], {label: list[i].cate_name, value: list[i].cate_id}))
       }
-      this.menusData.unshift({label: '全' + '\xa0\xa0\xa0\xa0' +'部', value: 0, cate_id: 0, cate_name: '全' + '\xa0\xa0\xa0\xa0' +'部'})
+      this.menusData.unshift({label: '全' + '\xa0\xa0\xa0\xa0\xa0' +'部', value: 0, cate_id: 0, cate_name: '全' + '\xa0\xa0\xa0\xa0\xa0' +'部'})
       if (!this.menusData.length) return
       this.defaultActive = this.menusData[0].value
       this.goodsShow()
@@ -494,6 +494,7 @@ export default {
   & .content {
     overflow: hidden;
     flex: 1;
+    height: 100%;
     // overflow: auto;
     // display: flex;
     position: relative;
@@ -589,7 +590,8 @@ export default {
       display: flex;
       .left {
         height: 100%;
-        width: 24vw;
+        width: 25vw;
+        text-align: center;
         background: $nav;
         padding-bottom: 100px;
       }

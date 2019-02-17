@@ -516,6 +516,7 @@ export default {
   & .content {
     overflow: hidden;
     flex: 1;
+    height: 100%;
     // overflow: auto;
     // display: flex;
     position: relative;
