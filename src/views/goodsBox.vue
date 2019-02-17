@@ -211,6 +211,7 @@ export default {
     }
   },
   created() {
+    this.stopDrop()
     // http://localhost:8088/goodsBox?box_no=FF541857
     console.log(this.$route.query)
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
@@ -222,7 +223,8 @@ export default {
   methods: {
     ...mapMutations([
       'getBeforeInfo',
-      'closeWindow'
+      'closeWindow',
+      'stopDrop'
     ]),
     async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
