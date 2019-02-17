@@ -52,6 +52,7 @@ export default new Vuex.Store({
       // let host = location.hostname
       // let prot = location.protocol
       // let redirectUrl = `${prot}//${host}/${data}`
+      if (sessionStorage.getItem('wxData')) sessionStorage.removeItem('wxData')
       let redirectUrl = location.href
       location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx15d558c01d3cab99&redirect_uri=' + redirectUrl + '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
     },

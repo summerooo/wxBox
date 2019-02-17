@@ -439,6 +439,10 @@ export default {
       // this.getLocation()
       let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
       console.log(a, 'tokentokentoken')
+      if (a.data.return_code === 400) {
+        this.$createToast({txt: a.data.return_msg, type: 'txt'}).show()
+        return this.wxAuthority()
+      }
       let goods_info = []
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})
