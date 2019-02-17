@@ -1,5 +1,5 @@
 <template>
-  <div class="all" id="isNotScroll">
+  <div class="all">
     <div class="content">
       <div class="container" >
         <!-- v-if="!boxFee.max_fee" -->
@@ -222,8 +222,7 @@ export default {
   methods: {
     ...mapMutations([
       'getBeforeInfo',
-      'closeWindow',
-      'stopDrop'
+      'closeWindow'
     ]),
     async routerInit () {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
@@ -477,7 +476,6 @@ export default {
   },
   mounted() {
     document.title = '认领补货'
-    this.stopDrop()
     // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.searchNav.offsetHeight + this.$refs.bottom.offsetHeight - 12}px)`
   }
 }

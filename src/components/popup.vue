@@ -114,6 +114,7 @@ export default {
       // this.$set(this.touchstartData, 't', e.timeStamp)
     },
     touchmove (e) {
+      e.preventDefault()
       this.$set(this.touchmoveData, 'y', e.changedTouches[0].clientY)
       // this.$set(this.touchmoveData, 't', e.timeStamp)
       if (this.touchmoveData.y - this.touchstartData.y > 0) {

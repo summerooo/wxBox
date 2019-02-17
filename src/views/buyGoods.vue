@@ -1,5 +1,5 @@
 <template>
-  <div class="all" id="isNotScroll">
+  <div class="all">
     <div class="content">
       <div class="container">
         <div class="searchNav" ref="searchNav">
@@ -185,7 +185,6 @@ export default {
     }
   },
   created() {
-    this.stopDrop()
     console.log(wx)
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
@@ -204,8 +203,7 @@ export default {
   methods: {
     ...mapMutations([
       'wxAuthority',
-      'closeWindow',
-      'stopDrop'
+      'closeWindow'
     ]),
     async getLocation () {
       let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
