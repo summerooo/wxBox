@@ -1,8 +1,8 @@
 import Vue from 'vue'
 
-import { Style, Button, IndexList, ScrollNav, Sticky, Scroll, Loading, Input, ActionSheet, Toast, Dialog,
+import { Style, Button, IndexList, ScrollNav, Sticky, Scroll, Loading, Input, Toast, Dialog,
 Radio, RadioGroup, Checkbox, CheckboxGroup, Picker } from 'cube-ui'
-Vue.use(Style).use(Button).use(IndexList).use(ScrollNav).use(Sticky).use(Scroll).use(Loading).use(Input).use(ActionSheet).use(Toast).use(Dialog)
+Vue.use(Style).use(Button).use(IndexList).use(ScrollNav).use(Sticky).use(Scroll).use(Loading).use(Input).use(Toast).use(Dialog)
 .use(Radio).use(RadioGroup).use(Checkbox).use(CheckboxGroup).use(Picker)
 // // By default we import all the components.
 // // Only reserve the components on demand and remove the rest.

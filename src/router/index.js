@@ -180,16 +180,16 @@ export default new Router({
       name: 'home',
       component: () => import('../views/About')
     },
-    {
-      path: '/cloud',
-      name: 'cloud',
-      component: () => import('../components/cloud')
-    },
-    {
-      path: '/sss',
-      name: 'sss',
-      component: () => import('../components/scroll.vue')
-    },
+    // {
+    //   path: '/cloud',
+    //   name: 'cloud',
+    //   component: () => import('../components/cloud')
+    // },
+    // {
+    //   path: '/sss',
+    //   name: 'sss',
+    //   component: () => import('../components/scroll.vue')
+    // },
     // {
     //   path: '/scrollTest',
     //   name: 'scrollTest',
@@ -199,6 +199,11 @@ export default new Router({
       path: '/goWx',
       name: 'goWx',
       component: () => import('../views/goWx.vue')
+    },
+    {
+      path: '/paySuccess',
+      name: 'paySuccess',
+      component: () => import('../views/paySuccess.vue')
     },
     { path:'*', redirect: '/' }
   ]

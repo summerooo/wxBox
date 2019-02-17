@@ -190,6 +190,8 @@ export default {
     console.log(this.$route.query)
     if ('box_no' in this.$route.query) {
       this.box_no = this.$route.query['box_no']
+    } else {
+      return this.$createToast({txt: '不存在盒子编号', type: 'txt'}).show()
     }
     if ('code' in this.$route.query) {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
@@ -197,7 +199,7 @@ export default {
     this.wxData = sessionStorage.getItem('wxData')
     if (!this.wxData) this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
-    this.routerInit()
+    this.routerInit(false)
     this.firstShow()
   },
   methods: {
@@ -229,13 +231,13 @@ export default {
         })
       })
     },
-    async routerInit () {
+    async routerInit (tf = true) {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
       if (this.searching === 4) this.showSearchData()
-      if (this.searching === 0) {
+      if (this.searching === 0 && tf) {
         this.back()
       }
     },
@@ -433,6 +435,36 @@ export default {
       // this.$router.go(-1)
     },
     async submit () {
+      if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
+      let that = this
+      if (!sessionStorage.getItem('getLocation')) {
+        let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+        console.log(a)
+        let redirectUrl = location.href
+        let o = await options({token: a.data.return_data.token, url: redirectUrl})
+        sessionStorage.setItem('getLocation',  JSON.stringify(o.data.return_data.config))
+      }
+      wx.config(JSON.parse(sessionStorage.getItem('getLocation')))
+      wx.ready(function () {
+        wx.getLocation({
+          type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+          async success (res) {
+            console.log(res, 'locationlocationlocation')
+          },
+					fail () {
+            that.$createToast({
+              txt: '获取地址失败，请手动选择',
+              type: 'txt'
+            }).show()
+          },
+          cancel () {
+            that.$createToast({
+              txt: '获取地址失败，请手动选择',
+              type: 'txt'
+            }).show()
+          }
+        })
+      })
       let goods_info = []
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})

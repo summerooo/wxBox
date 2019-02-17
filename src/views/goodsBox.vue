@@ -107,7 +107,7 @@
         <!-- !Boolean(Number(cartMoney)) -->
         <!-- boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true -->
         <cube-button :primary="true"
-          :disabled="boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true"
+          :disabled="cartMoney ? (boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true) : true"
           @click="submit">申请补货</cube-button>
       </div>
     </div>
@@ -215,7 +215,7 @@ export default {
     console.log(this.$route.query)
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.getBeforeInfo()
-    this.routerInit()
+    this.routerInit(false)
     this.firstShow()
   },
   methods: {
@@ -223,13 +223,13 @@ export default {
       'getBeforeInfo',
       'closeWindow'
     ]),
-    async routerInit () {
+    async routerInit (tf = true) {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
       if (this.searching === 4) this.showSearchData()
-      if (this.searching === 0) {
+      if (this.searching === 0 && tf) {
         this.back()
       }
     },
