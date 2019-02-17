@@ -230,6 +230,7 @@ export default {
       if (!index.length) index[0] = 0
       this.searching = Number(index[0])
       if (this.searching === 4) this.showSearchData()
+      if (!this.searching) this.$refs.searchInput.$refs.input.blur()
     },
     async goodsShow () {
       // 基于左侧商品 right
