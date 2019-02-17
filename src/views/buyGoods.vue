@@ -208,7 +208,7 @@ export default {
       'closeWindow'
     ]),
     async getLocation () {
-      let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+      let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
       console.log(a)
       let redirectUrl = location.href
       let that = this
@@ -218,7 +218,7 @@ export default {
         wx.getLocation({
           type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
           success (res) {
-            console.log(res, 'location')
+            console.log(res, 'locationlocationlocationlocation')
             // const { latitude, longitude, speed, accuracy } = res
             // console.log()
           },
@@ -436,35 +436,7 @@ export default {
     },
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
-      let that = this
-      if (!sessionStorage.getItem('getLocation')) {
-        let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
-        console.log(a)
-        let redirectUrl = location.href
-        let o = await options({token: a.data.return_data.token, url: redirectUrl})
-        sessionStorage.setItem('getLocation',  JSON.stringify(o.data.return_data.config))
-      }
-      wx.config(JSON.parse(sessionStorage.getItem('getLocation')))
-      wx.ready(function () {
-        wx.getLocation({
-          type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-          async success (res) {
-            console.log(res, 'locationlocationlocation')
-          },
-					fail () {
-            that.$createToast({
-              txt: '获取地址失败，请手动选择',
-              type: 'txt'
-            }).show()
-          },
-          cancel () {
-            that.$createToast({
-              txt: '获取地址失败，请手动选择',
-              type: 'txt'
-            }).show()
-          }
-        })
-      })
+      this.getLocation()
       let goods_info = []
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})
