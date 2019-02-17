@@ -446,6 +446,7 @@ export default {
       console.log(goods_info)
       let br = await prepayWeixinOrder({ token: a.data.return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
+      /* eslint-disable */
       WeixinJSBridge.invoke(
         'getBrandWCPayRequest', Object.assign({
           appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
@@ -466,6 +467,7 @@ export default {
           }
         }
       )
+      /* eslint-disable */
     },
     async panelIcon (data) {
       console.log(this.user, '!!!!!')
