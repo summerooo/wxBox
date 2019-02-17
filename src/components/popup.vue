@@ -83,7 +83,6 @@ export default {
     openPopup () {
       // this.popupTf = true
       this.isVisible = true
-      console.log('111')
       this.$nextTick(() => {
         if (this.timer) clearTimeout(this.timer)
         this.$refs.container.removeAttribute('style')
