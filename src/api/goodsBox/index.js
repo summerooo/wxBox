@@ -26,7 +26,7 @@ export const orderSearchGoodsLog = data => {
   return axios.post(`${api}/orderSearchGoodsLog`, data)
 }
 
-// 搜索页历史记录
+// 搜索页热门记录
 export const orderSearchGoodsHot = data => {
   return axios.post(`${api}/orderSearchGoodsHot`, data)
 }

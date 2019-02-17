@@ -188,6 +188,7 @@ export default {
     console.log(wx)
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
+    sessionStorage.removeItem('wxData')
     if ('box_no' in this.$route.query) {
       this.box_no = this.$route.query['box_no']
     } else {
