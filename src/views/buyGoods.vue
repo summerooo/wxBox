@@ -612,7 +612,7 @@ export default {
       display: flex;
       .left {
         height: 100%;
-        width: 24vw;
+        width: 25vw;
         background: $nav;
         padding-bottom: 100px;
       }
