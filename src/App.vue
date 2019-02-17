@@ -75,7 +75,7 @@ export default {
           }
         })
       }
-      overscroll(document.body)
+      overscroll(document.querySelector('.isNotScroll'))
       document.body.addEventListener('touchmove', evt => {
         if (!evt._isScroller) {
           evt.preventDefault()
