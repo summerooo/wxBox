@@ -216,7 +216,6 @@ export default {
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.getBeforeInfo()
     this.routerInit()
-    // this.goodsShow()
     this.firstShow()
   },
   methods: {
