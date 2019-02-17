@@ -231,14 +231,7 @@ export default {
       this.searching = Number(index[0])
       if (this.searching === 4) this.showSearchData()
       if (this.searching === 0) {
-        this.searchFalse = true
-        this.searchData = ''
-        await this.$refs.searchInput.$refs.input.blur()
-        await this.goodsShow()
-        setTimeout(() => {
-          this.searchFalse = false
-        }, 300)
-        this.$refs.scroll.refresh()
+        this.$refs.searchInput.$refs.input.blur()
       }
     },
     async goodsShow () {
