@@ -423,9 +423,9 @@ export default {
     async back () {
       this.searchFalse = true
       this.searchData = ''
-      await this.$refs.searchInput.$refs.input.blur()
       await this.goodsShow()
       await this.$router.replace({name: 'buyGoods'})
+      this.$refs.searchInput.$refs.input.blur()
       setTimeout(() => {
         this.searchFalse = false
       }, 300)
