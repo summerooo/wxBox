@@ -184,7 +184,7 @@ export default {
       this.routerInit()
     }
   },
-  async created() {
+  created() {
     console.log(wx)
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
@@ -198,7 +198,7 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
-    if (!this.wxData) await this.wxAuthority()
+    if (!this.wxData) return this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit(false)
     this.firstShow()
