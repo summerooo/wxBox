@@ -94,7 +94,7 @@ export default new Vuex.Store({
           }
         })
       }
-      overscroll(document.querySelector('.isNotScroll'))
+      overscroll(document.body)
       document.body.addEventListener('touchmove', evt => {
         if (!evt._isScroller) {
           evt.preventDefault()

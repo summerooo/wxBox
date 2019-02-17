@@ -185,6 +185,7 @@ export default {
     }
   },
   created() {
+    this.stopDrop()
     console.log(wx)
     // http://localhost:8088/buyGoods?box_no=FF541857
     console.log(this.$route.query)
@@ -466,7 +467,6 @@ export default {
   },
   mounted() {
     document.title = '商品列表'
-    this.stopDrop()
     // this.$refs.searchContent.style.height = `calc(100% - ${this.$refs.bottom.offsetHeight}px)`
   }
 }
