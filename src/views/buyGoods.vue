@@ -106,7 +106,7 @@ import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
-import { authority, options } from '../api/wx'
+import { authority } from '../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
