@@ -454,6 +454,7 @@ export default {
       // )
       let that = this
       alert(JSON.stringify(Object.assign({
+        timeStamp: wxpso.data.return_data.msg.timestamp,
         success (res) {
           that.$createToast({ txt: '支付成功', type: 'txt' }).show()
           setTimeout(() => {
@@ -468,6 +469,7 @@ export default {
     )
       
       wx.chooseWXPay(Object.assign({
+        timeStamp: wxpso.data.return_data.msg.timestamp,
         success (res) {
           that.$createToast({ txt: '支付成功', type: 'txt' }).show()
           setTimeout(() => {
