@@ -419,6 +419,7 @@ export default {
         let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
         sessionStorage.setItem('authorityToken',  JSON.stringify(a.data.return_data))
         authorityToken = sessionStorage.getItem('authorityToken')
+        let redirectUrl = location.href
         let o = await options({token: a.data.return_data.token, url: redirectUrl})
         sessionStorage.setItem('buyAuthority',  JSON.stringify(o.data.return_data.config))
         buyAuthority = sessionStorage.getItem('buyAuthority')
@@ -444,26 +445,11 @@ export default {
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
       let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(authorityToken), order_origin: 4, channel: 1}, br.data.return_data))
       let that = this
-      alert(
-        JSON.stringify(Object.assign({
-          timeStamp: wxpso.data.return_data.msg.timestamp,
-          success (res) {
-            that.$createToast({ txt: '支付成功', type: 'txt' }).show()
-            setTimeout(() => {
-              that.$router.push({name: 'paySuccess'})
-            }, 300)
-          },
-          fail (e) {
-            alert(JSON.stringify(e))
-            that.$createToast({ txt: '支付失败', type: 'txt' }).show()
-          }
-        }, wxpso.data.return_data.msg))
-      )
       wx.config(JSON.parse(sessionStorage.getItem('buyAuthority')))
       wx.ready(() => {
         wx.chooseWXPay(Object.assign({
           timeStamp: wxpso.data.return_data.msg.timestamp,
-          success (res) {
+          success () {
             that.$createToast({ txt: '支付成功', type: 'txt' }).show()
             setTimeout(() => {
               that.$router.push({name: 'paySuccess'})
