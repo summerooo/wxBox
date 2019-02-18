@@ -460,7 +460,7 @@ export default {
               that.$router.push({name: 'paySuccess'})
             }, 300)
           },
-          async fail (e) {
+          async fail () {
             // alert(JSON.stringify(e))
             let cso = await cancelSaleOrder(br.data.return_data)
             that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
