@@ -452,23 +452,24 @@ export default {
       //     }
       //   }
       // )
+      let that = this
       wx.chooseWXPay(Object.assign({
-          appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
-          timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
-          nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
-          package: 'prepay_id=u802345jgfjsdfgsdg888',
-          signType: 'MD5',         //微信签名方式
-          paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89', //微信签名
-          success (res) {
-            this.$createToast({ txt: '支付成功', type: 'txt' }).show()
-            setTimeout(() => {
-              this.$router.push({name: 'paySuccess'})
-            }, 300)
-          },
-          fail (e) {
-            this.$createToast({ txt: '支付失败', type: 'txt' }).show()
-          }
-        }, wxpso.data.return_data.msg))
+        appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
+        timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
+        nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
+        package: 'prepay_id=u802345jgfjsdfgsdg888',
+        signType: 'MD5',         //微信签名方式
+        paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89', //微信签名
+        success (res) {
+          that.$createToast({ txt: '支付成功', type: 'txt' }).show()
+          setTimeout(() => {
+            that.$router.push({name: 'paySuccess'})
+          }, 300)
+        },
+        fail (e) {
+          that.$createToast({ txt: '支付失败', type: 'txt' }).show()
+        }
+      }, wxpso.data.return_data.msg))
       /* eslint-disable */
     },
     async panelIcon (data) {
