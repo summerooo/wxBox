@@ -104,9 +104,9 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, prepayWeixinOrder, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
+import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
-import { authority } from '../api/wx'
+import { authority, prepayWeixinOrder, weixinPaySaleOrder } from '../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -430,6 +430,7 @@ export default {
       console.log(goods_info)
       let br = await prepayWeixinOrder({ token: JSON.parse(buyAuthority).return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
+      let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(buyAuthority).return_data.token, order_origin: 4, channel: 1}, br.data.return_data))
       /* eslint-disable */
       WeixinJSBridge.invoke(
         'getBrandWCPayRequest', Object.assign({
@@ -439,7 +440,7 @@ export default {
           package: 'prepay_id=u802345jgfjsdfgsdg888',
           signType: 'MD5',         //微信签名方式
           paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
-        }, br.data.return_data.msg),
+        }, wxpso.data.return_data.msg),
         res => {
           if(res.err_msg == 'get_brand_wcpay_request:ok' ){
             this.$createToast({ txt: '支付成功', type: 'txt' }).show()

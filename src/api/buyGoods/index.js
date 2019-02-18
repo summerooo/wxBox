@@ -16,10 +16,6 @@ export const getBoxHandlingFee = data => {
   return axios.post(`${api}/getBoxHandlingFee`, data)
 }
 
-// 结算
-export const prepayWeixinOrder = data => {
-  return axios.post(`${api}/prepayWeixinOrder`, data)
-}
 
 // orderSearchGoodsLog 搜索页历史记录
 export const orderSearchGoodsLog = data => {
