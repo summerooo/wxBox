@@ -432,26 +432,43 @@ export default {
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
       let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(buyAuthority).return_data.token, order_origin: 4, channel: 1}, br.data.return_data))
       /* eslint-disable */
-      WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', Object.assign({
+      // WeixinJSBridge.invoke(
+      //   'getBrandWCPayRequest', Object.assign({
+      //     appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
+      //     timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
+      //     nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
+      //     package: 'prepay_id=u802345jgfjsdfgsdg888',
+      //     signType: 'MD5',         //微信签名方式
+      //     paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
+      //   }, wxpso.data.return_data.msg),
+      //   res => {
+      //     if(res.err_msg == 'get_brand_wcpay_request:ok' ){
+      //       this.$createToast({ txt: '支付成功', type: 'txt' }).show()
+      //       setTimeout(() => {
+      //         this.$router.push({name: 'paySuccess'})
+      //       }, 300)
+      //     } else {
+      //       this.$createToast({ txt: '支付失败', type: 'txt' }).show()
+      //     }
+      //   }
+      // )
+      wx.chooseWXPay(Object.assign({
           appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
           timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
           nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
           package: 'prepay_id=u802345jgfjsdfgsdg888',
           signType: 'MD5',         //微信签名方式
-          paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
-        }, wxpso.data.return_data.msg),
-        res => {
-          if(res.err_msg == 'get_brand_wcpay_request:ok' ){
+          paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89', //微信签名
+          success (res) {
             this.$createToast({ txt: '支付成功', type: 'txt' }).show()
             setTimeout(() => {
               this.$router.push({name: 'paySuccess'})
             }, 300)
-          } else {
+          },
+          fail (e) {
             this.$createToast({ txt: '支付失败', type: 'txt' }).show()
           }
-        }
-      )
+        }, wxpso.data.return_data.msg))
       /* eslint-disable */
     },
     async panelIcon (data) {
