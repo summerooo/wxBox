@@ -413,6 +413,10 @@ export default {
     },
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
+      const toast = this.$createToast({
+        mask: true
+      })
+      toast.show()
       let authorityToken = sessionStorage.getItem('authorityToken')
       let buyAuthority = sessionStorage.getItem('buyAuthority')
       if (!authorityToken || !buyAuthority) {
@@ -444,6 +448,7 @@ export default {
       let br = await prepayWeixinOrder({ token: JSON.parse(authorityToken).token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
       let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(authorityToken).token, order_origin: 4, channel: 1}, br.data.return_data))
+      toast.hide()
       let that = this
       wx.config(JSON.parse(sessionStorage.getItem('buyAuthority')))
       wx.ready(() => {
