@@ -416,7 +416,7 @@ export default {
       let authorityToken = sessionStorage.getItem('authorityToken')
       let buyAuthority = sessionStorage.getItem('buyAuthority')
       if (!authorityToken || !buyAuthority) {
-        let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+        let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
         sessionStorage.setItem('authorityToken',  JSON.stringify(a.data.return_data))
         authorityToken = sessionStorage.getItem('authorityToken')
         let redirectUrl = location.href
