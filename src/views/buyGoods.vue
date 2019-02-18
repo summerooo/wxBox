@@ -439,7 +439,7 @@ export default {
           package: 'prepay_id=u802345jgfjsdfgsdg888',
           signType: 'MD5',         //微信签名方式
           paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
-        }, br.data.return_data),
+        }, br.data.return_data.msg),
         res => {
           if(res.err_msg == 'get_brand_wcpay_request:ok' ){
             this.$createToast({ txt: '支付成功', type: 'txt' }).show()
