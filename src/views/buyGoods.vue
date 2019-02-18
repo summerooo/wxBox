@@ -453,6 +453,20 @@ export default {
       //   }
       // )
       let that = this
+      alert(JSON.stringify(Object.assign({
+        success (res) {
+          that.$createToast({ txt: '支付成功', type: 'txt' }).show()
+          setTimeout(() => {
+            that.$router.push({name: 'paySuccess'})
+          }, 300)
+        },
+        fail (e) {
+          alert(JSON.stringify(e))
+          that.$createToast({ txt: '支付失败', type: 'txt' }).show()
+        }
+      }, wxpso.data.return_data.msg))
+    )
+      
       wx.chooseWXPay(Object.assign({
         success (res) {
           that.$createToast({ txt: '支付成功', type: 'txt' }).show()
