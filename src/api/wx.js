@@ -25,3 +25,8 @@ export const prepayWeixinOrder = data => {
 export const weixinPaySaleOrder = data => {
   return axios.post(`${api}/weixinPaySaleOrder`, data)
 }
+
+// cancelSaleOrder 取消支付订单
+export const cancelSaleOrder = data => {
+  return axios.post(`${api}/cancelSaleOrder`, data)
+}

@@ -106,7 +106,7 @@ import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
-import { authority, options, prepayWeixinOrder, weixinPaySaleOrder } from '../api/wx'
+import { authority, options, prepayWeixinOrder, weixinPaySaleOrder, cancelSaleOrder } from '../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -460,9 +460,10 @@ export default {
               that.$router.push({name: 'paySuccess'})
             }, 300)
           },
-          fail (e) {
-            alert(JSON.stringify(e))
-            that.$createToast({ txt: '支付失败', type: 'txt' }).show()
+          async fail (e) {
+            // alert(JSON.stringify(e))
+            let cso = await cancelSaleOrder(br.data.return_data)
+            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
           }
         }, wxpso.data.return_data.msg))
       })
