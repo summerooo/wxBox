@@ -461,7 +461,7 @@ export default {
           }, 300)
         },
         fail (e) {
-          alert(e)
+          alert(JSON.stringify(e))
           that.$createToast({ txt: '支付失败', type: 'txt' }).show()
         }
       }, wxpso.data.return_data.msg))
