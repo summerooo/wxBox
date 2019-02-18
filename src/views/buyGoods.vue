@@ -208,30 +208,6 @@ export default {
       'wxAuthority',
       'closeWindow'
     ]),
-    async getLocation () {
-      let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
-      console.log(a)
-      let redirectUrl = location.href
-      let that = this
-      let o = await options({token: a.data.return_data.token, url: redirectUrl})
-      wx.config(Object.assign({}, o.data.return_data.config, { debug: true }))
-      wx.ready(function () {
-        wx.getLocation({
-          type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-          success (res) {
-            console.log(res, 'locationlocationlocationlocation')
-            // const { latitude, longitude, speed, accuracy } = res
-            // console.log()
-          },
-          fail () {
-            that.$createToast({
-              txt: '获取地址失败，请手动选择',
-              type: 'txt'
-            }).show()
-          }
-        })
-      })
-    },
     async routerInit (tf = true) {
       // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)
       let index = this.$route.name.match(/\d+/g) ? this.$route.name.match(/\d+/g) : []
@@ -437,11 +413,13 @@ export default {
     },
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
-      // this.getLocation()
-      let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
-      console.log(a, 'tokentokentoken')
-      if (a.data.return_code === 400) {
-        this.$createToast({txt: a.data.return_msg, type: 'txt'}).show()
+      let buyAuthority = sessionStorage.getItem('buyAuthority')
+      if (!buyAuthority) {
+        let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
+        sessionStorage.setItem('buyAuthority',  JSON.stringify(a.data))
+      }
+      if (JSON.parse(buyAuthority).return_code === 400) {
+        this.$createToast({txt: JSON.parse(buyAuthority).return_msg, type: 'txt'}).show()
         return this.wxAuthority()
       }
       let goods_info = []
@@ -449,7 +427,7 @@ export default {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})
       }
       console.log(goods_info)
-      let br = await prepayWeixinOrder({ token: a.data.return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
+      let br = await prepayWeixinOrder({ token: JSON.parse(buyAuthority).return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
       /* eslint-disable */
       WeixinJSBridge.invoke(
