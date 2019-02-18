@@ -106,7 +106,7 @@ import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
 import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
-import { authority, prepayWeixinOrder, weixinPaySaleOrder } from '../api/wx'
+import { authority, options, prepayWeixinOrder, weixinPaySaleOrder } from '../api/wx'
 import wx from 'weixin-js-sdk'
 
 export default {
@@ -413,74 +413,68 @@ export default {
     },
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
+      let authorityToken = sessionStorage.getItem('authorityToken')
       let buyAuthority = sessionStorage.getItem('buyAuthority')
-      if (!buyAuthority) {
-        let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
-        sessionStorage.setItem('buyAuthority',  JSON.stringify(a.data))
+      if (!authorityToken || !buyAuthority) {
+        let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+        sessionStorage.setItem('authorityToken',  JSON.stringify(a.data.return_data))
+        authorityToken = sessionStorage.getItem('authorityToken')
+        let o = await options({token: a.data.return_data.token, url: redirectUrl})
+        sessionStorage.setItem('buyAuthority',  JSON.stringify(o.data.return_data.config))
         buyAuthority = sessionStorage.getItem('buyAuthority')
       }
-      if (JSON.parse(buyAuthority).return_code === 400) {
-        this.$createToast({txt: JSON.parse(buyAuthority).return_msg, type: 'txt'}).show()
-        return this.wxAuthority()
-      }
+      // if (!buyAuthority) {
+      //   let a = await authority(Object.assign({}, { user_id: this.user.user_id }, JSON.parse(this.wxData)))
+      //   console.log(a)
+      //   let redirectUrl = location.href
+      //   let o = await options({token: a.data.return_data.token, url: redirectUrl})
+      //   sessionStorage.setItem('buyAuthority',  JSON.stringify(o.data.return_data.config))
+      //   buyAuthority = sessionStorage.getItem('buyAuthority')
+      // }
+      // if (JSON.parse(buyAuthority).return_code === 400) {
+      //   this.$createToast({txt: JSON.parse(buyAuthority).return_msg, type: 'txt'}).show()
+      //   return this.wxAuthority()
+      // }
       let goods_info = []
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number, goods_name: this.cart[i].goods_name})
       }
       console.log(goods_info)
-      let br = await prepayWeixinOrder({ token: JSON.parse(buyAuthority).return_data.token, goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
+      let br = await prepayWeixinOrder({ token: JSON.parse(authorityToken), goods_info: goods_info, box_no: this.box_no, order_source: 4, original_price: 0, preferential_amount: 0, payable_fee: 0, preferential_type: 0, discount_id: 0, user_coupon_id: 0 })
       console.log(br, 'prepayWeixinOrderprepayWeixinOrder')
-      let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(buyAuthority).return_data.token, order_origin: 4, channel: 1}, br.data.return_data))
-      /* eslint-disable */
-      // WeixinJSBridge.invoke(
-      //   'getBrandWCPayRequest', Object.assign({
-      //     appId: 'wx2421b1c4370ec43b',     //公众号名称，由商户传入
-      //     timeStamp: '1395712654',         //时间戳，自1970年以来的秒数
-      //     nonceStr: 'e61463f8efa94090b1f366cccfbbb444', //随机串
-      //     package: 'prepay_id=u802345jgfjsdfgsdg888',
-      //     signType: 'MD5',         //微信签名方式
-      //     paySign: '70EA570631E4BB79628FBCA90534C63FF7FADD89' //微信签名
-      //   }, wxpso.data.return_data.msg),
-      //   res => {
-      //     if(res.err_msg == 'get_brand_wcpay_request:ok' ){
-      //       this.$createToast({ txt: '支付成功', type: 'txt' }).show()
-      //       setTimeout(() => {
-      //         this.$router.push({name: 'paySuccess'})
-      //       }, 300)
-      //     } else {
-      //       this.$createToast({ txt: '支付失败', type: 'txt' }).show()
-      //     }
-      //   }
-      // )
+      let wxpso = await weixinPaySaleOrder(Object.assign({token: JSON.parse(authorityToken), order_origin: 4, channel: 1}, br.data.return_data))
       let that = this
-      alert(JSON.stringify(Object.assign({
-        timeStamp: wxpso.data.return_data.msg.timestamp,
-        success (res) {
-          that.$createToast({ txt: '支付成功', type: 'txt' }).show()
-          setTimeout(() => {
-            that.$router.push({name: 'paySuccess'})
-          }, 300)
-        },
-        fail (e) {
-          alert(JSON.stringify(e))
-          that.$createToast({ txt: '支付失败', type: 'txt' }).show()
-        }
-      }, wxpso.data.return_data.msg))
-    )
-      
-      wx.chooseWXPay(Object.assign({
-        timeStamp: wxpso.data.return_data.msg.timestamp,
-        success (res) {
-          that.$createToast({ txt: '支付成功', type: 'txt' }).show()
-          setTimeout(() => {
-            that.$router.push({name: 'paySuccess'})
-          }, 300)
-        },
-        fail (e) {
-          alert(JSON.stringify(e))
-          that.$createToast({ txt: '支付失败', type: 'txt' }).show()
-        }
-      }, wxpso.data.return_data.msg))
+      alert(
+        JSON.stringify(Object.assign({
+          timeStamp: wxpso.data.return_data.msg.timestamp,
+          success (res) {
+            that.$createToast({ txt: '支付成功', type: 'txt' }).show()
+            setTimeout(() => {
+              that.$router.push({name: 'paySuccess'})
+            }, 300)
+          },
+          fail (e) {
+            alert(JSON.stringify(e))
+            that.$createToast({ txt: '支付失败', type: 'txt' }).show()
+          }
+        }, wxpso.data.return_data.msg))
+      )
+      wx.config(JSON.parse(sessionStorage.getItem('buyAuthority')))
+      wx.ready(() => {
+        wx.chooseWXPay(Object.assign({
+          timeStamp: wxpso.data.return_data.msg.timestamp,
+          success (res) {
+            that.$createToast({ txt: '支付成功', type: 'txt' }).show()
+            setTimeout(() => {
+              that.$router.push({name: 'paySuccess'})
+            }, 300)
+          },
+          fail (e) {
+            alert(JSON.stringify(e))
+            that.$createToast({ txt: '支付失败', type: 'txt' }).show()
+          }
+        }, wxpso.data.return_data.msg))
+      })
       /* eslint-disable */
     },
     async panelIcon (data) {
