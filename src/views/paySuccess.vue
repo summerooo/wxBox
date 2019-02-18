@@ -2,7 +2,7 @@
   <div class="all">
     <img src="../assets/images/paySuccess.png" alt="">
     <p>恭喜你支付成功</p>
-    <cube-button primary @click="downloadApp">下载APP 更多优惠等你来拿！</cube-button>
+    <!-- <cube-button primary @click="downloadApp">下载APP 更多优惠等你来拿！</cube-button> -->
     <br>
     <cube-button primary outline @click="back">继续购买</cube-button>
   </div>
@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../assets/css/variable.scss';
 
 .all {
