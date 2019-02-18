@@ -417,6 +417,7 @@ export default {
       if (!buyAuthority) {
         let a = await authority(Object.assign({}, { user_id: 0 }, JSON.parse(this.wxData)))
         sessionStorage.setItem('buyAuthority',  JSON.stringify(a.data))
+        buyAuthority = sessionStorage.getItem('buyAuthority')
       }
       if (JSON.parse(buyAuthority).return_code === 400) {
         this.$createToast({txt: JSON.parse(buyAuthority).return_msg, type: 'txt'}).show()
