@@ -469,10 +469,8 @@ export default {
           // async fail () {
           //   alert(JSON.stringify(br.data.return_data) + 'fail')
           // }
-          async cencel () {
-            alert('1')
+          async cancel () {
             let cso = await cancelSaleOrder(br.data.return_data)
-            alert(JSON.stringify(cso))
             that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
           },
           async fail () {
