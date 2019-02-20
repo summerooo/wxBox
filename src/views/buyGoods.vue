@@ -470,14 +470,12 @@ export default {
           //   alert(JSON.stringify(br.data.return_data) + 'fail')
           // }
           async cancel () {
-            alert(JSON.stringify(br.data.return_data) + 'cancel')
             let cso = await cancelSaleOrder(br.data.return_data)
-            alert(JSON.stringify(cso) + 'cso')
-            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+            that.$createToast({ txt: cso.data.return_msg ? cso.data.return_msg : '支付失败', type: 'txt' }).show()
           },
           async fail () {
             let cso = await cancelSaleOrder(br.data.return_data)
-            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+            that.$createToast({ txt: cso.data.return_msg ? cso.data.return_msg : '支付失败', type: 'txt' }).show()
           }
         }, wxpso.data.return_data.msg))
       })
