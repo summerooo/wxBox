@@ -463,10 +463,10 @@ export default {
               that.$router.push({name: 'paySuccess'})
             }, 300)
           },
-          async fail () {
+          fail () {
             alert(JSON.stringify(br.data.return_data))
-            let cso = await cancelSaleOrder(br.data.return_data)
-            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+            // let cso = await cancelSaleOrder(br.data.return_data)
+            // that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
           }
         }, wxpso.data.return_data.msg))
       })
