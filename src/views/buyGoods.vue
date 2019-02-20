@@ -198,7 +198,7 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
-    // if (!this.wxData) return this.wxAuthority()
+    if (!this.wxData) return this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit(false)
     this.firstShow()
@@ -414,7 +414,7 @@ export default {
       // this.$router.go(-1)
     },
     async submit () {
-      // if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
+      if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
       const toast = this.$createToast({
         time: 0,
         mask: true
@@ -463,20 +463,20 @@ export default {
               that.$router.push({name: 'paySuccess'})
             }, 300)
           },
-          async cancel () {
-            alert(JSON.stringify(br.data.return_data) + 'cancel')
-          },
-          async fail () {
-            alert(JSON.stringify(br.data.return_data) + 'fail')
-          }
-          // async cencel () {
-          //   let cso = await cancelSaleOrder(br.data.return_data)
-          //   that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+          // async cancel () {
+          //   alert(JSON.stringify(br.data.return_data) + 'cancel')
           // },
           // async fail () {
-          //   let cso = await cancelSaleOrder(br.data.return_data)
-          //   that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+          //   alert(JSON.stringify(br.data.return_data) + 'fail')
           // }
+          async cencel () {
+            let cso = await cancelSaleOrder(br.data.return_data)
+            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+          },
+          async fail () {
+            let cso = await cancelSaleOrder(br.data.return_data)
+            that.$createToast({ txt: cso.return_data.return_msg ? cso.return_data.return_msg : '支付失败', type: 'txt' }).show()
+          }
         }, wxpso.data.return_data.msg))
       })
       /* eslint-disable */
