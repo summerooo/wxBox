@@ -463,11 +463,11 @@ export default {
               that.$router.push({name: 'paySuccess'})
             }, 300)
           },
-          cancel () {
-            alert(JSON.stringify(br.data.return_data))
+          async cancel () {
+            alert(JSON.stringify(br.data.return_data), 'cancel')
           },
-          fail () {
-            alert(JSON.stringify(br.data.return_data))
+          async fail () {
+            alert(JSON.stringify(br.data.return_data), 'fail')
           }
           // async cencel () {
           //   let cso = await cancelSaleOrder(br.data.return_data)
