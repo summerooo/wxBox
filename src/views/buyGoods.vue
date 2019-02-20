@@ -414,7 +414,7 @@ export default {
       // this.$router.go(-1)
     },
     async submit () {
-      if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
+      // if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
       const toast = this.$createToast({
         time: 0,
         mask: true
@@ -464,10 +464,10 @@ export default {
             }, 300)
           },
           async cancel () {
-            alert(JSON.stringify(br.data.return_data), 'cancel')
+            alert(JSON.stringify(br.data.return_data) + 'cancel')
           },
           async fail () {
-            alert(JSON.stringify(br.data.return_data), 'fail')
+            alert(JSON.stringify(br.data.return_data) + 'fail')
           }
           // async cencel () {
           //   let cso = await cancelSaleOrder(br.data.return_data)
