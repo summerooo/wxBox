@@ -104,7 +104,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, orderSearchGoodsLog, orderSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
+import { orderWeixinSearchLogDelete, WeixinOrderScan, WeixinOrderScanList, orderWeixinSearchGoodsLog, orderWeixinSearchGoodsHot, weixinOrderSerach } from '../api/buyGoods'
 import { mapState, mapMutations } from 'vuex'
 import { authority, options, prepayWeixinOrder, weixinPaySaleOrder, cancelSaleOrder } from '../api/wx'
 import wx from 'weixin-js-sdk'
@@ -198,7 +198,7 @@ export default {
       sessionStorage.setItem('wxData', JSON.stringify(this.$route.query))
     }
     this.wxData = sessionStorage.getItem('wxData')
-    if (!this.wxData) return this.wxAuthority()
+    // if (!this.wxData) return this.wxAuthority()
     this.shoppingBoxImage = this.shoppingBoxImageStatus.none
     this.routerInit(false)
     this.firstShow()
@@ -349,14 +349,14 @@ export default {
     },
     async showSearchData () {
       this.panelData = []
-      let osgl = {osgl: await orderSearchGoodsLog(this.user)}.osgl
+      let osgl = {osgl: await orderWeixinSearchGoodsLog({box_no: this.box_no})}.osgl
       let osglData = osgl.data.return_data
       this.$set(this.panelData, 0, {label: '历史搜索', icon: 'box-lajitong'})
       this.$set(this.panelData[0], 'children', [])
       for (let i of osglData) {
         this.panelData[0].children.push({label: i.goods_name, value: i.goods_name})
       }
-      let osgh = {osgh: await orderSearchGoodsHot(this.user)}.osgh
+      let osgh = {osgh: await orderWeixinSearchGoodsHot({box_no: this.box_no})}.osgh
       let osghData = osgh.data.return_data
       if (osghData.length) {
         this.$set(this.panelData, 1, {label: '热门搜索'})
@@ -402,9 +402,11 @@ export default {
     async back () {
       this.searchFalse = true
       this.searchData = ''
+      await this.$router.replace({name: 'buyGoods', query: { box_no: this.box_no}})
       await this.$refs.searchInput.$refs.input.blur()
+      this.page = 1
+      this.defaultActive = 0
       await this.goodsShow()
-      await this.$router.replace({name: 'buyGoods'})
       setTimeout(() => {
         this.searchFalse = false
       }, 300)
@@ -414,6 +416,7 @@ export default {
     async submit () {
       if (!this.wxData) return this.$createToast({txt: '请授权登陆', type: 'txt'}).show()
       const toast = this.$createToast({
+        time: 0,
         mask: true
       })
       toast.show()
@@ -472,7 +475,7 @@ export default {
     async panelIcon (data) {
       console.log(this.user, '!!!!!')
       if (data.row.label === '历史搜索') {
-        let osld = await orderSearchLogDelete(this.user)
+        let osld = await orderWeixinSearchLogDelete({box_no: this.box_no})
         console.log(osld)
         this.$createToast({ txt: osld.data.return_msg, type: 'txt' }).show()
         this.showSearchData()

@@ -18,18 +18,18 @@ export const getBoxHandlingFee = data => {
 
 
 // orderSearchGoodsLog 搜索页历史记录
-export const orderSearchGoodsLog = data => {
-  return axios.post(`${api}/orderSearchGoodsLog`, data)
+export const orderWeixinSearchGoodsLog = data => {
+  return axios.post(`${api}/orderWeixinSearchGoodsLog`, data)
 }
 
-// 搜索页历史记录
-export const orderSearchGoodsHot = data => {
-  return axios.post(`${api}/orderSearchGoodsHot`, data)
+// 搜索 热搜
+export const orderWeixinSearchGoodsHot = data => {
+  return axios.post(`${api}/orderWeixinSearchGoodsHot`, data)
 }
 
 // 删除搜索历史记录
-export const orderSearchLogDelete = data => {
-  return axios.post(`${api}/orderSearchLogDelete`, data)
+export const orderWeixinSearchLogDelete = data => {
+  return axios.post(`${api}/orderWeixinSearchLogDelete`, data)
 }
 
 // 搜索
