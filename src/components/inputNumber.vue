@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variable.scss';
+
 .inputNumber {
   // border: 3px solid yellow;
   width: 95px;

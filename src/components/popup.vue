@@ -147,7 +147,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variable.scss';
 
 .popup {
   // align-self: flex-end;

@@ -65,7 +65,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variable.scss';
+
 .ball {
   z-index: 1;
   width: 20px;

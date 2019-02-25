@@ -170,15 +170,20 @@ export default new Router({
     //   name: 'customGoods',
     //   component: () => import('../views/customGoods')
     // },
-    {
-      path: '/goods',
-      name: 'goods',
-      component: () => import('../views/goods')
-    },
+    // {
+    //   path: '/goods',
+    //   name: 'goods',
+    //   component: () => import('../views/goods')
+    // },
     {
       path: '/home',
       name: 'home',
       component: () => import('../views/About')
+    },
+    {
+      path: '/addGoods',
+      name: 'addGoods',
+      component: () => import('../views/addGoods')
     },
     // {
     //   path: '/cloud',

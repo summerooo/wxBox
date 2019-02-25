@@ -96,7 +96,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../assets/css/variable.scss';
 
 .all {
   padding: 30px;

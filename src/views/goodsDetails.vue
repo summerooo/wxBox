@@ -553,7 +553,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@import '../assets/css/variable.scss';
+
 .all {
   width: 100%;
   height: 100%;

@@ -147,7 +147,7 @@ export default {
   // box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: 3px solid blue;
+  border: 3px solid $primary;
   .swiperAll {
     position: relative;
     border: 3px solid lightcoral;
@@ -181,12 +181,12 @@ export default {
 .a {
   width: 10%;
   height: 10%;
-  border: 1px solid red;
+  border: 1px solid $red;
   font-size: 2vmax;
 }
 .b {
   width: 10vmax;
   height: 10vmax;
-  border: 1px solid red;
+  border: 1px solid $red;
 }
 </style>

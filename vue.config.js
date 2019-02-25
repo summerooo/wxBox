@@ -52,6 +52,9 @@ module.exports = {
       stylus: {
         'resolve url': true,
         import: ['./src/theme']
+      },
+      sass: {
+        data: `@import '@/assets/css/variable.scss';`
       }
     }
   },

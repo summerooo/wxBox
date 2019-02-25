@@ -6,7 +6,6 @@ import store from './store'
 import axios from './api'
 import md5 from 'js-md5'
 import './assets/css/icon.css'
-
 // import VueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'swiper/dist/css/swiper.css'
 
