@@ -6,22 +6,16 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+// import { mapMutations } from 'vuex'
 // import wx from 'weixin-js-sdk'
 
 export default {
   created() {
-    let nu = navigator.userAgent
+    const nu = navigator.userAgent
+    const models = [ 'Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod' ]
     // 设备
     if (!sessionStorage.getItem('device')) {
-      for (let d of [
-        'Android',
-        'iPhone',
-        'SymbianOS',
-        'Windows Phone',
-        'iPad',
-        'iPod'
-      ]) {
+      for (let d of models) {
         if (nu.includes(d)) {
           sessionStorage.setItem('device', d)
           this.device = d
@@ -55,18 +49,18 @@ export default {
   //   }
   // },
   methods: {
-    ...mapMutations(['setBoxNo']),
-    isWx() {
-      let nu = navigator.userAgent
-      if (nu.toLowerCase().match(/MicroMessenger/i)) {
-        alert('在微信')
-      } else {
-        if ('box_no' in this.$route.query) {
-          this.setBoxNo(this.$route.query['box_no'])
-        }
-        this.$router.replace({ name: 'goWx' })
-      }
-    }
+    // ...mapMutations(['setBoxNo']),
+    // isWx() {
+    //   let nu = navigator.userAgent
+    //   if (nu.toLowerCase().match(/MicroMessenger/i)) {
+    //     alert('在微信')
+    //   } else {
+    //     if ('box_no' in this.$route.query) {
+    //       this.setBoxNo(this.$route.query['box_no'])
+    //     }
+    //     this.$router.replace({ name: 'goWx' })
+    //   }
+    // }
   },
   mounted() {
     console.log(this.$md5('123456'))

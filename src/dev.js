@@ -4,7 +4,6 @@ let host = 'http://192.168.0.103:85/userapi/v1/'
 let nginx = false
 nginx = true
 
-// ----------------------------------------------------
 let proxy = {
   '/api': {
     target: host,
@@ -14,19 +13,12 @@ let proxy = {
     }
   }
 }
-// nginx 相对的配置
-
-// location /api {
-//   proxy_pass http://www.udao56.com/thinkphp5/index.php/tms;
-// }
-
+// proxy -> {'api': '/api’}
 let proxyApi = {}
-// Is your service nginx  和 npm run dev 都是代理方式
-// 封装一个对象，如 {'api': '/api’}
 for (let i in proxy) {
   proxyApi[i.replace(/\//, '')] = i
 }
-// build 后 无代理 放到指定服务目录下 无代理 所以不能用 /hot...
+// build
 if (process.env.NODE_ENV === 'production') {
   if (!nginx) {
     for (let i in proxy) {
@@ -39,8 +31,3 @@ module.exports = {
   proxy,
   ...proxyApi
 }
-
-// export default () => {
-//   return {...proxyApi, proxy}
-// }
-
