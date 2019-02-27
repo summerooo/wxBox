@@ -568,7 +568,7 @@ export default {
         span {
           display: inline-block;
           transition: all inline;
-          animation: xmove  10s infinite;
+          animation: xmove  10s infinite linear;
         }
       }
     }
