@@ -3,9 +3,14 @@
     <div class="content">
       <div class="container" >
         <!-- v-if="!boxFee.max_fee" -->
-        <div class="notice" ref="notice" v-if="boxFee.max_fee">
+        <div class="notice" v-if="boxFee.max_fee">
           <i class="box-laba"></i>
-          您的盒子目前有{{cartMoney}}元商品，还可添加{{(boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney).toFixed(2)}}元商品
+          <div ref="notice">
+            <span>
+              您的盒子目前有{{boxFee.box_fee}}元商品，
+              {{boxFee.handling_fee}}元商品还在配送中，还可添加{{(boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney).toFixed(2)}}元商品
+            </span>
+          </div>
         </div>
         <div class="searchNav" ref="searchNav">
           <transition name="back">
@@ -551,8 +556,31 @@ export default {
       background: $lightprimary;
       color: $orange;
       font-size: $small;
+      display: flex;
       i {
         margin-right: $mini;
+        background: transparent;
+      }
+      white-space:nowrap;
+      div {
+        height: 100%;
+        overflow: hidden;
+        span {
+          display: inline-block;
+          transition: all inline;
+          animation: xmove  10s infinite;
+        }
+      }
+    }
+    @keyframes xmove {
+      20% {
+        transform: translateX(0)
+      }
+      60%{
+        transform: translateX(-50%)
+      }
+      100% {
+        transform: translateX(0)
       }
     }
     .noSearch {
