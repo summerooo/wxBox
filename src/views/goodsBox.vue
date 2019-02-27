@@ -107,10 +107,8 @@
         <!-- !Boolean(Number(cartMoney)) -->
         <!-- boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true -->
         <cube-button :primary="true"
-          :disabled="cartMoney ?
-          (boxFee.min_fee > 0 ? cartMoney <= boxFee.min_fee && ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee ) <= cartMoney) : false)
-          : true"
-          @click="submit">申请补货</cube-button>
+          :disabled="isDisabled"
+          @click="submit">{{user.box_no ? '补货' : '申请补货'}}</cube-button>
       </div>
     </div>
     <sx-drop-ball ref="drop" :destination="destination"></sx-drop-ball>
@@ -198,6 +196,13 @@ export default {
         money += this.cart[i].goods_price * this.cart[i].goods_number
       }
       return money.toFixed(2)
+    },
+    isDisabled () {
+      let cm = Number(this.cartMoney)
+      let bf = Boolean(Number(this.cartMoney)) ?
+      (this.boxFee.min_fee > 0 ? !(cm >= this.boxFee.min_fee && ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee ) >= cm)) : false)
+      : true
+      return bf
     }
   },
   watch: {
