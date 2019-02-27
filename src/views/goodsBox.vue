@@ -198,9 +198,8 @@ export default {
       return money.toFixed(2)
     },
     isDisabled () {
-      let cm = Number(this.cartMoney + ' ')
-      let bf = cm ?
-      (this.boxFee.min_fee > 0 ? !(cm >= this.boxFee.min_fee && ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee ) >= cm)) : false)
+      let bf = this.cartMoney ?
+      (this.boxFee.min_fee > 0 ? !(this.cartMoney >= this.boxFee.min_fee && ((this.boxFee.max_fee - this.boxFee.box_fee - this.boxFee.handling_fee ) >= this.cartMoney)) : false)
       : true
       return bf
     }
