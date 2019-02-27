@@ -21,6 +21,11 @@ export const boxReceive = data => {
   return axios.post(`${api}/boxReceive`, data)
 }
 
+// replenishment 盒子补货 
+export const replenishment = data => {
+  return axios.post(`${api}/replenishment`, data)
+}
+
 // orderSearchGoodsLog 搜索页历史记录
 export const orderSearchGoodsLog = data => {
   return axios.post(`${api}/orderSearchGoodsLog`, data)

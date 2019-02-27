@@ -35,7 +35,8 @@ export default {
   methods: {
     ...mapMutations([
       'setPhone',
-      'setUser'
+      'setUser',
+      'setBoxNo'
     ]),
     async submit () {
       if (!this.telephone) return this.$createToast({ txt: '请输入手机号', type: 'txt' }).show()
@@ -51,7 +52,8 @@ export default {
       toast.hide()
       if (ul.data.return_code === 200) {
         let o = ul.data.return_data
-        this.setUser({box_id: o.box_id, user_id: o.user_id, login_token: o.login_token, user_name: o.user_name})
+        this.setUser({box_id: o.box_id, box_no: o.box_no, user_id: o.user_id, login_token: o.login_token, user_name: o.user_name})
+        if (o.box_no) return this.$router.replace('goodsBox')
         this.$router.replace('info')
       } else return this.$createToast({ txt: ul.data.return_msg, type: 'txt' }).show()
       // let that = this

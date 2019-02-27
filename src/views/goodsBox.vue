@@ -122,7 +122,7 @@ import sxInputNumber from '../components/inputNumber'
 import sxPopup from '../components/popup'
 import sxSearchPanel from '../components/goods/searchPanel'
 import sxSearchList from '../components/goods/searchList'
-import { orderSearchLogDelete, orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
+import { orderSearchLogDelete, orderReplenishment, orderReplenishmentGoods, getBoxHandlingFee, boxReceive, replenishment, orderSearchGoodsLog, orderSearchGoodsHot, orderSearchGoods } from '../api/goodsBox'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -444,7 +444,9 @@ export default {
       for (let i in this.cart) {
         goods_info.push({goods_code: this.cart[i].goods_code, goods_number: this.cart[i].goods_number})
       }
-      let br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
+      let br
+      if (this.user.box_no) br = await replenishment(Object.assign({}, this.user, { goods_info: goods_info, order_origin: 4 }))
+      else br = await boxReceive(Object.assign({}, this.user, this.beforeInfo, { goods_info: goods_info, order_origin: 4 }))
       let that = this
       if (br.data.return_code === 200) this.$createDialog({
         type: 'alert',
