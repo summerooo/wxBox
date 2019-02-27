@@ -108,7 +108,7 @@
         <!-- boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee || ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney) < 0) : true -->
         <cube-button :primary="true"
           :disabled="cartMoney ?
-          (boxFee.min_fee >= 0 ? cartMoney <= boxFee.min_fee && ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee ) <= cartMoney) : true)
+          (boxFee.min_fee > 0 ? cartMoney <= boxFee.min_fee && ((boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee ) <= cartMoney) : false)
           : true"
           @click="submit">申请补货</cube-button>
       </div>
