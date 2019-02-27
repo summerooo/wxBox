@@ -158,9 +158,9 @@ export default {
       timer: '',
       shoppingBoxImage: '',
       shoppingBoxImageStatus: {
-        none: '../assets/images/none.png',
-        open: '../assets/images/open.png',
-        full: '../assets/images/full.png'
+        none: require('../assets/images/none.png'),
+        open: require('../assets/images/open.png'),
+        full: require('../assets/images/full.png')
       },
       page: 1,
       boxFee: {
