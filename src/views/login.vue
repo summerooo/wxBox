@@ -52,7 +52,7 @@ export default {
       toast.hide()
       if (ul.data.return_code === 200) {
         let o = ul.data.return_data
-        this.setUser({box_id: o.box_id, box_no: o.box_no, user_id: o.user_id, login_token: o.login_token, user_name: o.user_name})
+        this.setUser({school_id: o.school_id, box_id: o.box_id, box_no: o.box_no, user_id: o.user_id, login_token: o.login_token, user_name: o.user_name})
         if (o.box_no) return this.$router.replace('goodsBox')
         this.$router.replace('info')
       } else return this.$createToast({ txt: ul.data.return_msg, type: 'txt' }).show()
