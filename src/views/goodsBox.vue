@@ -5,7 +5,7 @@
         <!-- v-if="!boxFee.max_fee" -->
         <div class="notice" ref="notice" v-if="boxFee.max_fee">
           <i class="box-laba"></i>
-          您的盒子目前有{{cartMoney}}元商品，还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}元商品
+          您的盒子目前有{{cartMoney}}元商品，还可添加{{(boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney).toFixed(2)}}元商品
         </div>
         <div class="searchNav" ref="searchNav">
           <transition name="back">
@@ -68,7 +68,7 @@
       <!-- :bar="Boolean(Number(boxFee.max_fee))" -->
       <sx-popup ref="popup" :bar="Boolean(Number(boxFee.max_fee))">
         <div slot="bar">
-          还可添加{{boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney}}元，盒子就满了
+          还可添加{{(boxFee.max_fee - boxFee.box_fee - boxFee.handling_fee - cartMoney).toFixed(2)}}元，盒子就满了
         </div>
         <div slot="left" class="popupLeft">
           已选商品 <span>(共{{cartLength}}件商品)</span>
