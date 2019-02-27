@@ -267,7 +267,9 @@ export default {
       this.goodsShow()
       // top 栏
       let gbf = {gbf: await getBoxHandlingFee(Object.assign({}, this.user, this.beforeInfo))}.gbf
-      if (gbf) this.boxFee = Object.assign({}, this.boxFee, gbf.data.return_data)
+      if (gbf) for (let bf of gbf.data.return_data) {
+        this.$set(this.boxFee, bf, Number(gbf.data.return_data[bf]))
+      }
       this.barbar = true
     },
     async showGoods () {
