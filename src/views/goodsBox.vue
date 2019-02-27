@@ -158,9 +158,9 @@ export default {
       timer: '',
       shoppingBoxImage: '',
       shoppingBoxImageStatus: {
-        none: 'https://alipic.lanhuapp.com/psc793f421061964d0-27b0-4e37-8345-29e37a0a96c1',
-        open: 'https://alipic.lanhuapp.com/ps82d84fa175b0fa70-7d84-430a-8140-566ea882f225',
-        full: 'https://alipic.lanhuapp.com/ps106a53bfaa2ac380-6244-4eac-9069-1d49d36b310f'
+        none: '../assets/images/none.png',
+        open: '../assets/images/open.png',
+        full: '../assets/images/full.png'
       },
       page: 1,
       boxFee: {
