@@ -238,6 +238,16 @@ export default new Router({
       component: () => import('../views/points/myPoints.vue'),
     },
     {
+      path: '/question',
+      name: 'question',
+      component: () => import('../views/customerService/question.vue'),
+    },
+    {
+      path: '/answer',
+      name: 'answer',
+      component: () => import('../views/customerService/answer.vue'),
+    },
+    {
       path: '/goWx',
       name: 'goWx',
       component: () => import('../views/goWx.vue')
