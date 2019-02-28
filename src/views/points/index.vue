@@ -134,12 +134,14 @@ export default {
     align-items: center;
     padding-left: $medium;
     padding-right: $medium;
-    height: 40px;
+    height: 50px;
     .backIcon {
       position: fixed;
       font-size: $large;
+      // top: 10px;
     }
     div {
+      font-size: $default;
       margin: 0 auto;
     }
   }

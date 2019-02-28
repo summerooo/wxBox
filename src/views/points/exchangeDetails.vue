@@ -1,24 +1,27 @@
 <template>
   <div class="all">
-    <header class="header">
-      <div class="img">
-        <img :src="row.goods_img" alt="">
+    <div class="detailsContent">
+      <header class="header">
+        <div class="img">
+          <img :src="row.goods_img" alt="">
+        </div>
+        <div class="content">
+          <header class="goodsName">{{row.goods_name}}</header>
+          <footer class="payPoints">{{row.pay_points}}积分</footer>
+        </div>
+      </header>
+      <br><br>
+      <div class="container">
+        收货信息
+        <label v-for="(row, index) in formModel" :key="index">
+          <p>{{formStruct[index].label}}</p>
+          <cube-input :disabled="disabled" v-model="formModel[index]" :placeholder="formStruct[index].placeholder" :type="index === 'telephone' ? 'number' : ''"></cube-input>
+        </label>
+        <label>
+          <p>{{formStruct['exchange_num']}}</p>
+          <sx-input-number v-model="exchange_num" :max="99"></sx-input-number>
+        </label>
       </div>
-      <div class="content">
-        <header class="goodsName">{{row.goods_name}}</header>
-        <footer class="payPoints">{{row.pay_points}}积分</footer>
-      </div>
-    </header>
-    <div class="container">
-      收货信息
-      <label v-for="(row, index) in formModel" :key="index">
-        <p>{{formStruct[index].label}}</p>
-        <cube-input :disabled="disabled" v-model="formModel[index]" :placeholder="formStruct[index].placeholder" :type="index === 'telephone' ? 'number' : ''"></cube-input>
-      </label>
-      <label>
-        <p>{{formStruct['exchange_num']}}</p>
-        <sx-input-number v-model="exchange_num" :max="99"></sx-input-number>
-      </label>
     </div>
     <footer class="footer">
       <cube-button primary @click="exchangeNow">立即兑换</cube-button>
@@ -116,9 +119,13 @@ export default {
   display: flex;
   flex-wrap: wrap;
   // flex-direction: column;
+  .detailsContent {
+    width: 100%;
+  }
   .header {
     width: 100%;
     display: flex;
+    height: 120px;
     .img {
       height: 120px;
       width: 120px;
@@ -133,6 +140,7 @@ export default {
       flex-direction: column;
       padding-left: $mini;
       .goodsName, .payPoints {
+        padding-top: $mini;
         width: 100%;
         background: white;
         // text-align: center;
