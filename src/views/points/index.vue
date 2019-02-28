@@ -203,7 +203,7 @@ export default {
         li {
           width: 44vw;
           margin-bottom: $large;
-          height: 170px;
+          height: 200px;
           display: flex;
           justify-content: center;
           flex-direction: column;
