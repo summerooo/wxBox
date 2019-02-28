@@ -10,7 +10,7 @@
       </li>
     </ul>
     <footer class="footer">
-      {{recordListData.length ? '' : '暂无数据'}}
+      {{!recordListData.length ? '暂无数据' : ''}}
     </footer>
   </div>
 </template>
