@@ -29,7 +29,7 @@ export default new Vuex.Store({
       state.box_no = data
     },
     getUser (state) {
-      state.user = JSON.parse(sessionStorage.getItem('user'))
+      if (sessionStorage.getItem('user')) state.user = JSON.parse(sessionStorage.getItem('user'))
     },
     setUpload (state, data) {
       state.upload = data

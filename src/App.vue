@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-// import { mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 // import wx from 'weixin-js-sdk'
 
 export default {
@@ -49,7 +49,7 @@ export default {
   //   }
   // },
   methods: {
-    // ...mapMutations(['setBoxNo']),
+    ...mapMutations(['getUser']),
     // isWx() {
     //   let nu = navigator.userAgent
     //   if (nu.toLowerCase().match(/MicroMessenger/i)) {
@@ -63,6 +63,7 @@ export default {
     // }
   },
   mounted() {
+    this.getUser()
     console.log(this.$md5('123456'))
   }
 }

@@ -201,6 +201,38 @@ export default new Router({
     //   component: () => import('../components/scrollTest')
     // },
     {
+      path: '/points',
+      name: 'points',
+      component: () => import('../views/points'),
+      children: [
+        {
+          path: '/record',
+          name: 'record',
+          component: () => import('../views/points/record.vue')
+        },
+        {
+          path: '/detail',
+          name: 'detail',
+          component: () => import('../views/points/detail.vue')
+        },
+        {
+          path: '/rule',
+          name: 'rule',
+          component: () => import('../views/points/rule.vue')
+        },
+        {
+          path: '/exchangeDetails',
+          name: 'exchangeDetails',
+          component: () => import('../views/points/exchangeDetails.vue')
+        },
+        {
+          path: '/exchangeSuccess',
+          name: 'exchangeSuccess',
+          component: () => import('../views/points/exchangeSuccess.vue')
+        }
+      ]
+    },
+    {
       path: '/goWx',
       name: 'goWx',
       component: () => import('../views/goWx.vue')
