@@ -107,8 +107,8 @@ export default {
   },
   created () {
     console.log(this.$route.name)
-    console.log(this.$route.query)
-    this.setUser(Object.assign({}, {school_id: 3, user_id: 1, login_token: '49f6280c69de8c5cf6718e41facd5305'}, this.$route.query))
+    console.log(this.$route.query, {school_id: 3, user_id: 1, login_token: '49f6280c69de8c5cf6718e41facd5305'})
+    this.setUser(Object.assign({}, this.$route.query))
     if (this.$route.name === 'points') this.firstShow()
   },
   mounted () {
