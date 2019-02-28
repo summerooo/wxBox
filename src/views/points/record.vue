@@ -9,7 +9,7 @@
         -{{row.use_point}}
       </li>
     </ul>
-    <footer class="footer">
+    <footer class="footerMsg">
       {{!recordListData.length ? '暂无数据' : ''}}
     </footer>
   </div>
@@ -36,8 +36,8 @@ export default {
     async show () {
       let sd = await shopExchangeRecords(Object.assign({}, this.user, this.$route.query, { page: this.page }))
       console.log(sd)
-      this.recordListData = this.recordListData.concat(sd.data.return_data)
       if (!sd.data.return_data.length) this.flag = false
+      else this.recordListData = this.recordListData.concat(sd.data.return_data)
     },
     scrollHandler () {
       if ((this.$refs.ul.scrollTop + this.$refs.ul.offsetHeight + 5) >= this.$refs.ul.scrollHeight) {
@@ -87,7 +87,7 @@ export default {
       }
     }
   }
-  .footer {
+  .footerMsg {
     width: 100%;
     font-size: $medium;
     color: $lightblack;
