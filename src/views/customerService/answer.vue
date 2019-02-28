@@ -42,7 +42,12 @@ export default {
     margin-bottom: $large;
   }
   div {
+    width: 100%;
+    word-wrap:break-word;
+    line-height: $large;
     font-size: $default;
+    padding: $mini;
+    padding-top: 0;
   }
 }
 

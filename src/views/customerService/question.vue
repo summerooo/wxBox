@@ -72,6 +72,7 @@ export default {
         align-items: center;
         flex-direction: column;
         width: 40%;
+        font-size: $default;
         img {
           padding-bottom: $mini;
           width: 33px;          
@@ -87,6 +88,7 @@ export default {
         .sonLi {
           width: 100%;
           padding: $mini;
+          font-size: $medium;
           border-bottom: 1px solid $nav;
         }
       }
