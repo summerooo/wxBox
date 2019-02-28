@@ -9,6 +9,9 @@
         -{{row.use_point}}
       </li>
     </ul>
+    <footer>
+      {{recordListData.length ? '' : '暂无数据'}}
+    </footer>
   </div>
 </template>
 
@@ -83,6 +86,13 @@ export default {
         }
       }
     }
+  }
+  .footer {
+    width: 100%;
+    font-size: $medium;
+    color: $lightblack;
+    text-align: center;
+    padding: $large;
   }
 }
 </style>
