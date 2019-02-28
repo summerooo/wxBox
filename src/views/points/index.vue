@@ -108,7 +108,7 @@ export default {
   created () {
     console.log(this.$route.name)
     console.log(this.$route.query, {school_id: 3, user_id: 1, login_token: '49f6280c69de8c5cf6718e41facd5305'})
-    if (!this.$route.query['login_token'] || !this.user['login_token']) {
+    if (!this.$route.query['login_token'] && !this.user['login_token']) {
       sessionStorage.remove('user')
       return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
     }
