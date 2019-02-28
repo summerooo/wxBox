@@ -1,5 +1,8 @@
 <template>
   <div class="all">
+    <footer class="footerMsg">
+      {{!recordListData.length ? '暂无数据' : ''}}
+    </footer>
     <ul class="content" ref="ul">
       <li class="list" v-for="(row, i) in recordListData" :key="i" ref="li">
         <aside class="aside">
@@ -9,9 +12,6 @@
         -{{row.use_point}}
       </li>
     </ul>
-    <footer class="footerMsg">
-      {{!recordListData.length ? '暂无数据' : ''}}
-    </footer>
   </div>
 </template>
 
