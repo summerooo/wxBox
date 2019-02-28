@@ -29,7 +29,10 @@
           {{shopListData.length ? '我是有底线的~' : '暂无商品'}}
         </footer>
       </div>
-      <router-view v-else></router-view>
+      <transition name="fade" v-else>
+        <router-view/>
+      </transition>
+      <!-- <router-view v-else></router-view> -->
     </div>
   </div>
 </template>
@@ -120,7 +123,7 @@ export default {
 .all {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
   .changeBg {
     background: $nav;
   }
@@ -129,7 +132,9 @@ export default {
     display: flex;
     width: 100%;
     align-items: center;
-    padding: $medium;
+    padding-left: $medium;
+    padding-right: $medium;
+    height: 40px;
     .backIcon {
       position: fixed;
       font-size: $large;
@@ -201,7 +206,7 @@ export default {
         li {
           width: 44vw;
           margin-bottom: $large;
-          height: 200px;
+          height: 230px;
           display: flex;
           justify-content: center;
           flex-direction: column;
@@ -212,7 +217,7 @@ export default {
             height: 80%;
           }
           .goodsName, .payPoints {
-            padding-top: $mini;
+            height: $large;
             width: 100%;
             background: white;
             font-size: $small;
