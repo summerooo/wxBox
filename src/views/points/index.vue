@@ -52,7 +52,6 @@ export default {
   },
   watch: {
     $route (val) {
-      if (!this.$route.query['login_token']) return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
       let title = ''
       this.changeBg = false
       switch (val.name) {
@@ -109,7 +108,10 @@ export default {
   created () {
     console.log(this.$route.name)
     console.log(this.$route.query, {school_id: 3, user_id: 1, login_token: '49f6280c69de8c5cf6718e41facd5305'})
-    if (!this.$route.query['login_token']) return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
+    if (!this.$route.query['login_token'] || !this.user['login_token']) {
+      sessionStorage.remove('user')
+      return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
+    }
     this.setUser(Object.assign({}, this.$route.query))
     if (this.$route.name === 'points') this.firstShow()
   },
