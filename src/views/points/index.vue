@@ -52,6 +52,7 @@ export default {
   },
   watch: {
     $route (val) {
+      if (!this.$route.query['login_token']) return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
       let title = ''
       this.changeBg = false
       switch (val.name) {
