@@ -204,17 +204,17 @@ export default {
         flex-wrap: wrap;
         justify-content: space-between;
         li {
-          width: 44vw;
+          width: 43vw;
           margin-bottom: $large;
           height: 230px;
           display: flex;
-          justify-content: center;
+          justify-content: space-between;
           flex-direction: column;
           align-items: center;
           overflow: hidden;
           // background: $nav;
           img {
-            height: 80%;
+            height: 75%;
           }
           .goodsName, .payPoints {
             height: $large;
