@@ -6,7 +6,7 @@
       </div>
       <div class="content">
         <header class="goodsName">{{row.goods_name}}</header>
-        <footer class="payPoints">{{row.pay_points}}</footer>
+        <footer class="payPoints">{{row.pay_points}}积分</footer>
       </div>
     </header>
     <div class="container">

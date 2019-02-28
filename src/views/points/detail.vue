@@ -5,7 +5,7 @@
     </div>
     <div class="info">
       <header class="goodsName">{{row.goods_name}}</header>
-      <footer class="payPoints">{{row.pay_points}}</footer>
+      <footer class="payPoints">{{row.pay_points}}积分</footer>
     </div>
     <footer class="footer">
       <cube-button primary @click="exchangeDetails">去兑换</cube-button>

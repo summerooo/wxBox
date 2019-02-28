@@ -24,7 +24,7 @@
           <li v-for="(row, index) in shopListData" :key="index" @click="viewDetails(row, index)">
             <img :src="row.goods_img">
             <header class="goodsName">{{row.goods_name}}</header>
-            <footer class="payPoints">{{row.pay_points}}</footer>
+            <footer class="payPoints">{{row.pay_points}}积分</footer>
           </li>
         </ul>
         <footer class="footer">我是有底线的~</footer>
