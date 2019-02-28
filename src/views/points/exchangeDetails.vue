@@ -88,7 +88,8 @@ export default {
       }
       this.$createDialog({
         type: 'confirm',
-        title: sif.data.return_msg,
+        // title: sif.data.return_msg,
+        content: sif.data.return_msg,
         confirmBtn: {
           text: '确定',
           active: true,
