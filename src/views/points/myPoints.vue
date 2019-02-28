@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { integral } from '@/api/points'
 
 export default {
@@ -43,6 +43,9 @@ export default {
     ])
   },
   methods: {
+    ...mapMutations([
+      'setUser'
+    ]),
     async show () {
       let sd = await integral(Object.assign({}, this.user, this.$route.query, { page: this.page, type: 3 }))
       console.log(sd)
@@ -60,7 +63,7 @@ export default {
   created () {
     console.log(this.$route.query)
     if (!this.$route.query['login_token'] && !this.user['login_token']) {
-      sessionStorage.remove('user')
+      sessionStorage.removeItem('user')
       return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
     }
     if (this.$route.query['login_token']) this.setUser(Object.assign({}, this.$route.query))
