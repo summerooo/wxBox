@@ -1,8 +1,8 @@
 <template>
   <div class="all">
     <div :class="{'searchNav': true, 'changeBg': changeBg}" ref="searchNav">
-      <i class="cubeic-back backIcon" @click="back"></i>
-      <div>{{title}}</div>
+      <!-- <i class="cubeic-back backIcon" @click="back" v-if="this.$route.name !== 'points'"></i>
+      <div>{{title}}</div> -->
     </div>
     <div class="container" ref="container">
       <div class="containerInside" v-if="$route.name === 'points'">
@@ -97,8 +97,8 @@ export default {
     back () {
       if (this.$route.name === 'record') return this.$router.push({name: 'points'})
       if (this.$route.name !== 'points') return this.$router.go(-1)
-      window.location.href = 'scheme://post/pathPrefix'
-      console.log('back')
+      // window.location.href = 'scheme://post/pathPrefix'
+      // console.log('back')
     },
     viewDetails (row, index) {
       console.log(row, index)
@@ -138,7 +138,7 @@ export default {
     align-items: center;
     padding-left: $medium;
     padding-right: $medium;
-    height: 50px;
+    height: 0px;
     .backIcon {
       position: fixed;
       font-size: $large;
