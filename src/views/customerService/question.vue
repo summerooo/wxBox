@@ -87,14 +87,15 @@ export default {
         flex-wrap: wrap;
         align-content: flex-start;
         border-left: 1px solid $darkwhite;
-        .sonLi:last-child {
-          border: 0px;
-        }
         .sonLi {
+          border-bottom: 1px solid $darkwhite;
           width: 100%;
           padding: $mini;
           font-size: $medium;
           line-height: $medium;
+        }
+        .sonLi:last-child {
+          border: 0px;
         }
       }
     }

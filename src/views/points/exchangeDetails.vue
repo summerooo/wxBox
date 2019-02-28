@@ -81,9 +81,9 @@ export default {
       let sif = await shopInformation(Object.assign({}, this.user, this.formModel, this.row, { exchange_num: this.exchange_num, order_origin: 4 }))
       this.disabled = false
       if (sif.data.return_code === 200) {
-        setTimeout(() => {
-          this.$router.replace({name: 'exchangeSuccess', query: this.$route.query})
-        }, 1200)
+        // setTimeout(() => {
+        //   this.$router.replace({name: 'exchangeSuccess', query: this.$route.query})
+        // }, 1200)
         return this.$createToast({ txt: sif.data.return_msg, type: 'txt', time: 1200 }).show()
       }
       this.$createDialog({

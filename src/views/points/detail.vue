@@ -58,7 +58,7 @@ export default {
   },
   created () {
     console.log(this.$route.query)
-    this.row = JSON.parse(this.$route.query.row)
+    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
     this.firstShow()
   }
 }
