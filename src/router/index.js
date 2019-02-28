@@ -233,6 +233,11 @@ export default new Router({
       ]
     },
     {
+      path: '/myPoints',
+      name: 'myPoints',
+      component: () => import('../views/points/myPoints.vue'),
+    },
+    {
       path: '/goWx',
       name: 'goWx',
       component: () => import('../views/goWx.vue')

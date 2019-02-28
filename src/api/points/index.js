@@ -25,3 +25,9 @@ export const shopExchangeRecords = data => {
 export const shopInformation = data => {
   return axios.post(`${api}/shopInformation`, data)
 }
+
+// 获取积分信息
+export const integral = data => {
+  return axios.post(`${api}/integral`, data)
+}
+
