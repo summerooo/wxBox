@@ -9,7 +9,7 @@
         -{{row.use_point}}
       </li>
     </ul>
-    <footer>
+    <footer class="footer">
       {{recordListData.length ? '' : '暂无数据'}}
     </footer>
   </div>
