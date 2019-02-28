@@ -66,7 +66,7 @@ export default {
       padding: $mini;
       display: flex;
       width: 100%;
-      height: 160px;
+      max-height: 160px;
       border-bottom: 1px solid $darkwhite;
       .aside {
         display: flex;
@@ -87,8 +87,8 @@ export default {
         flex-wrap: wrap;
         align-content: flex-start;
         border-left: 1px solid $darkwhite;
-        .sonLi:nth-child(1), .sonLi:nth-child(2) {
-          border-bottom: 1px solid $darkwhite;
+        .sonLi:last-child {
+          border: 0px;
         }
         .sonLi {
           width: 100%;

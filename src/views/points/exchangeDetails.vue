@@ -198,6 +198,7 @@ export default {
     }
   }
   .footer {
+    width: 100%;
     align-self: flex-end;
     flex: 1
   }
