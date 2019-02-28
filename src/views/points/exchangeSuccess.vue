@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     gogo (where) {
-      this.$router.replace({name: where})
+      this.$router.replace({name: where, query: JSON.parse(this.$route.query)})
     }
   },
   created () {}

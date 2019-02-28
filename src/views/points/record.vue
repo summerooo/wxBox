@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     async show () {
-      let sd = await shopExchangeRecords(Object.assign({}, this.user, this.$route.query, { page: this.page }))
+      let sd = await shopExchangeRecords(Object.assign({}, this.user, JSON.parse(this.$route.query.row), { page: this.page }))
       console.log(sd)
       if (!sd.data.return_data.length) this.flag = false
       else this.recordListData = this.recordListData.concat(sd.data.return_data)
