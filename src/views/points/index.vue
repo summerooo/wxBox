@@ -1,9 +1,7 @@
 <template>
   <div class="all">
     <div :class="{'searchNav': true, 'changeBg': changeBg}" ref="searchNav">
-      <transition name="back">
-        <i class="cubeic-back backIcon" @click="back"></i>
-      </transition>
+      <i class="cubeic-back backIcon" @click="back"></i>
       <div>{{title}}</div>
     </div>
     <div class="container" ref="container">
@@ -27,7 +25,9 @@
             <footer class="payPoints">{{row.pay_points}}积分</footer>
           </li>
         </ul>
-        <footer class="footer">我是有底线的~</footer>
+        <footer class="footer">
+          {{shopListData.length ? '我是有底线的~' : '暂无商品'}}
+        </footer>
       </div>
       <router-view v-else></router-view>
     </div>
@@ -131,8 +131,8 @@ export default {
     align-items: center;
     padding: $medium;
     .backIcon {
+      position: fixed;
       font-size: $large;
-      width: 39px;
     }
     div {
       margin: 0 auto;
