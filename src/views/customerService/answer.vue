@@ -20,7 +20,7 @@ export default {
   methods: {
     async firstShow () {
       let q = await questionAnswer({question_id: JSON.parse(this.$route.query.row).question_id})
-      this.answerData = q.data.return_data
+      this.answerData = q.data.return_data[0]
     }
   },
   mounted() {}
