@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-
+expect.sh
 
 # local env files
 .env.local
