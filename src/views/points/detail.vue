@@ -51,7 +51,7 @@ export default {
       this.$refs.img.style.height = '120px'
       this.$refs.img.style.padding = '14px'
       setTimeout(() => {
-        this.$router.push({name: 'exchangeDetails', query: this.row})
+        this.$router.push({name: 'exchangeDetails', query: this.$route.query})
       }, 150)
       console.log('exchangeDetails')
     }

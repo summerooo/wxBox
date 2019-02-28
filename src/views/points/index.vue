@@ -47,7 +47,8 @@ export default {
       headerData: '',
       shopListData: [],
       title: '',
-      changeBg: true
+      changeBg: true,
+      row: ''
     }
   },
   watch: {
@@ -113,10 +114,12 @@ export default {
       return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
     }
     if (this.$route.query['login_token']) this.setUser(Object.assign({}, this.$route.query))
+    if (this.row['login_token']) this.setUser(Object.assign({}, this.$route.query))
     if (this.$route.name === 'points') this.firstShow()
   },
   mounted () {
     this.title = '商品详情'
+    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
     if (this.$refs.container) this.$refs.container.style.height = `calc(100% - ${this.$refs.searchNav.offsetHeight}px)`
   }
 }

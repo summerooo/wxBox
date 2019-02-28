@@ -82,7 +82,7 @@ export default {
       this.disabled = false
       if (sif.data.return_code === 200) {
         setTimeout(() => {
-          this.$router.replace({name: 'exchangeSuccess'})
+          this.$router.replace({name: 'exchangeSuccess', query: this.$route.query})
         }, 1200)
         return this.$createToast({ txt: sif.data.return_msg, type: 'txt', time: 1200 }).show()
       }
@@ -105,7 +105,7 @@ export default {
     }
   },
   created () {
-    this.row = this.$route.query
+    this.row = JSON.parse(this.$route.query.row)
   }
 }
 </script>
