@@ -127,7 +127,6 @@ export default {
   .searchNav {
     z-index: 1;
     display: flex;
-    // justify-content: space-between;
     width: 100%;
     align-items: center;
     padding: $medium;
@@ -150,7 +149,6 @@ export default {
       display: flex;
       flex-direction: column;
       .header {
-        // width: 100%;
         height: 120px;
         margin: $large;
         color: black;
@@ -209,17 +207,14 @@ export default {
           flex-direction: column;
           align-items: center;
           overflow: hidden;
-          background: $nav;
+          // background: $nav;
           img {
-            // padding: $large;
-            // background: $nav;
             height: 80%;
           }
           .goodsName, .payPoints {
             padding-top: $mini;
             width: 100%;
             background: white;
-            // text-align: center;
             font-size: $small;
           }
           .goodsName {
