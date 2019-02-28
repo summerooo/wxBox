@@ -112,7 +112,7 @@ export default {
       sessionStorage.remove('user')
       return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
     }
-    this.setUser(Object.assign({}, this.$route.query))
+    if (this.$route.query['login_token']) this.setUser(Object.assign({}, this.$route.query))
     if (this.$route.name === 'points') this.firstShow()
   },
   mounted () {
