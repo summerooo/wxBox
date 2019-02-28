@@ -63,9 +63,11 @@ export default {
     height: calc(100% - 60px);
     width: 100%;
     .fatherLi {
+      padding: $mini;
       display: flex;
       width: 100%;
-      height: 120px;
+      height: 130px;
+      border-bottom: 1px solid $darkwhite;
       .aside {
         display: flex;
         justify-content: center;
@@ -84,14 +86,21 @@ export default {
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
-        border-left: 1px solid $nav;
+        border-left: 1px solid $darkwhite;
         .sonLi {
+          border-bottom: 1px solid $darkwhite;
           width: 100%;
           padding: $mini;
           font-size: $medium;
-          border-bottom: 1px solid $nav;
+          line-height: $medium;
+        }
+        .sonLi:nth-child(3) {
+          border: none;
         }
       }
+    }
+    .fatherLi:last-child {
+      border: 0px;
     }
   }
   .call {
