@@ -116,14 +116,14 @@ export default {
       Swiper.on('touchEnd', () => {
         // this.pullingUpText = '查看详情'
         if (Swiper.translate > 45) {
+          this.viewDetails = false
           Swiper.updateSize()
           Swiper.updateSlides()
-          this.viewDetails = false
         }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
+          this.viewDetails = true
           Swiper.updateSize()
           Swiper.updateSlides()
-          this.viewDetails = true
         }
       })
     }
