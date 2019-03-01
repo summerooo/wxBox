@@ -207,6 +207,7 @@ export default {
     .viewDetails {
       width: 100%;
       height: auto;
+      padding-bottom: 80px;
       ul {
         background: white;
         height: auto;
