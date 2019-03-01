@@ -3,7 +3,7 @@
     <header class="header">
       <div>
         可用积分
-        <p>{{user.point ? user.point : 0}}</p>
+        <p>{{point ? point : 0}}</p>
       </div>
     </header>
     <br><br>
@@ -27,14 +27,15 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { integral } from '@/api/points'
+import { integral, personalCenter } from '@/api/points'
 
 export default {
   data () {
     return {
       integralListData: [],
       page: 1,
-      flag: true
+      flag: true,
+      point: 0
     }
   },
   computed: {
@@ -47,6 +48,8 @@ export default {
       'setUser'
     ]),
     async show () {
+      let pc = await personalCenter(this.$route.query)
+      this.point = pc.data.return_data.point
       let sd = await integral(Object.assign({}, this.user, this.$route.query, { page: this.page, type: 3 }))
       console.log(sd)
       if (!sd.data.return_data.length) this.flag = false
@@ -61,11 +64,11 @@ export default {
     },
   },
   created () {
-    console.log(this.$route.query)
-    if (!this.$route.query['login_token'] && !this.user['login_token']) {
-      sessionStorage.removeItem('user')
-      return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
-    }
+    // console.log(this.$route.query)
+    // if (!this.$route.query['login_token'] && !this.user['login_token']) {
+    //   sessionStorage.removeItem('user')
+    //   return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
+    // }
     if (this.$route.query['login_token']) this.setUser(Object.assign({}, this.$route.query))
     this.show()
   },

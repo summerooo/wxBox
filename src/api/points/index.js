@@ -31,3 +31,7 @@ export const integral = data => {
   return axios.post(`${api}/integral`, data)
 }
 
+// 获取个人中心信息
+export const personalCenter = data => {
+  return axios.post(`${api}/personalCenter`, data)
+}
