@@ -105,7 +105,8 @@ export default {
     }
   },
   created () {
-    this.row = JSON.parse(this.$route.query.row)
+    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    else this.row = this.$route.query
   }
 }
 </script>
