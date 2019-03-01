@@ -118,13 +118,13 @@ export default {
   padding: $medium;
   padding-top: $large;
   display: flex;
-  flex-wrap: wrap;
-  // flex-direction: column;
+  // flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: column;
   .detailsContent {
     width: 100%;
   }
   .header {
-    width: 100%;
     display: flex;
     height: 120px;
     .img {
@@ -157,7 +157,6 @@ export default {
     }
   }
   .container {
-    width: 100%;
     font-size: 18px;
     display: flex;
     flex-direction: column;
@@ -197,10 +196,6 @@ export default {
       border-bottom-color: $primary !important;
     }
   }
-  .footer {
-    width: 100%;
-    align-self: flex-end;
-    flex: 1
-  }
+  .footer {}
 }
 </style>
