@@ -29,10 +29,10 @@
           {{shopListData.length ? '我是有底线的~' : '暂无商品'}}
         </footer>
       </div>
-      <transition name="fade" v-else>
+      <router-view v-else></router-view>
+      <!-- <transition name="fade" v-else>
         <router-view/>
-      </transition>
-      <!-- <router-view v-else></router-view> -->
+      </transition> -->
     </div>
   </div>
 </template>
