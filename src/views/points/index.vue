@@ -107,11 +107,8 @@ export default {
     }
   },
   created () {
-    if ('row' in this.$route.query) {
-      this.row = JSON.parse(this.$route.query.row)
-    } else {
-      this.row = this.$route.query
-    }
+    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    else this.row = Object.assign({}, this.user, this.$route.query)
     this.setUser(Object.assign({}, this.row))
     if (this.$route.name === 'points') this.firstShow()
   },

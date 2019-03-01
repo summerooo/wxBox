@@ -44,9 +44,6 @@ export default {
     ])
   },
   methods: {
-    ...mapMutations([
-      'setUser'
-    ]),
     async show () {
       let pc = await personalCenter(this.$route.query)
       this.point = pc.data.return_data.point
@@ -69,9 +66,8 @@ export default {
     //   sessionStorage.removeItem('user')
     //   return this.$createToast({ txt: '数据缺失,请重新登录', type: 'txt', time: 1000 }).show()
     // }
-    // if (this.$route.query['login_token']) this.setUser(Object.assign({}, this.$route.query))
     if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
-    else this.row = this.$route.query
+    else this.row = Object.assign({}, this.user, this.$route.query)
     this.show()
   },
   mounted () {

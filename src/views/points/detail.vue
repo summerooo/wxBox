@@ -54,6 +54,8 @@ export default {
   data () {
     return {
       swiperOption: {
+        observer:true,
+        observeParents:true,
         direction: 'vertical',
         slidesPerView: 'auto',
         // freeModeMomentumBounce: false,
@@ -86,12 +88,17 @@ export default {
       this.detailData = sd.data.return_data
     },
     exchangeDetails () {
-      this.$refs.img.style.alignSelf = 'flex-start'
-      this.$refs.img.style.height = '120px'
-      this.$refs.img.style.padding = '14px'
-      setTimeout(() => {
+      console.log('img' in this.$refs)
+      if (!this.viewDetails) {
+        this.$refs.img.style.alignSelf = 'flex-start'
+        this.$refs.img.style.height = '120px'
+        this.$refs.img.style.padding = '14px'
+        setTimeout(() => {
+          this.$router.push({name: 'exchangeDetails', query: this.$route.query})
+        }, 150)
+      } else {
         this.$router.push({name: 'exchangeDetails', query: this.$route.query})
-      }, 150)
+      }
     },
     ss () {
       let Swiper = this.swiper
@@ -100,8 +107,6 @@ export default {
         this.pullingUpText = '下拉查看详情'
       })
       Swiper.on('touchMove', () => {
-        console.log(Swiper.translate)
-
         if (Swiper.translate < -45) {
           setTimeout(() => {
             this.pullingUpText = '释放查看详情'
@@ -121,7 +126,7 @@ export default {
   },
   created () {
     if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
-    else this.row = this.$route.query
+    else this.row = Object.assign({}, this.user, this.$route.query)
     this.firstShow()
   },
   mounted() {

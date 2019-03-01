@@ -30,7 +30,7 @@ export default {
   },
   created () {
     if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
-    else this.row = this.$route.query
+    else this.row = Object.assign({}, this.user, this.$route.query)
   }
 }
 </script>
