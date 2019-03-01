@@ -19,7 +19,7 @@
               <p>{{row}}</p>{{detailData[0][index]}}
             </li>
           </ul>
-          <div v-html="detailData.goods_desc"></div>
+          <div v-html="detailData[0].goods_desc"></div>
         </div>
       </swiper-slide>
     </swiper>
@@ -152,8 +152,8 @@ export default {
     padding-top: $large;
     // border-top: $medium solid $nav;
     .goodsName, .payPoints {
-      padding: $medium;
-      padding-top: $mini;
+      padding: $small;
+      // padding-top: $mini;
       width: 100%;
       background: white;
       font-size: $large;
@@ -222,13 +222,16 @@ export default {
             width: 66px;
           }
         }
-        li:last-child {
-          border-top: 1px solid $nav;
-        }
+        // li:last-child {
+        //   border-top: 1px solid $nav;
+        // }
       }
       div {
         padding: $medium;
         width: 100%;
+        img {
+          width: 100vw;
+        }
       }
     }
   }
