@@ -119,11 +119,13 @@ export default {
           this.viewDetails = false
           Swiper.updateSize()
           Swiper.updateSlides()
+          Swiper.updateContainerSize()
         }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
           Swiper.updateSize()
           Swiper.updateSlides()
+          Swiper.updateContainerSize()
         }
       })
     }
