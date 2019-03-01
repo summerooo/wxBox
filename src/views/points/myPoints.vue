@@ -3,7 +3,7 @@
     <header class="header">
       <div>
         可用积分
-        <p>{{user.point ? user.point : 2480}}</p>
+        <p>{{user.point ? user.point : 0}}</p>
       </div>
     </header>
     <br><br>
