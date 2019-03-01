@@ -25,10 +25,13 @@ export default {
   methods: {
     gogo (where) {
       console.log(this.$route.query)
-      this.$router.replace({name: where, query: JSON.parse(this.$route.query.row)})
+      this.$router.replace({name: where, query: this.row})
     }
   },
-  created () {}
+  created () {
+    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    else this.row = this.$route.query
+  }
 }
 </script>
 

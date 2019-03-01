@@ -120,6 +120,7 @@ export default {
   mounted () {
     this.title = '商品详情'
     if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    else this.row = this.$route.query
     if (this.$refs.container) this.$refs.container.style.height = `calc(100% - ${this.$refs.searchNav.offsetHeight}px)`
   }
 }
