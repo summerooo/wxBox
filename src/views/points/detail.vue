@@ -171,6 +171,7 @@ export default {
     display: flex;
     flex-direction: column;
     position: fixed;
+    z-index: 999;
     bottom: 0;
     width: 100%;
     .footerMessage {
