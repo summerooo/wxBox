@@ -229,8 +229,10 @@ export default {
       div {
         padding: $medium;
         width: 100%;
+        height: auto;
         img {
-          width: 100vw;
+          width: 100%;
+          height: auto;
         }
       }
     }
