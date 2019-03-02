@@ -36,7 +36,7 @@
       <ul class="list">
         <li><font>支付方式</font><span>{{way}}</span></li>
         <li><font>商品总额</font><span>{{goodsData.total_fee}}</span></li>
-        <li><font>优惠</font><span>-{{goodsData.preferential_amount}}</span></li>
+        <li v-if="!Number(goodsData.preferential_amount)"><font>优惠</font><span>-{{goodsData.preferential_amount}}</span></li>
       </ul>
       <footer class="foorter">
         <p>实付款: <font>{{goodsData.pay_fee}}</font></p>
