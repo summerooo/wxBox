@@ -27,6 +27,7 @@
       </transition>
     </swiper>
     <cube-scroll
+      class="cubeScroll"
       v-if= "viewDetails"
       ref="scroll"
       :options="options"
@@ -148,6 +149,7 @@ export default {
         // }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
+          this.$refs.scroll.refresh()
         }
       })
     }
@@ -271,7 +273,7 @@ export default {
     }
   }
   /deep/ .cube-scroll-content, /deep/ .cube-scroll-list-wrapper {
-    // width: 100%;
+    width: 100%;
   }
   .refresh {
     height: 80px;
