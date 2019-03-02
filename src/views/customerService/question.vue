@@ -1,5 +1,8 @@
 <template>
   <div class="all">
+    <header class="header">
+      常见问题
+    </header>
     <ul class="container">
       <li class="fatherLi" v-for="(row, index) in questionData" :key="index">
         <aside class="aside">
@@ -59,6 +62,10 @@ export default {
 .all {
   width: 100%;
   height: 100%;
+  .header {
+    padding: $default;
+    border-bottom: 1px solid $darkwhite;
+  }
   .container {
     height: calc(100% - 60px);
     width: 100%;

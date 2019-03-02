@@ -18,6 +18,14 @@
             <img src="../../assets/images/rule.png" alt="">积分规则
           </router-link>
         </nav>
+        <div class="subheading">
+          <h4>
+            <img src="../../assets/images/jifenLeft.png" alt="">
+            &nbsp;&nbsp;&nbsp;兑换商品&nbsp;&nbsp;&nbsp;
+            <img src="../../assets/images/jifenRight.png" alt="">
+          </h4>
+          <p>好物随心换</p>
+        </div>
         <ul class="content">
           <li v-for="(row, index) in shopListData" :key="index" @click="viewDetails(row, index)">
             <img :src="row.goods_img">
@@ -107,7 +115,7 @@ export default {
     }
   },
   created () {
-    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    if ('row' in this.$route.query) this.row = Object.assign({}, this.user, JSON.parse(this.$route.query.row))
     else this.row = Object.assign({}, this.user, this.$route.query)
     this.setUser(Object.assign({}, this.row))
     if (this.$route.name === 'points') this.firstShow()
@@ -127,6 +135,25 @@ export default {
   // overflow: hidden;
   .changeBg {
     background: $nav;
+  }
+  .subheading {
+    width: 100%;
+    padding: $medium;
+    text-align: center;
+    h4 {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        height: 20px;
+      }
+    }
+    p {
+      padding-top: $mini;
+      font-size: $medium;
+      color: $lightblack;
+    }
   }
   .searchNav {
     z-index: 1;
@@ -164,7 +191,7 @@ export default {
         font-size: $large;
         line-height: $large;
         margin-bottom: 0;
-        border-radius: 15px 15px 0 0;
+        border-radius: 6px 6px 0 0;
         background: linear-gradient(to top, #FFEB0F, #FFD909);
         display: flex;
         justify-content: center;
@@ -200,7 +227,7 @@ export default {
       }
       .content {
         height: auto;
-        margin-top: $mini;
+        // margin-top: $mini;
         padding: $large;
         background: white;
         display: flex;

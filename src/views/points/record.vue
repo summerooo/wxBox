@@ -1,7 +1,7 @@
 <template>
   <div class="all">
-    <footer class="footerMsg">
-      {{!recordListData.length ? '暂无数据' : ''}}
+    <footer class="footerMsg" v-if="!recordListData.length">
+      暂无数据
     </footer>
     <ul class="content" ref="ul">
       <li class="list" v-for="(row, i) in recordListData" :key="i" ref="li">
@@ -49,7 +49,7 @@ export default {
   },
   created () {
     console.log(this.$route.query)
-    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    if ('row' in this.$route.query) this.row = Object.assign({}, this.user, JSON.parse(this.$route.query.row))
     else this.row = Object.assign({}, this.user, this.$route.query)
     this.show()
   },

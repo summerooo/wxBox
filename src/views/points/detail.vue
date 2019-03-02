@@ -1,6 +1,6 @@
 <template>
   <div class="all">
-    <swiper ref="mySwiper" :options="swiperOption" class="swiperAll">
+    <swiper ref="mySwiper" :options="swiperOption" class="swiperAll" v-show="!viewDetails">
       <transition name="fade">
         <swiper-slide class="swiperContainer" v-if="!viewDetails" key="previewDetails">
           <div class="swiperContent">
@@ -14,7 +14,7 @@
             <div class="loadmore">{{pullingUpText}}</div>
           </div>
         </swiper-slide>
-        <swiper-slide  class="swiperContainer" v-else key="viewDetails">
+        <!-- <swiper-slide  class="swiperContainer" v-else key="viewDetails">
           <div class="viewDetails">
             <ul>
               <li v-for="(row, index) in detailsStruct" :key="index">
@@ -23,10 +23,27 @@
             </ul>
             <div v-html="detailData[0].goods_desc"></div>
           </div>
-        </swiper-slide>
+        </swiper-slide> -->
       </transition>
     </swiper>
-    
+    <cube-scroll
+      v-if= "viewDetails"
+      ref="scroll"
+      :options="options"
+      @pulling-down="onPullingDown"
+      :scroll-events="['scroll']">
+      <template slot="pulldown" slot-scope="props">
+        <div> </div>
+      </template>
+      <div class="viewDetails">
+        <ul>
+          <li v-for="(row, index) in detailsStruct" :key="index">
+            <p>{{row}}</p>{{detailData[0][index]}}
+          </li>
+        </ul>
+        <div v-html="detailData[0].goods_desc"></div>
+      </div>
+    </cube-scroll>
     <footer class="footer">
       <cube-button primary @click="exchangeDetails">去兑换</cube-button>
     </footer>
@@ -56,6 +73,11 @@ export default {
   },
   data () {
     return {
+      options: {
+        pullDownRefresh: {
+          threshold: 60
+        }
+      },
       swiperOption: {
         observer:true,
         observeParents:true,
@@ -90,6 +112,9 @@ export default {
       console.log(sd)
       this.detailData = sd.data.return_data
     },
+    onPullingDown () {
+      this.viewDetails = false
+    },
     exchangeDetails () {
       console.log('img' in this.$refs)
       if (!this.viewDetails) {
@@ -118,9 +143,9 @@ export default {
       })
       Swiper.on('touchEnd', () => {
         // this.pullingUpText = '查看详情'
-        if (Swiper.translate > 45) {
-          this.viewDetails = false
-        }
+        // if (Swiper.translate > 45) {
+        //   this.viewDetails = false
+        // }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
         }
@@ -128,7 +153,7 @@ export default {
     }
   },
   created () {
-    if ('row' in this.$route.query) this.row = JSON.parse(this.$route.query.row)
+    if ('row' in this.$route.query) this.row = Object.assign({}, this.user, JSON.parse(this.$route.query.row))
     else this.row = Object.assign({}, this.user, this.$route.query)
     this.firstShow()
   },
@@ -198,7 +223,9 @@ export default {
     position: relative;
     height: 100vh;
     width: 100%;
-    .swiperContainer, .swiperContent {
+  }
+  & {
+    .swiperContainer, .swiperContent{
       width: 100%;
       margin: auto;
       display: flex;
@@ -240,12 +267,11 @@ export default {
         padding: $medium;
         width: 100%;
         height: auto;
-        img {
-          width: 100%;
-          height: auto;
-        }
       }
     }
+  }
+  /deep/ .cube-scroll-content, /deep/ .cube-scroll-list-wrapper {
+    // width: 100%;
   }
   .refresh {
     height: 80px;
