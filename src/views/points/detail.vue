@@ -2,7 +2,7 @@
   <div class="all">
     <swiper ref="mySwiper" :options="swiperOption" class="swiperAll" v-show="!viewDetails">
       <transition name="fade">
-        <swiper-slide class="swiperContainer" v-if="!viewDetails" key="previewDetails">
+        <swiper-slide class="swiperContainer" key="previewDetails" v-if="!viewDetails" >
           <div class="swiperContent">
             <div class="img" ref="img">
               <img :src="row.goods_img" alt="">
@@ -27,8 +27,8 @@
       </transition>
     </swiper>
     <cube-scroll
+      v-if="viewDetails"
       class="cubeScroll"
-      v-if= "viewDetails"
       ref="scroll"
       :options="options"
       @pulling-down="onPullingDown"
@@ -149,7 +149,9 @@ export default {
         // }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
-          this.$refs.scroll.refresh()
+          setTimeout(() => {
+            this.$refs.scroll.refresh()
+          }, 10)
         }
       })
     }
@@ -272,7 +274,7 @@ export default {
       }
     }
   }
-  /deep/ .cube-scroll-content, /deep/ .cube-scroll-list-wrapper {
+  /deep/ .cube-scroll-list-wrapper {
     width: 100%;
   }
   .refresh {
