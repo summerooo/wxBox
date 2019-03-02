@@ -1,27 +1,30 @@
 <template>
   <div class="all">
     <swiper ref="mySwiper" :options="swiperOption" class="swiperAll">
-      <swiper-slide class="swiperContainer">
-        <div class="swiperContent" v-if="!viewDetails">
-          <div class="img" ref="img">
-            <img :src="row.goods_img" alt="">
+      <transition name="fade">
+        <swiper-slide class="swiperContainer" v-if="!viewDetails" key="previewDetails">
+          <div class="swiperContent">
+            <div class="img" ref="img">
+              <img :src="row.goods_img" alt="">
+            </div>
+            <div class="info">
+              <header class="goodsName">{{row.goods_name}}</header>
+              <footer class="payPoints">{{row.pay_points}}积分</footer>
+            </div>
+            <div class="loadmore">{{pullingUpText}}</div>
           </div>
-          <div class="info">
-            <header class="goodsName">{{row.goods_name}}</header>
-            <footer class="payPoints">{{row.pay_points}}积分</footer>
+        </swiper-slide>
+        <swiper-slide  class="swiperContainer" v-else key="viewDetails">
+          <div class="viewDetails">
+            <ul>
+              <li v-for="(row, index) in detailsStruct" :key="index">
+                <p>{{row}}</p>{{detailData[0][index]}}
+              </li>
+            </ul>
+            <div v-html="detailData[0].goods_desc"></div>
           </div>
-          <div class="loadmore">{{pullingUpText}}</div>
-        </div>
-        <!-- <div class="refresh"></div> -->
-        <div class="viewDetails" v-else>
-          <ul>
-            <li v-for="(row, index) in detailsStruct" :key="index">
-              <p>{{row}}</p>{{detailData[0][index]}}
-            </li>
-          </ul>
-          <div v-html="detailData[0].goods_desc"></div>
-        </div>
-      </swiper-slide>
+        </swiper-slide>
+      </transition>
     </swiper>
     
     <footer class="footer">
@@ -117,15 +120,9 @@ export default {
         // this.pullingUpText = '查看详情'
         if (Swiper.translate > 45) {
           this.viewDetails = false
-          Swiper.updateSize()
-          Swiper.updateSlides()
-          Swiper.updateContainerSize()
         }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
-          Swiper.updateSize()
-          Swiper.updateSlides()
-          Swiper.updateContainerSize()
         }
       })
     }
