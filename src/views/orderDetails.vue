@@ -36,36 +36,12 @@
       <ul class="list">
         <li><font>支付方式</font><span>{{way}}</span></li>
         <li><font>商品总额</font><span>{{goodsData.total_fee}}</span></li>
-        <li><font>优惠</font><span>{{goodsData.preferential_amount}}</span></li>
+        <li><font>优惠</font><span>-{{goodsData.preferential_amount}}</span></li>
       </ul>
       <footer class="foorter">
-        <p>实付款: <font>￥75.2</font></p>
+        <p>实付款: <font>{{goodsData.pay_fee}}</font></p>
       </footer>
     </div>
-     <!-- "return_data": {
-        "order_sn": "P19012614310115932",
-        "create_time": "2019-01-26 14:31:01",
-        "total_fee": "35.00",
-        "pay_fee": "35.00",
-        "preferential_amount": 0,
-        "goods_info": [
-            {
-                "goods_name": "眼线液",
-                "goods_number": 1,
-                "goods_price": "5.00",
-                "goods_spec": "10g",
-                "goods_img": "http://admin.hly.com//uploads/img/goods/20190110/7489010b093ce3d65d86692459fb7bf6.jpg"
-            },
-            {
-                "goods_name": "粉底",
-                "goods_number": 3,
-                "goods_price": "10.00",
-                "goods_spec": "10g",
-                "goods_img": "http://admin.hly.com//uploads/img/goods/20190111/257b0c5d3b3f8ae6d2d620aabe0b675d.jpg"
-            }
-        ],
-        "total_number": 4
-    } -->
   </div>
 </template>
 
@@ -106,7 +82,7 @@ export default {
   },
   methods: {
     async firstShow () {
-      let sod = await saleOrderDetail(Object.assign({}, this.row, {order_sn: 'P19030212011779253'}))
+      let sod = await saleOrderDetail(Object.assign({}, this.row))
       console.log(sod)
       this.goodsData = sod.data.return_data
     },
