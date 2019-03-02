@@ -75,43 +75,6 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/goodsDetails',
-    //   name: 'goodsDetails',
-    //   component: () => import('../views/goodsDetails'),
-    //   children: [
-    //     // 0、商品全部展示  1、暂无数据  2、开始搜索  3、 搜索（无nav） 4、搜索面板  5、搜索列表(输入后)  searching
-    //     // {
-    //     //   path: '/goodsDetails0',
-    //     //   name: 'goodsDetails0'
-    //     // },
-    //     {
-    //       path: '/goodsDetails1',
-    //       name: 'goodsDetails1'
-    //     },
-    //     {
-    //       path: '/goodsDetails2',
-    //       name: 'goodsDetails2'
-    //     },
-    //     {
-    //       path: '/goodsDetails3',
-    //       name: 'goodsDetails3'
-    //     },
-    //     {
-    //       path: '/goodsDetails4',
-    //       name: 'goodsDetails4'
-    //     },
-    //     {
-    //       path: '/goodsDetails5',
-    //       name: 'goodsDetails5'
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/',
-    //   name: 'details',
-    //   component: () => import('../views/details')
-    // },
     {
       path: '/login',
       name: 'login',
@@ -160,46 +123,25 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/test',
-    //   name: 'test',
-    //   component: () => import('../views/test')
-    // },
-    // {
-    //   path: '/cc',
-    //   name: 'customGoods',
-    //   component: () => import('../views/customGoods')
-    // },
-    // {
-    //   path: '/goods',
-    //   name: 'goods',
-    //   component: () => import('../views/goods')
-    // },
+    // test 页面
     {
       path: '/home',
       name: 'home',
       component: () => import('../views/About')
     },
+    // 订单详情
     {
-      path: '/addGoods',
-      name: 'addGoods',
-      component: () => import('../views/addGoods')
+      path: '/orderDetails',
+      name: 'orderDetails',
+      component: () => import('../views/orderDetails')
     },
+    // 添加商品
     // {
-    //   path: '/cloud',
-    //   name: 'cloud',
-    //   component: () => import('../components/cloud')
+    //   path: '/addGoods',
+    //   name: 'addGoods',
+    //   component: () => import('../views/addGoods')
     // },
-    // {
-    //   path: '/sss',
-    //   name: 'sss',
-    //   component: () => import('../components/scroll.vue')
-    // },
-    // {
-    //   path: '/scrollTest',
-    //   name: 'scrollTest',
-    //   component: () => import('../components/scrollTest')
-    // },
+    // 积分
     {
       path: '/points',
       name: 'points',

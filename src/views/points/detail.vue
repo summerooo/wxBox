@@ -33,7 +33,7 @@
       :options="options"
       @pulling-down="onPullingDown"
       :scroll-events="['scroll']">
-      <template slot="pulldown" slot-scope="props">
+      <template slot="pulldown">
         <div></div>
       </template>
       <div class="viewDetails">

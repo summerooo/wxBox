@@ -73,7 +73,6 @@ export default {
       padding: $mini;
       display: flex;
       width: 100%;
-      max-height: 160px;
       border-bottom: 1px solid $darkwhite;
       .aside {
         display: flex;
@@ -82,6 +81,7 @@ export default {
         flex-direction: column;
         width: 40%;
         font-size: $default;
+        border-right: 1px solid $darkwhite;
         img {
           padding-bottom: $mini;
           width: 33px;          
@@ -91,15 +91,18 @@ export default {
         width: 60%;
         height: 100%;
         display: flex;
+        align-self: center;
         flex-wrap: wrap;
         align-content: flex-start;
-        border-left: 1px solid $darkwhite;
+        // border-left: 1px solid $darkwhite;
+        line-height: $large;
         .sonLi {
           border-bottom: 1px solid $darkwhite;
           width: 100%;
+          // padding: $medium;
+          height: auto;
           padding: $mini;
           font-size: $medium;
-          line-height: $medium;
         }
         .sonLi:last-child {
           border: 0px;
