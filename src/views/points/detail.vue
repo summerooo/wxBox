@@ -27,13 +27,14 @@
       </transition>
     </swiper>
     <cube-scroll
+      v-show="viewDetails"
       class="cubeScroll"
       ref="scroll"
       :options="options"
       @pulling-down="onPullingDown"
       :scroll-events="['scroll']">
       <template slot="pulldown" slot-scope="props">
-        <div> </div>
+        <div></div>
       </template>
       <div class="viewDetails">
         <ul>
@@ -90,9 +91,9 @@ export default {
       return {
         pullDownRefresh: {
           threshold: 60
-        },
+        }
         // pullDownRefresh: true,
-        scrollbar: true
+        // scrollbar: true
       }
     },
     swiper () {
@@ -110,6 +111,8 @@ export default {
       // this.$refs.scroll.refresh()
     },
     onPullingDown () {
+      console.log('111')
+      this.$refs.scroll.forceUpdate()
       this.viewDetails = false
     },
     exchangeDetails () {
