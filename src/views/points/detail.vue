@@ -27,7 +27,6 @@
       </transition>
     </swiper>
     <cube-scroll
-      v-if="viewDetails"
       class="cubeScroll"
       ref="scroll"
       :options="options"
@@ -39,26 +38,15 @@
       <div class="viewDetails">
         <ul>
           <li v-for="(row, index) in detailsStruct" :key="index">
-            <p>{{row}}</p>{{detailData[0][index]}}
+            <p>{{row}}</p>{{detailData[index]}}
           </li>
         </ul>
-        <div v-html="detailData[0].goods_desc"></div>
+        <div v-html="detailData.goods_desc"></div>
       </div>
     </cube-scroll>
     <footer class="footer">
       <cube-button primary @click="exchangeDetails">去兑换</cube-button>
     </footer>
-    <!-- end_time: "2019-02-28 00:00:00"
-      goods_brand: "这是品牌"
-      goods_color: "红色"
-      goods_desc: "<p>详情</p>"
-      goods_img: "http://192.168.0.103:86//uploads/img/promotion/20190222/5b31b055baa8f4cd2c0f446412dd9d04.jpg"
-      goods_name: "测试"
-      goods_weight: "5"
-      pay_points: 500
-      shop_goods_id: 5
-      start_time: "2019-02-22 00:00:00"
-      stock_num: 100 -->
   </div>
 </template>
 
@@ -74,11 +62,6 @@ export default {
   },
   data () {
     return {
-      options: {
-        pullDownRefresh: {
-          threshold: 60
-        }
-      },
       swiperOption: {
         observer:true,
         observeParents:true,
@@ -103,6 +86,15 @@ export default {
     ...mapState([
       'user'
     ]),
+    options () {
+      return {
+        pullDownRefresh: {
+          threshold: 60
+        },
+        // pullDownRefresh: true,
+        scrollbar: true
+      }
+    },
     swiper () {
       return this.$refs.mySwiper.swiper
     }
@@ -112,6 +104,10 @@ export default {
       let sd = await shoppingDesc(Object.assign({}, this.user, this.row))
       console.log(sd)
       this.detailData = sd.data.return_data
+      for (let i in sd.data.return_data[0]) {
+        this.$set(this.detailData, i, sd.data.return_data[0][i])
+      }
+      // this.$refs.scroll.refresh()
     },
     onPullingDown () {
       this.viewDetails = false
@@ -149,9 +145,9 @@ export default {
         // }
         if (!this.viewDetails && Swiper.isEnd && Swiper.translate < -45) {
           this.viewDetails = true
-          setTimeout(() => {
+          this.$nextTick(() => {
             this.$refs.scroll.refresh()
-          }, 10)
+          })
         }
       })
     }
@@ -276,6 +272,9 @@ export default {
   }
   /deep/ .cube-scroll-list-wrapper {
     width: 100%;
+  }
+  /deep/ .cube-scroll-content {
+    // height: 100% !important;
   }
   .refresh {
     height: 80px;
